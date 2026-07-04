@@ -1,0 +1,59 @@
+.ig-feed {
+  padding: 88px 0;
+  background: var(--white);
+}
+
+.wrap {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+.section-head {
+  margin-bottom: 40px;
+}
+
+.section-eyebrow {
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gray-mid);
+  margin-bottom: 8px;
+}
+
+h2 {
+  font-family: var(--display);
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 600;
+  color: var(--black);
+}
+
+.ig-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 4px;
+}
+
+.ig-item {
+  display: block;
+  aspect-ratio: 1 / 1;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--gray-light);
+  filter: grayscale(100%);
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.ig-item:hover {
+  filter: grayscale(0%);
+  transform: scale(1.02);
+}
+
+.ig-estado {
+  padding: 40px 0;
+  text-align: center;
+  color: var(--gray-mid);
+  font-family: var(--body);
+}

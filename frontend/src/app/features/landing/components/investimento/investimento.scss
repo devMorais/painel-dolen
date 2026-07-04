@@ -1,0 +1,83 @@
+.precos {
+  background: var(--white);
+}
+
+.price-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.price-group h3 {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  margin-bottom: 18px;
+}
+
+.price-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.price-card {
+  border: 1px solid var(--gray-light);
+  border-radius: 14px;
+  padding: 20px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.price-card.starred {
+  border: 1.5px solid var(--black);
+}
+
+.price-card .pname {
+  font-weight: 600;
+  font-size: 0.98rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-card .pdesc {
+  font-size: 0.82rem;
+  color: var(--gray-mid);
+  margin-top: 3px;
+}
+
+.price-card .pval {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  white-space: nowrap;
+}
+
+.founder-note {
+  margin-top: 28px;
+  padding: 20px 22px;
+  border-radius: 14px;
+  background: var(--black);
+  color: var(--white);
+  font-size: 0.92rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.btn-founder {
+  background: var(--white);
+  color: var(--black);
+  border-color: var(--white);
+  white-space: nowrap;
+}
+
+@media (max-width: 860px) {
+  .price-tabs {
+    grid-template-columns: 1fr;
+  }
+}

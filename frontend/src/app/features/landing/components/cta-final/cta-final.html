@@ -1,0 +1,29 @@
+@if (conteudo(); as c) {
+  <section class="cta-final" id="contato">
+    <div class="wrap">
+      <h2>{{ c.titulo }}</h2>
+      <p>{{ c.texto }}</p>
+      <div class="contact-row">
+        @if (configuracoes()?.whatsapp_numero; as whatsapp) {
+          <a [href]="linkWhatsApp(whatsapp)" target="_blank" rel="noopener" class="btn btn-cta-solid">
+            Chamar no WhatsApp
+          </a>
+        }
+        <a
+          [href]="c.instagram_url"
+          target="_blank"
+          rel="noopener"
+          class="btn"
+          [class.btn-cta-solid]="!configuracoes()?.whatsapp_numero"
+          [class.btn-ghost-dark]="!!configuracoes()?.whatsapp_numero"
+        >
+          {{ c.instagram_label }}
+        </a>
+        <a [href]="mailto(c.email_destino, c.email_assunto)" class="btn btn-ghost-dark">
+          {{ c.email_label }}
+        </a>
+      </div>
+      <small>{{ c.nota }}</small>
+    </div>
+  </section>
+}

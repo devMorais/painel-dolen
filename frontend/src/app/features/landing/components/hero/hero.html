@@ -1,0 +1,26 @@
+@if (conteudo(); as c) {
+  <section class="hero">
+    <div class="orbit-field">
+      @for (orbita of orbitas; track $index) {
+        <span [ngStyle]="estiloOrbita(orbita)"></span>
+      }
+    </div>
+    <div class="wrap hero-inner">
+      <div class="eyebrow">{{ c.eyebrow }}</div>
+      <h1>{{ c.titulo }} <em>{{ c.titulo_destaque }}</em></h1>
+      <p class="lead">{{ c.texto }}</p>
+      <div class="hero-ctas">
+        <a [href]="c.cta_primario_url" class="btn btn-solid btn-hero-solid">{{ c.cta_primario_label }}</a>
+        <a [href]="c.cta_secundario_url" class="btn btn-ghost-dark">{{ c.cta_secundario_label }}</a>
+      </div>
+      <div class="proof-strip">
+        @for (item of c.prova_itens; track $index; let last = $last) {
+          <span>{{ item }}</span>
+          @if (!last) {
+            <span class="dot"></span>
+          }
+        }
+      </div>
+    </div>
+  </section>
+}

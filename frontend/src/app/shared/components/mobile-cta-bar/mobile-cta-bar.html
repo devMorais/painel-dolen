@@ -1,0 +1,11 @@
+@if (configuracoes(); as c) {
+  <div class="mobile-cta-bar">
+    @if (c.whatsapp_numero) {
+      <a [href]="linkWhatsApp(c.whatsapp_numero)" target="_blank" rel="noopener" class="btn btn-solid">
+        Chamar no WhatsApp
+      </a>
+    } @else {
+      <a href="#contato" class="btn btn-solid">Pedir orçamento</a>
+    }
+  </div>
+}

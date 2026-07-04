@@ -1,0 +1,22 @@
+@if (conteudo(); as secao) {
+  <section class="como" id="como-funciona">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="section-eyebrow">{{ secao.eyebrow }}</div>
+        <h2>{{ secao.titulo }}</h2>
+        @if (secao.subtexto) {
+          <p>{{ secao.subtexto }}</p>
+        }
+      </div>
+      <div class="steps">
+        @for (passo of secao.itens; track passo.id) {
+          <div class="step">
+            <div class="n">{{ passo.ordem }}</div>
+            <h4>{{ passo.titulo }}</h4>
+            <p>{{ passo.descricao }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+}

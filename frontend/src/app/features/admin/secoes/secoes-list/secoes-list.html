@@ -1,0 +1,27 @@
+<div class="secoes-page">
+  <h1>Seções do site</h1>
+  <p class="subtitulo">Ligue ou desligue qualquer seção da landing page. A mudança já vale no site em produção.</p>
+
+  @if (carregando()) {
+    <p>Carregando...</p>
+  } @else {
+    <ul class="secoes-lista">
+      @for (secao of secoes(); track secao.slug) {
+        <li class="secao-item">
+          <span class="secao-label">{{ secao.label }}</span>
+          <button
+            type="button"
+            class="toggle"
+            [class.ligado]="secao.visivel"
+            [disabled]="salvandoSlug() === secao.slug"
+            (click)="alternar(secao)"
+            [attr.aria-pressed]="secao.visivel"
+            [attr.aria-label]="'Alternar visibilidade de ' + secao.label"
+          >
+            <span class="toggle-bola"></span>
+          </button>
+        </li>
+      }
+    </ul>
+  }
+</div>

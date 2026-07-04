@@ -1,0 +1,132 @@
+<header>
+  <div class="wrap">
+    <div class="logo">
+      <svg viewBox="0 0 100 100">
+        <circle
+          cx="50"
+          cy="52"
+          r="34"
+          fill="none"
+          stroke="#0A0A0A"
+          stroke-width="13"
+          stroke-dasharray="190 30"
+          stroke-dashoffset="-18"
+          stroke-linecap="round"
+        />
+        <circle cx="76" cy="30" r="11" fill="#0A0A0A" />
+      </svg>
+      <span>{{ conteudo()?.nome_site ?? 'dolen' }}</span>
+    </div>
+    <nav>
+      <div class="nav-links">
+        @if (visibilidade()?.produtos ?? true) {
+          <a href="#produtos">Produtos</a>
+        }
+        @if (visibilidade()?.comoFunciona ?? true) {
+          <a href="#como-funciona">Como funciona</a>
+        }
+        @if (visibilidade()?.precos ?? true) {
+          <a href="#precos">Preços</a>
+        }
+      </div>
+      @if (visibilidade()?.cta ?? true) {
+        <a href="#contato" class="btn btn-solid nav-cta">Pedir orçamento</a>
+      }
+      <button
+        type="button"
+        class="menu-toggle"
+        (click)="alternarMenu()"
+        [attr.aria-expanded]="menuAberto()"
+        aria-label="Abrir menu"
+      >
+        @if (menuAberto()) {
+          <svg viewBox="0 0 24 24" width="22" height="22">
+            <path
+              d="M6 6L18 18M18 6L6 18"
+              stroke="#0A0A0A"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+        } @else {
+          <svg viewBox="0 0 24 24" width="22" height="22">
+            <path d="M4 7H20M4 12H20M4 17H20" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        }
+      </button>
+    </nav>
+  </div>
+
+  @if (menuAberto()) {
+    <div class="mobile-nav">
+      <div class="wrap">
+        @if (visibilidade()?.produtos ?? true) {
+          <a href="#produtos" (click)="fecharMenu()">Produtos</a>
+        }
+        @if (visibilidade()?.comoFunciona ?? true) {
+          <a href="#como-funciona" (click)="fecharMenu()">Como funciona</a>
+        }
+        @if (visibilidade()?.precos ?? true) {
+          <a href="#precos" (click)="fecharMenu()">Preços</a>
+        }
+        @if (visibilidade()?.cta ?? true) {
+          <a href="#contato" class="btn btn-solid" (click)="fecharMenu()">Pedir orçamento</a>
+        }
+      </div>
+    </div>
+  }
+</header>
+
+<main>
+  @if (visibilidade()?.hero ?? true) {
+    <app-hero />
+  }
+  @if (visibilidade()?.sobre ?? true) {
+    <app-sobre />
+  }
+  @if (visibilidade()?.diferenciais ?? true) {
+    <app-diferenciais />
+  }
+  @if (visibilidade()?.produtos ?? true) {
+    <app-produtos />
+  }
+  @if (visibilidade()?.instagram ?? true) {
+    <app-instagram-feed />
+  }
+  @if (visibilidade()?.comoFunciona ?? true) {
+    <app-como-funciona />
+  }
+  @if (visibilidade()?.precos ?? true) {
+    <app-investimento />
+  }
+  @if (visibilidade()?.cta ?? true) {
+    <app-cta-final />
+  }
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="logo">
+      <svg viewBox="0 0 100 100" width="22" height="22">
+        <circle
+          cx="50"
+          cy="52"
+          r="34"
+          fill="none"
+          stroke="#FFFFFF"
+          stroke-width="13"
+          stroke-dasharray="190 30"
+          stroke-dashoffset="-18"
+          stroke-linecap="round"
+        />
+        <circle cx="76" cy="30" r="11" fill="#FFFFFF" />
+      </svg>
+      <span>{{ conteudo()?.nome_site ?? 'dolen' }}</span>
+    </div>
+    <div class="fnote">{{ conteudo()?.copyright_texto }}</div>
+  </div>
+</footer>
+
+@if (visibilidade()?.cta ?? true) {
+  <app-mobile-cta-bar />
+}

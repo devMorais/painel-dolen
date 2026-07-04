@@ -1,0 +1,33 @@
+@if (conteudo(); as c) {
+  <section class="precos" id="precos">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="section-eyebrow">{{ c.eyebrow }}</div>
+        <h2>{{ c.titulo }}</h2>
+        <p>{{ c.subtexto }}</p>
+      </div>
+      <div class="price-tabs">
+        @for (grupo of c.grupos; track grupo.id) {
+          <div class="price-group">
+            <h3>{{ grupo.nome }}</h3>
+            <div class="price-cards">
+              @for (plano of grupo.planos; track plano.id) {
+                <div class="price-card" [class.starred]="plano.destaque">
+                  <div>
+                    <div class="pname">{{ plano.nome }}</div>
+                    <div class="pdesc">{{ plano.descricao }}</div>
+                  </div>
+                  <div class="pval">{{ formatarPreco(plano.preco) }}</div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+      <div class="founder-note">
+        <span>{{ c.nota_fundador_texto }}</span>
+        <a [href]="c.nota_fundador_cta_url" class="btn btn-founder">{{ c.nota_fundador_cta_label }}</a>
+      </div>
+    </div>
+  </section>
+}

@@ -1,0 +1,22 @@
+@if (conteudo(); as secao) {
+  <section class="diferenciais">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="section-eyebrow">{{ secao.eyebrow }}</div>
+        <h2>{{ secao.titulo }}</h2>
+        @if (secao.subtexto) {
+          <p>{{ secao.subtexto }}</p>
+        }
+      </div>
+      <div class="dif-grid">
+        @for (item of secao.itens; track item.id) {
+          <div class="dif-item">
+            <div class="num">{{ numero(item.ordem) }}</div>
+            <h4>{{ item.titulo }}</h4>
+            <p>{{ item.descricao }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+}

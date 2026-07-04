@@ -1,0 +1,21 @@
+@if (conteudo(); as c) {
+  <section class="sobre">
+    <div class="wrap sobre-grid">
+      <div class="sobre-copy">
+        <div class="section-eyebrow">{{ c.eyebrow }}</div>
+        <h2 style="margin-bottom: 20px">{{ c.titulo }}</h2>
+        @for (paragrafo of c.paragrafos; track $index) {
+          <p>{{ paragrafo }}</p>
+        }
+      </div>
+      <div class="flag-card">
+        <span class="tag">{{ c.destaque_tag }}</span>
+        <h3>{{ c.destaque_titulo }}</h3>
+        <p>{{ c.destaque_texto }}</p>
+        <a class="inline-link" [href]="c.destaque_link_url" target="_blank" rel="noopener">
+          {{ c.destaque_link_label }}
+        </a>
+      </div>
+    </div>
+  </section>
+}

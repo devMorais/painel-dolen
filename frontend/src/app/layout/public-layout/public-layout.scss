@@ -1,0 +1,134 @@
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo svg {
+  width: 26px;
+  height: 26px;
+}
+
+.logo span {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--gray-light);
+}
+
+header > .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 34px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 34px;
+}
+
+.nav-links a {
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--gray-dark);
+  transition: color 0.15s;
+}
+
+.nav-links a:hover {
+  color: var(--black);
+}
+
+.menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.mobile-nav {
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-light);
+}
+
+.mobile-nav .wrap {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 28px 20px;
+  gap: 2px;
+}
+
+.mobile-nav a:not(.btn) {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: var(--gray-dark);
+}
+
+.mobile-nav .btn {
+  margin-top: 10px;
+  width: 100%;
+}
+
+footer {
+  background: var(--black);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 36px 0;
+}
+
+footer .wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+footer .logo span {
+  color: var(--white);
+}
+
+footer .fnote {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+@media (max-width: 860px) {
+  .nav-links {
+    display: none;
+  }
+
+  .nav-cta {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  footer {
+    padding-bottom: calc(96px + env(safe-area-inset-bottom));
+  }
+}

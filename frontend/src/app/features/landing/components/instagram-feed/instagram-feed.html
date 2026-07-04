@@ -1,0 +1,26 @@
+@if (carregando()) {
+  <div class="ig-estado">Carregando posts...</div>
+} @else if (comErro() || posts().length === 0) {
+  <!-- Feed indisponível (token não configurado ou API fora do ar): a seção some sem quebrar o layout. -->
+} @else {
+  <section class="ig-feed">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="section-eyebrow">{{ secao()?.eyebrow }}</div>
+        <h2>{{ secao()?.titulo }}</h2>
+      </div>
+      <div class="ig-grid">
+        @for (post of posts(); track post.id) {
+          <a
+            class="ig-item"
+            [href]="post.permalink"
+            target="_blank"
+            rel="noopener"
+            [style.background-image]="'url(' + capaDoPost(post) + ')'"
+            [attr.aria-label]="post.caption ?? 'Post do Instagram da Dolen'"
+          ></a>
+        }
+      </div>
+    </div>
+  </section>
+}

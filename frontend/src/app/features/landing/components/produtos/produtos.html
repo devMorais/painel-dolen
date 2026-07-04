@@ -1,0 +1,48 @@
+@if (conteudo(); as secao) {
+  <section class="catalogo" id="produtos">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="section-eyebrow">{{ secao.eyebrow }}</div>
+        <h2>{{ secao.titulo }}</h2>
+        @if (secao.subtexto) {
+          <p>{{ secao.subtexto }}</p>
+        }
+      </div>
+
+      <div class="cat-grid">
+        @for (produto of secao.itens; track produto.id) {
+          <div class="cat-card" [class.featured]="produto.destaque">
+            <div class="cat-top">
+              @if (produto.rotulo_ordem) {
+                <span class="cat-rank">{{ produto.rotulo_ordem }}</span>
+              }
+              @if (produto.badge) {
+                <span class="cat-badge">{{ produto.badge }}</span>
+              }
+            </div>
+            <h3>{{ produto.nome }}</h3>
+            <p class="problema">{{ produto.descricao }}</p>
+            <div class="cat-meta">
+              {{ produto.publico_alvo }} · <strong>{{ produto.preco_label }}</strong>
+            </div>
+            <div class="cat-actions">
+              @if (produto.cta_primario_label && produto.cta_primario_url) {
+                <a
+                  [href]="produto.cta_primario_url"
+                  [target]="produto.cta_primario_url.startsWith('http') ? '_blank' : null"
+                  rel="noopener"
+                  class="pill-link solid"
+                >
+                  {{ produto.cta_primario_label }}
+                </a>
+              }
+              @if (produto.cta_secundario_label && produto.cta_secundario_url) {
+                <a [href]="produto.cta_secundario_url" class="pill-link">{{ produto.cta_secundario_label }}</a>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+}

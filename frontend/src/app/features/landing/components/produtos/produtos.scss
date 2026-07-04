@@ -1,0 +1,141 @@
+.catalogo {
+  background: var(--white);
+}
+
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.cat-card {
+  border: 1px solid var(--gray-light);
+  border-radius: 16px;
+  padding: 28px;
+  transition:
+    border-color 0.15s,
+    transform 0.15s;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.cat-card:hover {
+  border-color: var(--black);
+  transform: translateY(-2px);
+}
+
+.cat-card.featured {
+  border: 1.5px solid var(--black);
+  background: var(--black);
+  color: var(--white);
+}
+
+.cat-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.cat-rank {
+  font-family: var(--display);
+  font-size: 0.78rem;
+  color: var(--gray-mid);
+  font-weight: 600;
+}
+
+.cat-card.featured .cat-rank {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.cat-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 100px;
+  border: 1px solid var(--gray-dark);
+  color: var(--gray-dark);
+}
+
+.cat-card.featured .cat-badge {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.cat-card h3 {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  margin-bottom: 8px;
+}
+
+.cat-card .problema {
+  font-size: 0.95rem;
+  color: var(--gray-dark);
+  margin-bottom: 14px;
+  flex-grow: 1;
+}
+
+.cat-card.featured .problema {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.cat-meta {
+  font-size: 0.82rem;
+  color: var(--gray-mid);
+  margin-bottom: 18px;
+}
+
+.cat-card.featured .cat-meta {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.cat-meta strong {
+  color: var(--black);
+  font-weight: 600;
+}
+
+.cat-card.featured .cat-meta strong {
+  color: var(--white);
+}
+
+.cat-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+
+.pill-link {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 13px 18px;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100px;
+  border: 1px solid var(--black);
+}
+
+.cat-card.featured .pill-link {
+  border-color: var(--white);
+}
+
+.pill-link.solid {
+  background: var(--black);
+  color: var(--white);
+}
+
+.cat-card.featured .pill-link.solid {
+  background: var(--white);
+  color: var(--black);
+}
+
+@media (max-width: 860px) {
+  .cat-grid {
+    grid-template-columns: 1fr;
+  }
+}
