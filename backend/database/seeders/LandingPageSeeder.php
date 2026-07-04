@@ -218,8 +218,11 @@ class LandingPageSeeder extends Seeder
             'og_type' => 'website',
             'twitter_card' => 'summary_large_image',
             'canonical_url' => 'https://dolen.com.br',
-            'robots_index' => true,
-            'robots_follow' => true,
+            // Desligado enquanto o site estiver hospedado em domínio provisório
+            // (ex.: dolen.devmorais.com.br) — ligar quando o domínio dolen.com.br
+            // estiver no ar de verdade, senão o Google indexa a URL errada.
+            'robots_index' => false,
+            'robots_follow' => false,
             'structured_data_tipo_negocio' => 'ProfessionalService',
             'structured_data_nome_negocio' => 'Dolen',
             'structured_data_telefone' => null,
