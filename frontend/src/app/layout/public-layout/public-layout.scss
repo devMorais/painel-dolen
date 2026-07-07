@@ -4,9 +4,14 @@
   gap: 10px;
 }
 
-.logo svg {
+.logo-icon {
   width: 26px;
   height: 26px;
+  object-fit: contain;
+}
+
+.logo-icon-invert {
+  filter: invert(1) brightness(2);
 }
 
 .logo span {
