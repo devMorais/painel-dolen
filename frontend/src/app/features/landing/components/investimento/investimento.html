@@ -17,7 +17,10 @@
                     <div class="pname">{{ plano.nome }}</div>
                     <div class="pdesc">{{ plano.descricao }}</div>
                   </div>
-                  <div class="pval">{{ formatarPreco(plano.preco) }}</div>
+                  <div class="pval">
+                    <span class="pval-parcela">12x {{ formatarParcela(plano.preco) }}</span>
+                    <span class="pval-avista">ou {{ formatarPreco(plano.preco) }} à vista</span>
+                  </div>
                 </div>
               }
             </div>

@@ -53,7 +53,7 @@ class LandingPageSeeder extends Seeder
             ],
             'destaque_tag' => 'Prova técnica',
             'destaque_titulo' => 'EduCore',
-            'destaque_texto' => 'IA generativa que transforma PDF em quiz, resumo e apresentação, rodando em produção com RAG, Gemini e pgvector. Construído do zero pelo fundador e apresentado no Innovaday do Senac — produto real, não promessa de pitch.',
+            'destaque_texto' => 'IA generativa que transforma PDF em quiz, resumo e apresentação, rodando em produção com RAG, Gemini e pgvector. Construído do zero pelo fundador — produto real, não promessa de pitch.',
             'destaque_link_label' => 'Ver o EduCore em produção →',
             'destaque_link_url' => 'https://educore.devmorais.com.br/',
             'visivel' => true,
@@ -76,25 +76,25 @@ class LandingPageSeeder extends Seeder
 
         SecaoProdutos::updateOrCreate(['id' => 1], [
             'eyebrow' => 'Produtos e serviços',
-            'titulo' => 'Sete produtos, dois jeitos de trabalhar com a gente.',
-            'subtexto' => 'Projetos sob encomenda para quem precisa de presença online rápido, e produtos SaaS próprios para quem quer usar o que a gente já usa todo dia.',
+            'titulo' => 'Sites de todo tipo, do institucional ao e-commerce.',
+            'subtexto' => 'Site institucional, loja virtual, blog, sistema sob medida — feito do jeito que o seu negócio precisa, para todo o Brasil. E produtos SaaS próprios para quem quer usar o que a gente já usa todo dia.',
             'visivel' => true,
         ]);
 
         Produto::query()->delete();
         collect([
             [
-                'ordem' => 1, 'slug' => 'crc', 'nome' => 'CRC — Site institucional',
-                'rotulo_ordem' => '01 · Foco imediato', 'badge' => 'Base pronta',
-                'descricao' => 'Para quem não aparece no Google e perde cliente pra concorrente que já tem site. Base já pronta — customizamos pro seu negócio em dias.',
+                'ordem' => 1, 'slug' => 'crc', 'nome' => 'Site institucional',
+                'rotulo_ordem' => '01 · Foco imediato', 'badge' => 'Em até 12x no cartão',
+                'descricao' => 'Para quem não aparece no Google e perde cliente pra concorrente que já tem site. Feito do jeito que o seu negócio precisa — com blog, galeria, mapa, o que fizer sentido. O CRC, site de oficina que construímos, é um exemplo real.',
                 'publico_alvo' => 'Oficinas, prestadores de serviço, clínicas, autônomos',
                 'preco_label' => 'R$ 800 – R$ 2.500', 'categoria' => 'sob_demanda', 'destaque' => false,
                 'cta_primario_label' => 'Pedir orçamento', 'cta_primario_url' => '#contato',
             ],
             [
-                'ordem' => 2, 'slug' => 'shopx', 'nome' => 'ShopX — Loja virtual',
-                'rotulo_ordem' => '02 · Foco imediato', 'badge' => 'Venda ou aluguel',
-                'descricao' => 'Para vender online sem depender só do Instagram. Disponível pra comprar ou alugar mensalmente.',
+                'ordem' => 2, 'slug' => 'shopx', 'nome' => 'Loja virtual / E-commerce',
+                'rotulo_ordem' => '02 · Foco imediato', 'badge' => 'Em até 12x no cartão',
+                'descricao' => 'Para vender online sem depender só do Instagram. Fazemos o e-commerce do jeito que o cliente precisa, focado no público brasileiro — o ShopX é nosso exemplo em produção.',
                 'publico_alvo' => 'Pequeno lojista, artesão, revendedor',
                 'preco_label' => 'R$ 2.500 – R$ 6.000 · aluguel sob consulta', 'categoria' => 'sob_demanda', 'destaque' => false,
                 'cta_primario_label' => 'Pedir orçamento', 'cta_primario_url' => '#contato',
@@ -117,10 +117,10 @@ class LandingPageSeeder extends Seeder
             ],
             [
                 'ordem' => 5, 'slug' => 'educore', 'nome' => 'EduCore',
-                'rotulo_ordem' => '05 · Vitrine técnica', 'badge' => 'Apresentado no Innovaday Senac',
-                'descricao' => 'Transforma PDF em quiz, resumo e apresentação em segundos — construído do zero pelo fundador e apresentado no Innovaday do Senac. Nossa prova de capacidade em IA.',
+                'rotulo_ordem' => '05 · Produto próprio', 'badge' => 'IA em produção',
+                'descricao' => 'Transforma PDF em quiz, resumo e apresentação em segundos — construído do zero pela Dolen. Nossa prova de capacidade em IA.',
                 'publico_alvo' => 'Professores, instituições, infoprodutores',
-                'preco_label' => 'Condições comerciais a confirmar', 'categoria' => 'vitrine_tecnica', 'destaque' => true,
+                'preco_label' => 'Condições comerciais a confirmar', 'categoria' => 'vitrine_tecnica', 'destaque' => false,
                 'cta_primario_label' => 'Ver demonstração', 'cta_primario_url' => 'https://educore.devmorais.com.br/',
                 'cta_secundario_label' => 'Saber mais', 'cta_secundario_url' => '#contato',
             ],
@@ -158,7 +158,7 @@ class LandingPageSeeder extends Seeder
 
         Passo::query()->delete();
         collect([
-            ['ordem' => 1, 'titulo' => 'Você conta o que precisa', 'descricao' => 'Chama no Instagram ou pelo formulário. Entendemos seu negócio e indicamos o pacote certo.'],
+            ['ordem' => 1, 'titulo' => 'Você conta o que precisa', 'descricao' => 'Chama no WhatsApp ou pelo formulário. Entendemos seu negócio e indicamos a melhor solução.'],
             ['ordem' => 2, 'titulo' => 'Orçamento e contrato', 'descricao' => 'Proposta clara, contrato de 1 página, 50% de entrada via PIX.'],
             ['ordem' => 3, 'titulo' => 'Construção sobre base pronta', 'descricao' => 'Partimos de sistemas já em produção — por isso o prazo é dias, não meses.'],
             ['ordem' => 4, 'titulo' => 'Entrega e manutenção', 'descricao' => 'Você recebe pronto, com opção de plano de manutenção mensal a partir de R$ 100.'],
@@ -167,14 +167,14 @@ class LandingPageSeeder extends Seeder
         PlanoPreco::query()->delete();
         GrupoPreco::query()->delete();
 
-        $site = GrupoPreco::create(['ordem' => 1, 'nome' => 'Site institucional (CRC)']);
+        $site = GrupoPreco::create(['ordem' => 1, 'nome' => 'Site institucional']);
         collect([
             ['ordem' => 1, 'nome' => 'Essencial', 'descricao' => '1 página, responsivo, WhatsApp, formulário', 'preco' => 800, 'destaque' => false],
             ['ordem' => 2, 'nome' => 'Profissional ⭐', 'descricao' => 'Até 5 páginas, SEO básico, Google Maps, galeria', 'preco' => 1500, 'destaque' => true],
             ['ordem' => 3, 'nome' => 'Premium', 'descricao' => '+ blog, redes integradas, domínio + hospedagem 1 ano', 'preco' => 2500, 'destaque' => false],
         ])->each(fn (array $item) => $site->planos()->create($item));
 
-        $loja = GrupoPreco::create(['ordem' => 2, 'nome' => 'Loja virtual (ShopX)']);
+        $loja = GrupoPreco::create(['ordem' => 2, 'nome' => 'Loja virtual / E-commerce']);
         collect([
             ['ordem' => 1, 'nome' => 'Start', 'descricao' => 'Até 30 produtos, PIX/cartão, frete, painel admin', 'preco' => 2500, 'destaque' => false],
             ['ordem' => 2, 'nome' => 'Pro ⭐', 'descricao' => 'Produtos ilimitados, cupons, relatórios, treinamento', 'preco' => 4000, 'destaque' => true],
@@ -183,8 +183,8 @@ class LandingPageSeeder extends Seeder
 
         SecaoPrecos::updateOrCreate(['id' => 1], [
             'eyebrow' => 'Investimento',
-            'titulo' => 'Preços dos dois serviços mais procurados.',
-            'subtexto' => 'Votação, doações e demais sistemas sob medida são orçados sob consulta, conforme escopo.',
+            'titulo' => 'Sites para todo tipo de negócio, em até 12x.',
+            'subtexto' => 'Pague no cartão em até 12x sem complicação. Votação, doações e demais sistemas sob medida são orçados sob consulta, conforme escopo.',
             'nota_fundador_texto' => 'Somos uma empresa nova — e assumimos isso. Os 3 primeiros clientes ganham 20% de desconto em troca de depoimento e autorização de portfólio.',
             'nota_fundador_cta_label' => 'Quero ser cliente fundador',
             'nota_fundador_cta_url' => '#contato',
@@ -199,7 +199,7 @@ class LandingPageSeeder extends Seeder
             'email_label' => 'Enviar e-mail',
             'email_destino' => 'contato@dolen.com.br',
             'email_assunto' => 'Orçamento - Site via landing page',
-            'nota' => 'contato@dolen.com.br entra em uso assim que o domínio dolen.com.br for ativado — até lá, o Instagram é o canal mais rápido.',
+            'nota' => 'Respondemos em até 1 dia útil. Se preferir, chame direto no WhatsApp ou no Instagram.',
             'visivel' => true,
         ]);
 

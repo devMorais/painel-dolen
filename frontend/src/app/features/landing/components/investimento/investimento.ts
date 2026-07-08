@@ -17,4 +17,12 @@ export class Investimento {
   protected formatarPreco(preco: string): string {
     return 'R$ ' + Math.round(parseFloat(preco)).toLocaleString('pt-BR');
   }
+
+  protected formatarParcela(preco: string): string {
+    const parcela = parseFloat(preco) / 12;
+    return (
+      'R$ ' +
+      parcela.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    );
+  }
 }

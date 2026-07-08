@@ -53,6 +53,17 @@
   font-weight: 700;
   font-size: 1.15rem;
   white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.price-card .pval-avista {
+  font-family: var(--body);
+  font-weight: 400;
+  font-size: 0.78rem;
+  color: var(--gray-mid);
 }
 
 .founder-note {
