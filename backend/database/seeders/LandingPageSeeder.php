@@ -35,11 +35,7 @@ class LandingPageSeeder extends Seeder
             'cta_primario_url' => '#contato',
             'cta_secundario_label' => 'Ver produtos e serviços',
             'cta_secundario_url' => '#produtos',
-            'prova_itens' => [
-                'EduCore — IA generativa em produção',
-                'Avante — gestão de tarefas em produção',
-                '7 produtos no portfólio',
-            ],
+            'prova_itens' => [],
             'visivel' => true,
         ]);
 
@@ -47,15 +43,15 @@ class LandingPageSeeder extends Seeder
             'eyebrow' => 'Quem somos',
             'titulo' => 'Não somos "mais uma agência de site".',
             'paragrafos' => [
-                'Somos uma casa de software que constrói produtos próprios com tecnologia e IA de verdade — e usa essa mesma capacidade técnica para entregar sistemas sob medida a pequenas empresas e freelancers.',
-                'A diferença é que partimos de bases já em produção. Isso significa entrega mais rápida e mais barata que uma agência que começa do zero a cada projeto — sem abrir mão de qualidade técnica.',
-                'O nome vem do símbolo: um anel com um ponto de encaixe. Cada produto do portfólio — Avante, EduCore, Numen, ShopX, Votar, AGF, CRC — orbita a Dolen como marca-mãe.',
+                'A Dolen nasceu de experiência real com software profissional: sistemas próprios rodando em produção e estudo constante de IA aplicada.',
+                'Todo site que entregamos vem com painel administrativo próprio — você edita textos, fotos e preços sozinho, sem depender de programador e sem pagar por cada alteração.',
+                'Atendemos todo o Brasil, com preço em reais, pagamento em até 12x no cartão e entrega em dias, porque partimos de bases que já existem e funcionam.',
             ],
-            'destaque_tag' => 'Prova técnica',
-            'destaque_titulo' => 'EduCore',
-            'destaque_texto' => 'IA generativa que transforma PDF em quiz, resumo e apresentação, rodando em produção com RAG, Gemini e pgvector. Construído do zero pelo fundador — produto real, não promessa de pitch.',
-            'destaque_link_label' => 'Ver o EduCore em produção →',
-            'destaque_link_url' => 'https://educore.devmorais.com.br/',
+            'destaque_tag' => 'Nosso diferencial',
+            'destaque_titulo' => 'Painel administrativo próprio',
+            'destaque_texto' => 'Seu site, sob seu controle: painel simples pra trocar textos, fotos e preços quando quiser. Sem taxa por alteração, sem esperar programador.',
+            'destaque_link_label' => 'Pedir orçamento →',
+            'destaque_link_url' => '#contato',
             'visivel' => true,
         ]);
 
@@ -68,16 +64,16 @@ class LandingPageSeeder extends Seeder
 
         Diferencial::query()->delete();
         collect([
-            ['ordem' => 1, 'titulo' => 'Prova técnica real', 'descricao' => 'O EduCore é IA generativa em produção — sustenta o discurso de "casa de tecnologia" mesmo quando o produto vendido é um site simples.'],
-            ['ordem' => 2, 'titulo' => 'Usamos o que vendemos', 'descricao' => 'O Avante gerencia o próprio plano de marketing e vendas da Dolen. Prova social gratuita em toda conversa.'],
-            ['ordem' => 3, 'titulo' => 'Velocidade e preço', 'descricao' => 'Bases já prontas (CRC, ShopX, Votar, AGF) permitem entregar mais rápido e mais barato que uma agência que parte do zero.'],
-            ['ordem' => 4, 'titulo' => 'Pagamento nacional', 'descricao' => 'Preço em reais, PIX, sem travar em cartão internacional.'],
+            ['ordem' => 1, 'titulo' => 'Experiência real', 'descricao' => 'Software próprio rodando em produção. Você contrata quem já constrói e mantém sistemas de verdade.'],
+            ['ordem' => 2, 'titulo' => 'Usamos o que vendemos', 'descricao' => 'Nossos próprios sistemas gerenciam a Dolen no dia a dia. Se não funcionasse, não venderíamos.'],
+            ['ordem' => 3, 'titulo' => 'Entrega em dias', 'descricao' => 'Partimos de bases prontas e testadas — mais rápido e mais barato que agência que começa do zero.'],
+            ['ordem' => 4, 'titulo' => 'Pagamento facilitado', 'descricao' => 'Preço em reais, em até 12x no cartão ou PIX. Sem surpresa, sem letra miúda.'],
         ])->each(fn (array $item) => Diferencial::create($item));
 
         SecaoProdutos::updateOrCreate(['id' => 1], [
-            'eyebrow' => 'Portfólio & serviços',
-            'titulo' => 'Sites de todo tipo, do institucional ao e-commerce.',
-            'subtexto' => 'Site institucional, loja virtual, blog, sistema sob medida — feito do jeito que o seu negócio precisa, para todo o Brasil. Os sistemas abaixo já existem e estão em produção: seu projeto parte de base comprovada, não do zero.',
+            'eyebrow' => 'O que fazemos',
+            'titulo' => 'Escolha o que o seu negócio precisa.',
+            'subtexto' => 'Tudo com painel próprio pra você editar sozinho, hospedagem e domínio grátis, em até 12x no cartão.',
             'visivel' => true,
         ]);
 
@@ -86,7 +82,7 @@ class LandingPageSeeder extends Seeder
             [
                 'ordem' => 1, 'slug' => 'crc', 'nome' => 'Site institucional',
                 'rotulo_ordem' => '01 · Foco imediato', 'badge' => 'Em até 12x no cartão',
-                'descricao' => 'Para quem não aparece no Google e perde cliente pra concorrente que já tem site. Feito do jeito que o seu negócio precisa — com blog, galeria, mapa, o que fizer sentido. O CRC, site de oficina que construímos, é um exemplo real.',
+                'descricao' => 'Apareça no Google e passe confiança pro seu cliente. Blog, galeria, mapa — o que fizer sentido. Pronto em dias.',
                 'publico_alvo' => 'Oficinas, prestadores de serviço, clínicas, autônomos',
                 'preco_label' => 'a partir de R$ 70/mês', 'categoria' => 'sob_demanda', 'destaque' => false,
                 'cta_primario_label' => 'Pedir orçamento', 'cta_primario_url' => '#contato',
@@ -94,7 +90,7 @@ class LandingPageSeeder extends Seeder
             [
                 'ordem' => 2, 'slug' => 'shopx', 'nome' => 'Loja virtual / E-commerce',
                 'rotulo_ordem' => '02 · Foco imediato', 'badge' => 'Em até 12x no cartão',
-                'descricao' => 'Para vender online sem depender só do Instagram. Fazemos o e-commerce do jeito que o cliente precisa, focado no público brasileiro — o ShopX é nosso exemplo em produção.',
+                'descricao' => 'Venda online sem depender só do Instagram. PIX, cartão e frete configurados, com painel pra gerenciar tudo.',
                 'publico_alvo' => 'Pequeno lojista, artesão, revendedor',
                 'preco_label' => 'a partir de R$ 210/mês', 'categoria' => 'sob_demanda', 'destaque' => false,
                 'cta_primario_label' => 'Pedir orçamento', 'cta_primario_url' => '#contato',
@@ -102,7 +98,7 @@ class LandingPageSeeder extends Seeder
             [
                 'ordem' => 3, 'slug' => 'votar', 'nome' => 'Votar — Votação e concurso',
                 'rotulo_ordem' => '03 · Case real', 'badge' => 'Já em produção',
-                'descricao' => 'Votação organizada, com arrecadação e à prova de fraude. Sistema já entregue e em uso por um cliente real — construímos uma versão sob medida pro seu evento.',
+                'descricao' => 'Votação organizada, com arrecadação e à prova de fraude. Já usado em evento real.',
                 'publico_alvo' => 'Eventos, festas, rádios, igrejas',
                 'preco_label' => 'R$ 1.500 – R$ 4.000', 'categoria' => 'case_cliente', 'destaque' => false,
                 'cta_primario_label' => 'Pedir orçamento', 'cta_primario_url' => '#contato',
@@ -110,7 +106,7 @@ class LandingPageSeeder extends Seeder
             [
                 'ordem' => 4, 'slug' => 'agf', 'nome' => 'AGF — Site + doações',
                 'rotulo_ordem' => '04 · Case real', 'badge' => 'Já em produção',
-                'descricao' => 'Para receber doações e divulgar a causa sem complicação. Sistema já entregue e em uso por uma associação real.',
+                'descricao' => 'Receba doações e divulgue sua causa sem complicação. Em uso por associação real.',
                 'publico_alvo' => 'ONGs, associações, igrejas, projetos sociais',
                 'preco_label' => 'Sob consulta', 'categoria' => 'case_cliente', 'destaque' => false,
                 'cta_primario_label' => 'Pedir orçamento', 'cta_primario_url' => '#contato',
@@ -118,7 +114,7 @@ class LandingPageSeeder extends Seeder
             [
                 'ordem' => 5, 'slug' => 'educore', 'nome' => 'EduCore',
                 'rotulo_ordem' => '05 · Produto próprio', 'badge' => 'IA em produção',
-                'descricao' => 'Transforma PDF em quiz, resumo e apresentação em segundos — construído do zero pela Dolen. Nossa prova de capacidade em IA.',
+                'descricao' => 'Transforma PDF em quiz, resumo e apresentação em segundos. Produto próprio de IA da Dolen.',
                 'publico_alvo' => 'Professores, instituições, infoprodutores',
                 'preco_label' => 'Condições comerciais a confirmar', 'categoria' => 'vitrine_tecnica', 'destaque' => false,
                 'cta_primario_label' => 'Ver demonstração', 'cta_primario_url' => 'https://educore.devmorais.com.br/',
@@ -127,7 +123,7 @@ class LandingPageSeeder extends Seeder
             [
                 'ordem' => 6, 'slug' => 'avante', 'nome' => 'Avante — Gestão de tarefas',
                 'rotulo_ordem' => '06', 'badge' => 'SaaS recorrente',
-                'descricao' => 'Board simples para não perder prazo entre vários clientes, sem a complexidade do Jira. É o sistema que usamos internamente pra gerenciar todos os nossos projetos — e também vendemos.',
+                'descricao' => 'Gestão de tarefas simples pra não perder prazo. Usamos todo dia — e você pode usar também.',
                 'publico_alvo' => 'Freelancers, squads de 2-10 pessoas',
                 'preco_label' => 'Free a R$ 99/mês', 'categoria' => 'saas', 'destaque' => false,
                 'cta_primario_label' => 'Experimentar', 'cta_primario_url' => 'https://avante.devmorais.com.br/',
@@ -136,7 +132,7 @@ class LandingPageSeeder extends Seeder
             [
                 'ordem' => 7, 'slug' => 'numen', 'nome' => 'Numen — Plataforma de cursos',
                 'rotulo_ordem' => '07 · Em breve', 'badge' => 'Venda ou aluguel',
-                'descricao' => 'Venda seus cursos com a sua cara, sem depender de plataforma genérica. Vai poder ser comprado ou alugado assim que estiver pronto.',
+                'descricao' => 'Venda seus cursos com a sua cara, sem plataforma genérica. Em breve — entre na lista de espera.',
                 'publico_alvo' => 'Professores, cursinhos, infoprodutores',
                 'preco_label' => 'Em desenvolvimento', 'categoria' => 'saas', 'destaque' => false,
                 'cta_primario_label' => 'Entrar na lista de espera', 'cta_primario_url' => '#contato',
