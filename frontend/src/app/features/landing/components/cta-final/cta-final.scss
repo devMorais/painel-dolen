@@ -20,11 +20,15 @@ p {
 }
 
 .form-orcamento {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
   text-align: left;
   margin-bottom: 36px;
+  padding: 28px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
 }
 
 .form-campo {
@@ -33,8 +37,14 @@ p {
   gap: 6px;
 }
 
+.form-campo-full {
+  grid-column: 1 / -1;
+}
+
 .form-campo label {
-  font-size: 0.88rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
   color: rgba(255, 255, 255, 0.75);
 }
 
@@ -44,17 +54,50 @@ p {
   font-size: 1rem;
   color: var(--white);
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 12px;
+  padding: 14px 16px;
   outline: none;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease;
   resize: vertical;
+}
+
+.form-campo input::placeholder,
+.form-campo textarea::placeholder {
+  color: rgba(255, 255, 255, 0.3);
 }
 
 .form-campo input:focus,
 .form-campo textarea:focus {
   border-color: var(--white);
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.form-envio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.btn-enviar {
+  width: 100%;
+  padding: 16px;
+  font-size: 1.05rem;
+  border-radius: 12px;
+}
+
+.form-microcopy {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+@media (max-width: 640px) {
+  .form-orcamento {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
 }
 
 .form-campo input.invalido {

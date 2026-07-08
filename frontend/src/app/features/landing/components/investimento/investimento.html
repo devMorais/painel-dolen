@@ -18,8 +18,8 @@
                     <div class="pdesc">{{ plano.descricao }}</div>
                   </div>
                   <div class="pval">
-                    <span class="pval-parcela">12x {{ formatarParcela(plano.preco) }}</span>
-                    <span class="pval-avista">ou {{ formatarPreco(plano.preco) }} à vista</span>
+                    <span class="pval-parcela">{{ formatarMensal(plano.preco) }}</span>
+                    <span class="pval-avista">durante 12 meses</span>
                   </div>
                 </div>
               }

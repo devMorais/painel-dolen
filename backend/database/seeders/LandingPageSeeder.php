@@ -75,9 +75,9 @@ class LandingPageSeeder extends Seeder
         ])->each(fn (array $item) => Diferencial::create($item));
 
         SecaoProdutos::updateOrCreate(['id' => 1], [
-            'eyebrow' => 'Produtos e serviços',
+            'eyebrow' => 'Portfólio & serviços',
             'titulo' => 'Sites de todo tipo, do institucional ao e-commerce.',
-            'subtexto' => 'Site institucional, loja virtual, blog, sistema sob medida — feito do jeito que o seu negócio precisa, para todo o Brasil. E produtos SaaS próprios para quem quer usar o que a gente já usa todo dia.',
+            'subtexto' => 'Site institucional, loja virtual, blog, sistema sob medida — feito do jeito que o seu negócio precisa, para todo o Brasil. Os sistemas abaixo já existem e estão em produção: seu projeto parte de base comprovada, não do zero.',
             'visivel' => true,
         ]);
 
@@ -88,7 +88,7 @@ class LandingPageSeeder extends Seeder
                 'rotulo_ordem' => '01 · Foco imediato', 'badge' => 'Em até 12x no cartão',
                 'descricao' => 'Para quem não aparece no Google e perde cliente pra concorrente que já tem site. Feito do jeito que o seu negócio precisa — com blog, galeria, mapa, o que fizer sentido. O CRC, site de oficina que construímos, é um exemplo real.',
                 'publico_alvo' => 'Oficinas, prestadores de serviço, clínicas, autônomos',
-                'preco_label' => 'R$ 800 – R$ 2.500', 'categoria' => 'sob_demanda', 'destaque' => false,
+                'preco_label' => 'a partir de R$ 70/mês', 'categoria' => 'sob_demanda', 'destaque' => false,
                 'cta_primario_label' => 'Pedir orçamento', 'cta_primario_url' => '#contato',
             ],
             [
@@ -96,7 +96,7 @@ class LandingPageSeeder extends Seeder
                 'rotulo_ordem' => '02 · Foco imediato', 'badge' => 'Em até 12x no cartão',
                 'descricao' => 'Para vender online sem depender só do Instagram. Fazemos o e-commerce do jeito que o cliente precisa, focado no público brasileiro — o ShopX é nosso exemplo em produção.',
                 'publico_alvo' => 'Pequeno lojista, artesão, revendedor',
-                'preco_label' => 'R$ 2.500 – R$ 6.000 · aluguel sob consulta', 'categoria' => 'sob_demanda', 'destaque' => false,
+                'preco_label' => 'a partir de R$ 210/mês', 'categoria' => 'sob_demanda', 'destaque' => false,
                 'cta_primario_label' => 'Pedir orçamento', 'cta_primario_url' => '#contato',
             ],
             [
@@ -159,7 +159,7 @@ class LandingPageSeeder extends Seeder
         Passo::query()->delete();
         collect([
             ['ordem' => 1, 'titulo' => 'Você conta o que precisa', 'descricao' => 'Chama no WhatsApp ou pelo formulário. Entendemos seu negócio e indicamos a melhor solução.'],
-            ['ordem' => 2, 'titulo' => 'Orçamento e contrato', 'descricao' => 'Proposta clara, contrato de 1 página, 50% de entrada via PIX.'],
+            ['ordem' => 2, 'titulo' => 'Orçamento e contrato', 'descricao' => 'Proposta clara, contrato de 1 página, primeira mensalidade no cartão e começamos.'],
             ['ordem' => 3, 'titulo' => 'Construção sobre base pronta', 'descricao' => 'Partimos de sistemas já em produção — por isso o prazo é dias, não meses.'],
             ['ordem' => 4, 'titulo' => 'Entrega e manutenção', 'descricao' => 'Você recebe pronto, com opção de plano de manutenção mensal a partir de R$ 100.'],
         ])->each(fn (array $item) => Passo::create($item));
@@ -169,22 +169,22 @@ class LandingPageSeeder extends Seeder
 
         $site = GrupoPreco::create(['ordem' => 1, 'nome' => 'Site institucional']);
         collect([
-            ['ordem' => 1, 'nome' => 'Essencial', 'descricao' => '1 página, responsivo, WhatsApp, formulário', 'preco' => 800, 'destaque' => false],
-            ['ordem' => 2, 'nome' => 'Profissional ⭐', 'descricao' => 'Até 5 páginas, SEO básico, Google Maps, galeria', 'preco' => 1500, 'destaque' => true],
-            ['ordem' => 3, 'nome' => 'Premium', 'descricao' => '+ blog, redes integradas, domínio + hospedagem 1 ano', 'preco' => 2500, 'destaque' => false],
+            ['ordem' => 1, 'nome' => 'Essencial', 'descricao' => '1 página, responsivo, WhatsApp, formulário', 'preco' => 840, 'destaque' => false],
+            ['ordem' => 2, 'nome' => 'Profissional ⭐', 'descricao' => 'Até 5 páginas, SEO básico, Google Maps, galeria', 'preco' => 1560, 'destaque' => true],
+            ['ordem' => 3, 'nome' => 'Premium', 'descricao' => '+ blog, redes sociais integradas, animações', 'preco' => 2520, 'destaque' => false],
         ])->each(fn (array $item) => $site->planos()->create($item));
 
         $loja = GrupoPreco::create(['ordem' => 2, 'nome' => 'Loja virtual / E-commerce']);
         collect([
-            ['ordem' => 1, 'nome' => 'Start', 'descricao' => 'Até 30 produtos, PIX/cartão, frete, painel admin', 'preco' => 2500, 'destaque' => false],
-            ['ordem' => 2, 'nome' => 'Pro ⭐', 'descricao' => 'Produtos ilimitados, cupons, relatórios, treinamento', 'preco' => 4000, 'destaque' => true],
-            ['ordem' => 3, 'nome' => 'Plus', 'descricao' => '+ multi-vendedor, domínio + hospedagem 1 ano', 'preco' => 6000, 'destaque' => false],
+            ['ordem' => 1, 'nome' => 'Start', 'descricao' => 'Até 30 produtos, PIX/cartão, frete, painel admin', 'preco' => 2520, 'destaque' => false],
+            ['ordem' => 2, 'nome' => 'Pro ⭐', 'descricao' => 'Produtos ilimitados, cupons, relatórios, treinamento', 'preco' => 4080, 'destaque' => true],
+            ['ordem' => 3, 'nome' => 'Plus', 'descricao' => '+ multi-vendedor, integrações sob medida', 'preco' => 6000, 'destaque' => false],
         ])->each(fn (array $item) => $loja->planos()->create($item));
 
         SecaoPrecos::updateOrCreate(['id' => 1], [
             'eyebrow' => 'Investimento',
-            'titulo' => 'Sites para todo tipo de negócio, em até 12x.',
-            'subtexto' => 'Pague no cartão em até 12x sem complicação. Votação, doações e demais sistemas sob medida são orçados sob consulta, conforme escopo.',
+            'titulo' => 'Um valor mensal que cabe no bolso.',
+            'subtexto' => 'Você paga uma mensalidade em 12x no cartão enquanto construímos — com hospedagem e domínio grátis em todos os planos. Depois da entrega, manutenção opcional a partir de R$ 100/mês (garantia de funcionamento, sem alterações). Sistemas sob medida são orçados sob consulta.',
             'nota_fundador_texto' => 'Somos uma empresa nova — e assumimos isso. Os 3 primeiros clientes ganham 20% de desconto em troca de depoimento e autorização de portfólio.',
             'nota_fundador_cta_label' => 'Quero ser cliente fundador',
             'nota_fundador_cta_url' => '#contato',
