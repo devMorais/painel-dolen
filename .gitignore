@@ -1,6 +1,10 @@
 # Config local do Claude Code (não é código do projeto)
 /.claude/
 
+# Deploy (contêm dados sensíveis de infraestrutura, nunca sobe pro GitHub)
+*.private.md
+deploy-*.bat
+
 # Sistema
 .DS_Store
 Thumbs.db

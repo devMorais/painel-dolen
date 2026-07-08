@@ -37,7 +37,9 @@
             "security": {
               "allowedHosts": [
                 "dolen-painel.test",
-                "localhost"
+                "localhost",
+                "dolen.com.br",
+                "www.dolen.com.br"
               ]
             },
             "ssr": {

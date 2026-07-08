@@ -217,7 +217,7 @@ class LandingPageSeeder extends Seeder
             'og_description' => 'Casa de tecnologia que constrói produtos próprios com IA e entrega sites, lojas e sistemas sob medida.',
             'og_type' => 'website',
             'twitter_card' => 'summary_large_image',
-            'canonical_url' => 'https://dolen.com.br',
+            'canonical_url' => 'https://www.dolen.com.br',
             // Desligado enquanto o site estiver hospedado em domínio provisório
             // (ex.: dolen.devmorais.com.br) — ligar quando o domínio dolen.com.br
             // estiver no ar de verdade, senão o Google indexa a URL errada.
