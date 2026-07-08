@@ -71,10 +71,6 @@ export class CtaFinal {
     return controle.invalid && controle.touched;
   }
 
-  protected mailto(destino: string, assunto: string | null): string {
-    return assunto ? `mailto:${destino}?subject=${encodeURIComponent(assunto)}` : `mailto:${destino}`;
-  }
-
   protected linkWhatsApp(numero: string): string {
     return linkWhatsApp(numero, 'Olá! Vim pelo site da Dolen e quero pedir um orçamento.');
   }
