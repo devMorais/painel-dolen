@@ -7,6 +7,7 @@ export interface Produto {
   nome: string;
   rotulo_ordem: string | null;
   badge: string | null;
+  imagem_url: string | null;
   descricao: string;
   publico_alvo: string;
   preco_label: string;

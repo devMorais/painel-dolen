@@ -3,4 +3,5 @@ export interface Diferencial {
   ordem: number;
   titulo: string;
   descricao: string;
+  imagem_url: string | null;
 }

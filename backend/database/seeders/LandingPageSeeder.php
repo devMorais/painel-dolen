@@ -68,10 +68,10 @@ class LandingPageSeeder extends Seeder
 
         Diferencial::query()->delete();
         collect([
-            ['ordem' => 1, 'titulo' => 'Prova técnica real', 'descricao' => 'O EduCore é IA generativa em produção — sustenta o discurso de "casa de tecnologia" mesmo quando o produto vendido é um site simples.'],
-            ['ordem' => 2, 'titulo' => 'Usamos o que vendemos', 'descricao' => 'O Avante gerencia o próprio plano de marketing e vendas da Dolen. Prova social gratuita em toda conversa.'],
-            ['ordem' => 3, 'titulo' => 'Velocidade e preço', 'descricao' => 'Bases já prontas (CRC, ShopX, Votar, AGF) permitem entregar mais rápido e mais barato que uma agência que parte do zero.'],
-            ['ordem' => 4, 'titulo' => 'Pagamento nacional', 'descricao' => 'Preço em reais, PIX, sem travar em cartão internacional.'],
+            ['ordem' => 1, 'imagem_url' => '/assets/diferenciais/prova-tecnica.svg', 'titulo' => 'Prova técnica real', 'descricao' => 'O EduCore é IA generativa em produção — sustenta o discurso de "casa de tecnologia" mesmo quando o produto vendido é um site simples.'],
+            ['ordem' => 2, 'imagem_url' => '/assets/diferenciais/usamos-o-que-vendemos.svg', 'titulo' => 'Usamos o que vendemos', 'descricao' => 'O Avante gerencia o próprio plano de marketing e vendas da Dolen. Prova social gratuita em toda conversa.'],
+            ['ordem' => 3, 'imagem_url' => '/assets/diferenciais/velocidade-preco.svg', 'titulo' => 'Velocidade e preço', 'descricao' => 'Bases já prontas (CRC, ShopX, Votar, AGF) permitem entregar mais rápido e mais barato que uma agência que parte do zero.'],
+            ['ordem' => 4, 'imagem_url' => '/assets/diferenciais/pagamento-nacional.svg', 'titulo' => 'Pagamento nacional', 'descricao' => 'Preço em reais, PIX, sem travar em cartão internacional.'],
         ])->each(fn (array $item) => Diferencial::create($item));
 
         SecaoProdutos::updateOrCreate(['id' => 1], [
