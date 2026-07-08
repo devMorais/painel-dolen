@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://backend.test/api',
+  apiUrl: 'https://api.dolen.com.br/api',
 };
