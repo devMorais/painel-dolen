@@ -157,7 +157,7 @@ class LandingPageSeeder extends Seeder
             ['ordem' => 1, 'titulo' => 'Você conta o que precisa', 'descricao' => 'Chama no WhatsApp ou pelo formulário. Entendemos seu negócio e indicamos a melhor solução.'],
             ['ordem' => 2, 'titulo' => 'Orçamento e contrato', 'descricao' => 'Proposta clara, contrato de 1 página, primeira mensalidade no cartão e começamos.'],
             ['ordem' => 3, 'titulo' => 'Construção sobre base pronta', 'descricao' => 'Partimos de sistemas já em produção — por isso o prazo é dias, não meses.'],
-            ['ordem' => 4, 'titulo' => 'Entrega e manutenção', 'descricao' => 'Você recebe pronto, com opção de plano de manutenção mensal a partir de R$ 100.'],
+            ['ordem' => 4, 'titulo' => 'Entrega e manutenção', 'descricao' => 'Você recebe pronto. A manutenção mensal (a partir de R$ 100) mantém hospedagem, domínio e funcionamento sempre em dia.'],
         ])->each(fn (array $item) => Passo::create($item));
 
         PlanoPreco::query()->delete();
@@ -180,7 +180,7 @@ class LandingPageSeeder extends Seeder
         SecaoPrecos::updateOrCreate(['id' => 1], [
             'eyebrow' => 'Investimento',
             'titulo' => 'Um valor mensal que cabe no bolso.',
-            'subtexto' => 'Você paga uma mensalidade em 12x no cartão enquanto construímos — com hospedagem e domínio grátis em todos os planos. Depois da entrega, manutenção opcional a partir de R$ 100/mês (garantia de funcionamento, sem alterações). Sistemas sob medida são orçados sob consulta.',
+            'subtexto' => 'Você paga uma mensalidade em 12x no cartão enquanto construímos — com hospedagem e domínio grátis em todos os planos. Depois da entrega, manutenção a partir de R$ 100/mês, que mantém seu site sempre no ar: hospedagem, renovação do domínio e garantia de funcionamento (alterações de conteúdo não inclusas). Sistemas sob medida são orçados sob consulta.',
             'nota_fundador_texto' => 'Somos uma empresa nova — e assumimos isso. Os 3 primeiros clientes ganham 20% de desconto em troca de depoimento e autorização de portfólio.',
             'nota_fundador_cta_label' => 'Quero ser cliente fundador',
             'nota_fundador_cta_url' => '#contato',
