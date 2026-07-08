@@ -12,6 +12,20 @@
       <div class="cat-grid">
         @for (produto of secao.itens; track produto.id) {
           <div class="cat-card" [class.featured]="produto.destaque">
+            <div class="cat-media">
+              @if (produto.imagem_url) {
+                <img
+                  [src]="produto.imagem_url"
+                  [alt]="produto.nome"
+                  loading="lazy"
+                  class="cat-img"
+                />
+              } @else {
+                <div class="cat-img-fallback" aria-hidden="true">
+                  <span>{{ produto.nome.charAt(0) }}</span>
+                </div>
+              }
+            </div>
             <div class="cat-top">
               @if (produto.rotulo_ordem) {
                 <span class="cat-rank">{{ produto.rotulo_ordem }}</span>

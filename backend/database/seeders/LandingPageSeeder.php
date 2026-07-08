@@ -64,10 +64,10 @@ class LandingPageSeeder extends Seeder
 
         Diferencial::query()->delete();
         collect([
-            ['ordem' => 1, 'titulo' => 'Experiência real', 'descricao' => 'Software próprio rodando em produção. Você contrata quem já constrói e mantém sistemas de verdade.'],
-            ['ordem' => 2, 'titulo' => 'Usamos o que vendemos', 'descricao' => 'Nossos próprios sistemas gerenciam a Dolen no dia a dia. Se não funcionasse, não venderíamos.'],
-            ['ordem' => 3, 'titulo' => 'Entrega em dias', 'descricao' => 'Partimos de bases prontas e testadas — mais rápido e mais barato que agência que começa do zero.'],
-            ['ordem' => 4, 'titulo' => 'Pagamento facilitado', 'descricao' => 'Preço em reais, em até 12x no cartão ou PIX. Sem surpresa, sem letra miúda.'],
+            ['ordem' => 1, 'imagem_url' => '/assets/diferenciais/prova-tecnica.svg', 'titulo' => 'Experiência real', 'descricao' => 'Software próprio rodando em produção. Você contrata quem já constrói e mantém sistemas de verdade.'],
+            ['ordem' => 2, 'imagem_url' => '/assets/diferenciais/usamos-o-que-vendemos.svg', 'titulo' => 'Usamos o que vendemos', 'descricao' => 'Nossos próprios sistemas gerenciam a Dolen no dia a dia. Se não funcionasse, não venderíamos.'],
+            ['ordem' => 3, 'imagem_url' => '/assets/diferenciais/velocidade-preco.svg', 'titulo' => 'Entrega em dias', 'descricao' => 'Partimos de bases prontas e testadas — mais rápido e mais barato que agência que começa do zero.'],
+            ['ordem' => 4, 'imagem_url' => '/assets/diferenciais/pagamento-nacional.svg', 'titulo' => 'Pagamento facilitado', 'descricao' => 'Preço em reais, em até 12x no cartão ou PIX. Sem surpresa, sem letra miúda.'],
         ])->each(fn (array $item) => Diferencial::create($item));
 
         SecaoProdutos::updateOrCreate(['id' => 1], [
