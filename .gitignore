@@ -5,6 +5,9 @@
 *.private.md
 deploy-*.bat
 
+# Scripts SQL de gestão do board (contêm modelo comercial — só local)
+/_BD/
+
 # Sistema
 .DS_Store
 Thumbs.db
