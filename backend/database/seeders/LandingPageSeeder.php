@@ -215,6 +215,7 @@ class LandingPageSeeder extends Seeder
             'meta_keywords' => 'tecnologia, inteligência artificial, IA, desenvolvimento de sistemas, site institucional, loja virtual, software house',
             'og_title' => 'Dolen — Tecnologia e sistemas com IA de verdade',
             'og_description' => 'Casa de tecnologia que constrói produtos próprios com IA e entrega sites, lojas e sistemas sob medida.',
+            'og_image_url' => 'https://www.dolen.com.br/assets/images/dolen-capa-facebook.png',
             'og_type' => 'website',
             'twitter_card' => 'summary_large_image',
             'canonical_url' => 'https://www.dolen.com.br',
