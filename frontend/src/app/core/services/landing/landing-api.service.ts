@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 
 import { environment } from '@env/environment';
-import { LandingContent } from '@core/models/landing';
+import { LandingContent, LeadResposta, NovoLead } from '@core/models/landing';
 
 /**
  * Busca o conteúdo inteiro da landing (uma página, um payload) e compartilha
@@ -21,5 +21,9 @@ export class LandingApiService {
 
   obterConteudo(): Observable<LandingContent> {
     return this.conteudo$;
+  }
+
+  enviarLead(lead: NovoLead): Observable<LeadResposta> {
+    return this.http.post<LeadResposta>(`${environment.apiUrl}/leads`, lead);
   }
 }

@@ -15,4 +15,5 @@ export * from './instagram-post.model';
 export * from './instagram-section.model';
 export * from './secoes-visiveis.model';
 export * from './seo-settings.model';
+export * from './lead.model';
 export * from './landing-content.model';
