@@ -207,7 +207,7 @@ class LandingPageSeeder extends Seeder
             'nome_site' => 'Dolen',
             'tagline' => 'Tecnologia e sistemas com IA de verdade.',
             'instagram_url' => 'https://instagram.com/dolen.ia',
-            'whatsapp_numero' => null, // TODO: preencher com o número real do WhatsApp Business
+            'whatsapp_numero' => '5561996140988',
             'email_contato' => 'contato@dolen.com.br',
             'copyright_texto' => '© 2026 Dolen — tecnologia e sistemas com IA de verdade.',
             'meta_title' => 'Dolen — Tecnologia e sistemas com IA de verdade',
@@ -218,14 +218,12 @@ class LandingPageSeeder extends Seeder
             'og_type' => 'website',
             'twitter_card' => 'summary_large_image',
             'canonical_url' => 'https://www.dolen.com.br',
-            // Desligado enquanto o site estiver hospedado em domínio provisório
-            // (ex.: dolen.devmorais.com.br) — ligar quando o domínio dolen.com.br
-            // estiver no ar de verdade, senão o Google indexa a URL errada.
-            'robots_index' => false,
-            'robots_follow' => false,
+            // Dominio dolen.com.br (www) confirmado e publicado - D-00 e D-04 concluidas.
+            'robots_index' => true,
+            'robots_follow' => true,
             'structured_data_tipo_negocio' => 'ProfessionalService',
             'structured_data_nome_negocio' => 'Dolen',
-            'structured_data_telefone' => null,
+            'structured_data_telefone' => '+5561996140988',
             'sitemap_prioridade' => 0.8,
         ]);
     }

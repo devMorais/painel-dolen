@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin
 
-Sitemap: https://dolen.com.br/sitemap.xml
+Sitemap: https://www.dolen.com.br/sitemap.xml
