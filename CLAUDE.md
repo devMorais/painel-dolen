@@ -41,11 +41,22 @@ Monorepo com 2 projetos: `frontend/` (Angular 20.3) e `backend/` (Laravel 13, PH
 - users (auth do admin)
 - Plano ainda adiciona: cases, landing_secundarias, eventos_conversao, posts_marketing, templates_post, pacotes_precos
 
-## Modelo comercial no site (definido 2026-07-08)
-- Preço exibido como MENSALIDADE: "R$ X/mês durante 12 meses" (12x no cartão via InfinitePay — nome do gateway NÃO aparece no site). Totais são múltiplos de 12, arredondados pra cima: Sites 840/1560/2520; Lojas 2520/4080/6000.
-- Hospedagem e domínio grátis em todos os planos; após a entrega, manutenção OBRIGATÓRIA a partir de R$ 100/mês (cobre hospedagem/domínio/funcionamento, sem alterações de conteúdo).
+## Modelo comercial (definido 2026-07-08 — substitui a versão da auditoria de 05/07)
+- Preço exibido no site como MENSALIDADE em 12x no cartão (gateway: InfinitePay — a Dolen usa pra cobrar os clientes; o nome do gateway NÃO aparece no site). Totais múltiplos de 12, arredondados pra cima:
+  - Site institucional: Essencial **R$ 70/mês**, Profissional **R$ 130/mês**, Premium **R$ 210/mês** (totais 840/1560/2520)
+  - Loja virtual/E-commerce: Start **R$ 210/mês**, Pro **R$ 340/mês**, Plus **R$ 500/mês** (totais 2520/4080/6000)
+- Hospedagem e domínio grátis em todos os planos durante a construção.
+- Após a entrega: manutenção **OBRIGATÓRIA** a partir de R$ 100/mês (hospedagem + renovação de domínio + garantia de funcionamento; alterações de conteúdo não inclusas).
+- Sistemas sob medida (votação, doações etc.): orçamento sob consulta.
+- Fluxo de fechamento: proposta clara, contrato de 1 página, primeira mensalidade no cartão e começa (não existe mais "50% de entrada via PIX").
 - CRC e ShopX são EXEMPLOS/portfólio, não pacotes — vendemos o tipo de site ("Site institucional", "Loja virtual / E-commerce").
 - **EduCore NÃO tem mais vínculo com Senac/Innovaday — nunca mencionar Senac na copy.** EduCore fica como produto próprio, sem destaque.
+
+## Domínio e subdomínios
+- Domínio oficial: **dolen.com.br**, com **www.dolen.com.br** como endereço canônico do site (raiz redireciona 301 pra www).
+- Backend/API em **api.dolen.com.br**.
+- Os produtos da casa (Avante, EduCore, Numen, ShopX, Votar, AGF, CRC) serão apresentados como subdomínios de demonstração da Dolen (ex.: avante.dolen.com.br) — diferente da hospedagem de produção de cada produto (Avante segue em avante.devmorais.com.br). Os subdomínios-vitrine são criados conforme cada produto for linkado na seção de Portfólio ([D-11]).
+- E-mail oficial: contato@dolen.com.br (MX/SPF/DKIM/DMARC configurados na Hostinger, testado nos dois sentidos).
 
 ## Identidade visual
 Tokens centralizados em frontend/src/styles.scss (preto/branco/cinza + `--erro`, fontes Space Grotesk + Inter) — sempre reusar var(), nunca cor solta. Logo oficial integrado (D-02): `assets/images/dolen-icone-preto.png` no header/footer (footer usa filter invert), favicon oficial, og_image = dolen-capa-facebook.png.
