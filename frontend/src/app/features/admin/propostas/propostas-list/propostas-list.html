@@ -1,0 +1,70 @@
+<div class="propostas-page">
+  <header class="topo">
+    <div>
+      <h1>Propostas comerciais</h1>
+      <p class="subtitulo">Crie, edite e publique propostas com o template oficial da Dolen.</p>
+    </div>
+    <a class="btn btn-solido" routerLink="/admin/propostas/nova">+ Nova proposta</a>
+  </header>
+
+  @if (carregando()) {
+    <p>Carregando...</p>
+  } @else if (propostas().length === 0) {
+    <div class="vazio">
+      <p>Nenhuma proposta ainda.</p>
+      <a routerLink="/admin/propostas/nova">Criar a primeira</a>
+    </div>
+  } @else {
+    <div class="tabela-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nº</th>
+            <th>Cliente</th>
+            <th>Status</th>
+            <th>Validade</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (proposta of propostas(); track proposta.id) {
+            <tr>
+              <td class="num">{{ proposta.numero }}</td>
+              <td>
+                <a class="cliente" [routerLink]="['/admin/propostas', proposta.id]">{{ proposta.cliente_nome }}</a>
+                @if (proposta.url) {
+                  <a class="url" [href]="proposta.url" target="_blank" rel="noopener">{{ proposta.url }}</a>
+                }
+              </td>
+              <td>
+                <span class="chip" [class.publicada]="proposta.status === 'publicada'">
+                  {{ proposta.status === 'publicada' ? 'Publicada' : 'Rascunho' }}
+                </span>
+              </td>
+              <td>{{ proposta.validade | date: 'dd/MM/yyyy' }}</td>
+              <td class="acoes">
+                <a class="btn" [routerLink]="['/admin/propostas', proposta.id]">Editar</a>
+                <button type="button" class="btn" [disabled]="ocupadaId() === proposta.id" (click)="duplicar(proposta)">
+                  Duplicar
+                </button>
+                @if (proposta.url) {
+                  <button type="button" class="btn" (click)="copiarLink(proposta)">
+                    {{ linkCopiadoId() === proposta.id ? 'Copiado!' : 'Copiar link' }}
+                  </button>
+                }
+                <button
+                  type="button"
+                  class="btn perigo"
+                  [disabled]="ocupadaId() === proposta.id"
+                  (click)="excluir(proposta)"
+                >
+                  Excluir
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

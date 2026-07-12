@@ -11,6 +11,9 @@ class Lead extends Model
         'email',
         'telefone',
         'mensagem',
+        'produto_interesse',
+        'instagram',
+        'notas',
         'origem',
         'status',
     ];

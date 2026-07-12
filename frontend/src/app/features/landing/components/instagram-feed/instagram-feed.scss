@@ -1,6 +1,6 @@
 .ig-feed {
-  padding: 88px 0;
-  background: var(--white);
+  padding: 80px 0;
+  background: var(--band, var(--white));
 }
 
 .wrap {
@@ -9,8 +9,13 @@
   padding: 0 28px;
 }
 
-.section-head {
-  margin-bottom: 40px;
+/* Cabeçalho: título à esquerda, @perfil à direita (padrão editorial). */
+.ig-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
 }
 
 .section-eyebrow {
@@ -30,30 +35,79 @@ h2 {
   color: var(--black);
 }
 
-.ig-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 4px;
+.ig-handle {
+  flex: none;
+  font-family: var(--body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--black);
+  padding-bottom: 3px;
+  border-bottom: 1.5px solid var(--black);
+  transition: color 0.15s ease, border-color 0.15s ease;
 }
 
-.ig-item {
-  display: block;
+.ig-handle:hover {
+  color: var(--gray-dark);
+  border-bottom-color: var(--gray-dark);
+}
+
+/* Grade limpa de tiles quadrados. */
+.ig-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+
+.ig-tile {
+  position: relative;
   aspect-ratio: 1 / 1;
+  border-radius: 12px;
   background-size: cover;
   background-position: center;
   background-color: var(--gray-light);
-  filter: grayscale(100%);
-  transition: filter 0.2s ease, transform 0.2s ease;
+  overflow: hidden;
 }
 
-.ig-item:hover {
-  filter: grayscale(0%);
-  transform: scale(1.02);
+.ig-tile-ov {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  background: rgba(10, 10, 10, 0);
+  opacity: 0;
+  transition: opacity 0.2s ease, background 0.2s ease;
 }
 
-.ig-estado {
-  padding: 40px 0;
-  text-align: center;
-  color: var(--gray-mid);
-  font-family: var(--body);
+.ig-tile-ov svg {
+  width: 26px;
+  height: 26px;
+  transform: scale(0.85);
+  transition: transform 0.2s ease;
+}
+
+.ig-tile:hover .ig-tile-ov {
+  opacity: 1;
+  background: rgba(10, 10, 10, 0.38);
+}
+
+.ig-tile:hover .ig-tile-ov svg {
+  transform: scale(1);
+}
+
+@media (max-width: 900px) {
+  .ig-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .ig-head {
+    align-items: center;
+  }
+
+  .ig-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

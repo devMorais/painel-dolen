@@ -3,6 +3,10 @@ import { Routes } from '@angular/router';
 import { authGuard } from '@core/guards/auth.guard';
 import { AdminLayout } from '@layout/admin-layout/admin-layout';
 import { Login } from '@features/admin/auth/login/login';
+import { Dashboard } from '@features/admin/dashboard/dashboard';
+import { Leads } from '@features/admin/leads/leads';
+import { PropostaEditor } from '@features/admin/propostas/proposta-editor/proposta-editor';
+import { PropostasList } from '@features/admin/propostas/propostas-list/propostas-list';
 import { SecoesList } from '@features/admin/secoes/secoes-list/secoes-list';
 
 export const adminRoutes: Routes = [
@@ -12,8 +16,13 @@ export const adminRoutes: Routes = [
     component: AdminLayout,
     canActivate: [authGuard],
     children: [
-      { path: '', redirectTo: 'secoes', pathMatch: 'full' },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: Dashboard },
+      { path: 'leads', component: Leads },
       { path: 'secoes', component: SecoesList },
+      { path: 'propostas', component: PropostasList },
+      { path: 'propostas/nova', component: PropostaEditor },
+      { path: 'propostas/:id', component: PropostaEditor },
     ],
   },
 ];

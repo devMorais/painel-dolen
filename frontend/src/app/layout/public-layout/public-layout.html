@@ -23,7 +23,7 @@
         }
       </div>
       @if (visibilidade()?.cta ?? true) {
-        <a href="#contato" class="btn btn-solid nav-cta">Pedir orçamento</a>
+        <a routerLink="/orcamento" class="btn btn-solid nav-cta">Pedir orçamento</a>
       }
       <button
         type="button"
@@ -63,7 +63,7 @@
           <a href="#precos" (click)="fecharMenu()">Preços</a>
         }
         @if (visibilidade()?.cta ?? true) {
-          <a href="#contato" class="btn btn-solid" (click)="fecharMenu()">Pedir orçamento</a>
+          <a routerLink="/orcamento" class="btn btn-solid" (click)="fecharMenu()">Pedir orçamento</a>
         }
       </div>
     </div>
@@ -72,25 +72,37 @@
 
 <main>
   @if (visibilidade()?.hero ?? true) {
-    <app-hero />
+    <app-hero ngSkipHydration />
   }
   @if (visibilidade()?.sobre ?? true) {
-    <app-sobre />
+    <div class="band" [class.band-soft]="bandaSuave('sobre')">
+      <app-sobre />
+    </div>
   }
   @if (visibilidade()?.diferenciais ?? true) {
-    <app-diferenciais />
+    <div class="band" [class.band-soft]="bandaSuave('diferenciais')">
+      <app-diferenciais />
+    </div>
   }
   @if (visibilidade()?.produtos ?? true) {
-    <app-produtos />
-  }
-  @if (visibilidade()?.instagram ?? true) {
-    <app-instagram-feed />
+    <div class="band" [class.band-soft]="bandaSuave('produtos')">
+      <app-produtos />
+    </div>
   }
   @if (visibilidade()?.comoFunciona ?? true) {
-    <app-como-funciona />
+    <div class="band" [class.band-soft]="bandaSuave('comoFunciona')">
+      <app-como-funciona />
+    </div>
   }
   @if (visibilidade()?.precos ?? true) {
-    <app-investimento />
+    <div class="band" [class.band-soft]="bandaSuave('precos')">
+      <app-investimento />
+    </div>
+  }
+  @if (visibilidade()?.instagram ?? true) {
+    <div class="band" [class.band-soft]="bandaSuave('instagram')">
+      <app-instagram-feed />
+    </div>
   }
   @if (visibilidade()?.cta ?? true) {
     <app-cta-final ngSkipHydration />

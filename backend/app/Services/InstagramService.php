@@ -21,7 +21,7 @@ class InstagramService
             $config = $this->configuracaoObrigatoria();
 
             $resposta = Http::get(self::API_BASE.'/me/media', [
-                'fields' => 'id,caption,media_type,media_url,permalink,thumbnail_url,timestamp',
+                'fields' => 'id,caption,media_type,media_url,permalink,thumbnail_url,timestamp,children{media_url,media_type,thumbnail_url}',
                 'limit' => $limite,
                 'access_token' => $config->instagram_access_token,
             ])->throw();

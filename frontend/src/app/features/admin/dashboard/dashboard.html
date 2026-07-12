@@ -1,0 +1,83 @@
+<header class="pg-head">
+  <div>
+    <h1>Dashboard</h1>
+    <p>Visão geral do que importa: leads, funil e propostas.</p>
+  </div>
+</header>
+
+@if (carregando()) {
+  <div class="pg-loading">Carregando…</div>
+} @else if (stats(); as s) {
+  <!-- Cartões de números -->
+  <div class="cards">
+    <a routerLink="/admin/leads" class="card card-destaque">
+      <span class="card-label">Leads novos</span>
+      <span class="card-num">{{ s.leads.novos }}</span>
+      <span class="card-hint">aguardando contato</span>
+    </a>
+    <div class="card">
+      <span class="card-label">Em contato</span>
+      <span class="card-num">{{ s.leads.em_contato }}</span>
+      <span class="card-hint">em negociação</span>
+    </div>
+    <div class="card">
+      <span class="card-label">Fechados</span>
+      <span class="card-num">{{ s.leads.fechados }}</span>
+      <span class="card-hint">clientes ganhos</span>
+    </div>
+    <div class="card">
+      <span class="card-label">Total de leads</span>
+      <span class="card-num">{{ s.leads.total }}</span>
+      <span class="card-hint">desde o início</span>
+    </div>
+  </div>
+
+  <div class="linha">
+    <!-- Leads recentes -->
+    <section class="bloco">
+      <div class="bloco-head">
+        <h2>Leads recentes</h2>
+        <a routerLink="/admin/leads" class="ver-todos">Ver todos →</a>
+      </div>
+
+      @if (s.leads_recentes.length === 0) {
+        <div class="vazio">Nenhum lead ainda. Quando alguém pedir orçamento pelo site, aparece aqui.</div>
+      } @else {
+        <ul class="leads-mini">
+          @for (lead of s.leads_recentes; track lead.id) {
+            <li>
+              <div class="lm-info">
+                <strong>{{ lead.nome }}</strong>
+                <span>{{ lead.produto_interesse || 'Sem produto definido' }}</span>
+              </div>
+              <div class="lm-meta">
+                <span class="pill pill-{{ lead.status }}">{{ rotulo(lead.status) }}</span>
+                <span class="lm-data">{{ quando(lead.created_at) }}</span>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
+    <!-- Propostas -->
+    <section class="bloco bloco-mini">
+      <div class="bloco-head">
+        <h2>Propostas</h2>
+        <a routerLink="/admin/propostas" class="ver-todos">Abrir →</a>
+      </div>
+      <div class="mini-stats">
+        <div>
+          <span class="ms-num">{{ s.propostas.total }}</span>
+          <span class="ms-label">criadas</span>
+        </div>
+        <div>
+          <span class="ms-num">{{ s.propostas.publicadas }}</span>
+          <span class="ms-label">publicadas</span>
+        </div>
+      </div>
+    </section>
+  </div>
+} @else {
+  <div class="pg-loading">Não foi possível carregar o dashboard.</div>
+}

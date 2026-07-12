@@ -1,5 +1,6 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 
 import { SiteConfigService } from '@core/services/landing/site-config.service';
 import { SecoesVisibilidadeService } from '@core/services/landing/secoes-visibilidade.service';
@@ -17,7 +18,7 @@ import { MobileCtaBar } from '@shared/components/mobile-cta-bar/mobile-cta-bar';
 
 @Component({
   selector: 'app-public-layout',
-  imports: [Hero, Sobre, Diferenciais, Produtos, InstagramFeed, ComoFunciona, Investimento, CtaFinal, MobileCtaBar],
+  imports: [Hero, Sobre, Diferenciais, Produtos, InstagramFeed, ComoFunciona, Investimento, CtaFinal, MobileCtaBar, RouterLink],
   templateUrl: './public-layout.html',
   styleUrl: './public-layout.scss',
 })
@@ -32,6 +33,41 @@ export class PublicLayout {
   protected readonly seo = toSignal(this.seoSettingsService.obterConfiguracoesSeo());
 
   protected readonly menuAberto = signal(false);
+
+  /**
+   * Seções "do meio" (entre o hero preto e o CTA preto) que participam da
+   * alternância de cor de fundo, na ordem em que aparecem na página.
+   */
+  private readonly ordemBandas = ['sobre', 'diferenciais', 'produtos', 'comoFunciona', 'precos', 'instagram'] as const;
+
+  /**
+   * Conjunto das seções que devem receber o tom "suave" (cinza claro).
+   * Alterna branco/suave conforme a ordem das seções REALMENTE visíveis,
+   * então nunca sobram duas iguais coladas, independente do que for ligado/desligado.
+   */
+  protected readonly bandasSuaves = computed<Set<string>>(() => {
+    const visibilidade = this.visibilidade() as Record<string, boolean> | undefined;
+    const suaves = new Set<string>();
+    let posicaoVisivel = 0;
+
+    for (const chave of this.ordemBandas) {
+      const visivel = visibilidade?.[chave] ?? true;
+      if (!visivel) {
+        continue;
+      }
+      // posições ímpares (a 2ª, 4ª... seção visível) recebem o tom suave
+      if (posicaoVisivel % 2 === 1) {
+        suaves.add(chave);
+      }
+      posicaoVisivel++;
+    }
+
+    return suaves;
+  });
+
+  protected bandaSuave(chave: string): boolean {
+    return this.bandasSuaves().has(chave);
+  }
 
   protected alternarMenu(): void {
     this.menuAberto.update((aberto) => !aberto);

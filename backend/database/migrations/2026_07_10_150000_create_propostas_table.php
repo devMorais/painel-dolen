@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('propostas', function (Blueprint $table) {
+            $table->id();
+            $table->string('numero', 30);
+            $table->string('slug')->unique();
+            $table->string('cliente_nome');
+            $table->string('status')->default('rascunho');
+            $table->date('data_proposta');
+            $table->date('validade');
+            $table->json('conteudo');
+            $table->string('published_slug')->nullable();
+            $table->timestamp('published_at')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('propostas');
+    }
+};

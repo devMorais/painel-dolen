@@ -1,24 +1,38 @@
 @if (carregando()) {
-  <div class="ig-estado">Carregando posts...</div>
-} @else if (comErro() || posts().length === 0) {
+  <!-- Carregando em silêncio: a seção aparece pronta, sem flash de layout. -->
+} @else if (comErro() || tiles().length === 0) {
   <!-- Feed indisponível (token não configurado ou API fora do ar): a seção some sem quebrar o layout. -->
 } @else {
   <section class="ig-feed">
     <div class="wrap">
-      <div class="section-head">
-        <div class="section-eyebrow">{{ secao()?.eyebrow }}</div>
-        <h2>{{ secao()?.titulo }}</h2>
+      <div class="ig-head">
+        <div class="ig-head-txt">
+          <div class="section-eyebrow">{{ secao()?.eyebrow }}</div>
+          <h2>{{ secao()?.titulo }}</h2>
+        </div>
+        @if (configuracoes()?.instagram_url; as url) {
+          <a class="ig-handle" [href]="url" target="_blank" rel="noopener">@dolen.ia</a>
+        }
       </div>
+
       <div class="ig-grid">
-        @for (post of posts(); track post.id) {
+        @for (tile of tiles(); track tile.url) {
           <a
-            class="ig-item"
-            [href]="post.permalink"
+            class="ig-tile"
+            [href]="tile.permalink"
             target="_blank"
             rel="noopener"
-            [style.background-image]="'url(' + capaDoPost(post) + ')'"
-            [attr.aria-label]="post.caption ?? 'Post do Instagram da Dolen'"
-          ></a>
+            [style.background-image]="'url(' + tile.url + ')'"
+            aria-label="Ver publicação no Instagram da Dolen"
+          >
+            <span class="ig-tile-ov">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" />
+                <circle cx="12" cy="12" r="4.2" />
+                <circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none" />
+              </svg>
+            </span>
+          </a>
         }
       </div>
     </div>

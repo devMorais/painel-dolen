@@ -1,6 +1,7 @@
 import { NgStyle } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 
 import { HeroService } from '@core/services/landing/hero.service';
 
@@ -16,7 +17,7 @@ interface Orbita {
 
 @Component({
   selector: 'app-hero',
-  imports: [NgStyle],
+  imports: [NgStyle, RouterLink],
   templateUrl: './hero.html',
   styleUrl: './hero.scss',
 })

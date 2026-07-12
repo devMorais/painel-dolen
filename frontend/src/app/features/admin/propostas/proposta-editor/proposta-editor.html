@@ -1,0 +1,308 @@
+<div class="editor-page">
+  <header class="editor-topo">
+    <div class="titulo-bloco">
+      <a routerLink="/admin/propostas" class="voltar">← Propostas</a>
+      <h1>
+        {{ id ? 'Proposta ' + (proposta()?.numero ?? '') : 'Nova proposta' }}
+        @if (proposta(); as p) {
+          <span class="chip" [class.publicada]="p.status === 'publicada'">
+            {{ p.status === 'publicada' ? 'Publicada' : 'Rascunho' }}
+          </span>
+        }
+      </h1>
+      @if (proposta()?.url; as url) {
+        <div class="link-publicado">
+          <a [href]="url" target="_blank" rel="noopener">{{ url }}</a>
+          <button type="button" class="btn mini" (click)="copiarLink()">
+            {{ linkCopiado() ? 'Copiado!' : 'Copiar' }}
+          </button>
+        </div>
+      }
+    </div>
+    <div class="acoes-topo">
+      @if (proposta()?.status === 'publicada') {
+        <button type="button" class="btn" [disabled]="publicando()" (click)="despublicar()">Despublicar</button>
+      }
+      <button type="button" class="btn" [disabled]="salvando()" (click)="salvar()">
+        {{ salvando() ? 'Salvando...' : 'Salvar rascunho' }}
+      </button>
+      <button type="button" class="btn solido" [disabled]="salvando() || publicando()" (click)="publicar()">
+        {{ publicando() ? 'Publicando...' : proposta()?.status === 'publicada' ? 'Republicar' : 'Publicar' }}
+      </button>
+    </div>
+  </header>
+
+  @if (mensagem()) {
+    <p class="aviso ok">{{ mensagem() }}</p>
+  }
+  @if (erro()) {
+    <p class="aviso erro">{{ erro() }}</p>
+  }
+
+  @if (carregando()) {
+    <p>Carregando...</p>
+  } @else {
+    <div class="editor-cols">
+      <form [formGroup]="form" class="painel-form">
+        <p class="dica-geral">Dica: use <code>**texto**</code> pra deixar um trecho em <strong>negrito</strong> na página.</p>
+
+        <details class="secao" open>
+          <summary>Identificação</summary>
+          <div class="campos">
+            <label>Cliente <input formControlName="cliente_nome" placeholder="Móveis Soares"></label>
+            <label>Endereço da página (slug)
+              <input formControlName="slug" placeholder="moveis-soares">
+              <span class="hint">www.dolen.com.br/propostas/<strong>{{ form.controls.slug.value || 'slug' }}</strong>/</span>
+            </label>
+            <div class="linha-dupla">
+              <label>Nº da proposta <input formControlName="numero" placeholder="automático se vazio"></label>
+              <label>Data <input type="date" formControlName="data_proposta"></label>
+              <label>Validade <input type="date" formControlName="validade"></label>
+            </div>
+            <div formGroupName="meta" class="repetidor">
+              <label>Preparada para <input formControlName="preparada_para" placeholder="Móveis Soares — Quadra 9, CL 12, Sobradinho-DF"></label>
+              <label>Elaborada por <input formControlName="elaborada_por"></label>
+            </div>
+          </div>
+        </details>
+
+        <details class="secao" open formGroupName="capa">
+          <summary>Capa</summary>
+          <div class="campos">
+            <label>Eyebrow (linha pequena acima do título) <input formControlName="eyebrow" placeholder="Dolen para Móveis Soares · Sobradinho, DF"></label>
+            <label>Título <input formControlName="titulo" placeholder="Uma vitrine que não fecha às 17h30."></label>
+            <label>Texto de abertura <textarea formControlName="lead" rows="4"></textarea></label>
+          </div>
+        </details>
+
+        <details class="secao" formGroupName="diagnostico">
+          <summary>Diagnóstico — "O que encontramos"</summary>
+          <div class="campos">
+            <label class="check"><input type="checkbox" formControlName="visivel"> Mostrar esta seção</label>
+            <label>Eyebrow <input formControlName="eyebrow"></label>
+            <label>Título <input formControlName="titulo"></label>
+            <div formArrayName="achados" class="repetidor">
+              @for (achado of achados.controls; track achado; let i = $index) {
+                <div class="item" [formGroupName]="i">
+                  <div class="item-campos">
+                    <input formControlName="titulo" placeholder="Título do achado">
+                    <textarea formControlName="texto" rows="3" placeholder="Texto do achado"></textarea>
+                  </div>
+                  <div class="item-acoes">
+                    <button type="button" class="btn mini" (click)="mover(achados, i, -1)" aria-label="Mover pra cima">↑</button>
+                    <button type="button" class="btn mini" (click)="mover(achados, i, 1)" aria-label="Mover pra baixo">↓</button>
+                    <button type="button" class="btn mini perigo" (click)="remover(achados, i)" aria-label="Remover">✕</button>
+                  </div>
+                </div>
+              }
+            </div>
+            <button type="button" class="btn adicionar" (click)="adicionarAchado()">+ Achado</button>
+          </div>
+        </details>
+
+        <details class="secao" open formGroupName="proposta">
+          <summary>Opções da proposta</summary>
+          <div class="campos">
+            <label>Eyebrow <input formControlName="eyebrow"></label>
+            <label>Título <input formControlName="titulo"></label>
+            <div formArrayName="opcoes" class="repetidor">
+              @for (opcao of opcoes.controls; track opcao; let i = $index) {
+                <div class="item cartao" [formGroupName]="i">
+                  <div class="item-campos">
+                    <div class="linha-dupla">
+                      <label>Selo (tag) <input formControlName="tag" placeholder="Recomendada"></label>
+                      <label class="check"><input type="checkbox" formControlName="destaque"> Card em destaque</label>
+                    </div>
+                    <label>Título do card <input formControlName="titulo" placeholder="Site institucional — plano Premium"></label>
+                    <div formArrayName="itens" class="sub-repetidor">
+                      <span class="sub-titulo">Itens do card</span>
+                      @for (item of itensDaOpcao(i).controls; track item; let j = $index) {
+                        <div class="sub-item">
+                          <input [formControlName]="j" placeholder="Ex.: Até 5 páginas: Início, Catálogo...">
+                          <button type="button" class="btn mini" (click)="mover(itensDaOpcao(i), j, -1)" aria-label="Mover pra cima">↑</button>
+                          <button type="button" class="btn mini" (click)="mover(itensDaOpcao(i), j, 1)" aria-label="Mover pra baixo">↓</button>
+                          <button type="button" class="btn mini perigo" (click)="remover(itensDaOpcao(i), j)" aria-label="Remover">✕</button>
+                        </div>
+                      }
+                      <button type="button" class="btn adicionar" (click)="adicionarItemOpcao(i)">+ Item</button>
+                    </div>
+                    <div class="linha-dupla">
+                      <label>Preço "de" (riscado) <input formControlName="preco_de" placeholder="R$ 210/mês"></label>
+                      <label>Preço <input formControlName="preco" placeholder="R$ 168"></label>
+                    </div>
+                    <div class="linha-dupla">
+                      <label>Sufixo do preço <input formControlName="preco_sufixo"></label>
+                      <label>Linha do total <input formControlName="total" placeholder="1º ano: R$ 2.016 · hospedagem e domínio inclusos"></label>
+                    </div>
+                  </div>
+                  <div class="item-acoes">
+                    <button type="button" class="btn mini" (click)="mover(opcoes, i, -1)" aria-label="Mover pra cima">↑</button>
+                    <button type="button" class="btn mini" (click)="mover(opcoes, i, 1)" aria-label="Mover pra baixo">↓</button>
+                    <button type="button" class="btn mini perigo" (click)="remover(opcoes, i)" aria-label="Remover">✕</button>
+                  </div>
+                </div>
+              }
+            </div>
+            <button type="button" class="btn adicionar" (click)="adicionarOpcao()">+ Opção</button>
+            <label>Nota entre as opções <textarea formControlName="nota" rows="3" placeholder="**Nada se perde no caminho.** Começando pelo site..."></textarea></label>
+          </div>
+        </details>
+
+        <details class="secao" formGroupName="inclusos">
+          <summary>Incluso em qualquer opção</summary>
+          <div class="campos">
+            <label class="check"><input type="checkbox" formControlName="visivel"> Mostrar esta seção</label>
+            <label>Eyebrow <input formControlName="eyebrow"></label>
+            <label>Título <input formControlName="titulo"></label>
+            <div formArrayName="itens" class="repetidor">
+              @for (item of inclusosItens.controls; track item; let i = $index) {
+                <div class="item" [formGroupName]="i">
+                  <div class="item-campos">
+                    <input formControlName="titulo" placeholder="Título">
+                    <textarea formControlName="texto" rows="3" placeholder="Texto"></textarea>
+                  </div>
+                  <div class="item-acoes">
+                    <button type="button" class="btn mini" (click)="mover(inclusosItens, i, -1)" aria-label="Mover pra cima">↑</button>
+                    <button type="button" class="btn mini" (click)="mover(inclusosItens, i, 1)" aria-label="Mover pra baixo">↓</button>
+                    <button type="button" class="btn mini perigo" (click)="remover(inclusosItens, i)" aria-label="Remover">✕</button>
+                  </div>
+                </div>
+              }
+            </div>
+            <button type="button" class="btn adicionar" (click)="adicionarIncluso()">+ Item</button>
+          </div>
+        </details>
+
+        <details class="secao" formGroupName="condicao">
+          <summary>Condição especial (caixa destacada)</summary>
+          <div class="campos">
+            <label class="check"><input type="checkbox" formControlName="visivel"> Mostrar esta seção</label>
+            <label>Eyebrow <input formControlName="eyebrow"></label>
+            <label>Título <input formControlName="titulo"></label>
+            <label>Texto <textarea formControlName="texto" rows="4"></textarea></label>
+          </div>
+        </details>
+
+        <details class="secao" formGroupName="passos">
+          <summary>Como funciona (passos numerados)</summary>
+          <div class="campos">
+            <label class="check"><input type="checkbox" formControlName="visivel"> Mostrar esta seção</label>
+            <label>Eyebrow <input formControlName="eyebrow"></label>
+            <label>Título <input formControlName="titulo"></label>
+            <div formArrayName="itens" class="repetidor">
+              @for (passo of passosItens.controls; track passo; let i = $index) {
+                <div class="item" [formGroupName]="i">
+                  <div class="item-campos">
+                    <input formControlName="titulo" placeholder="Título do passo">
+                    <textarea formControlName="texto" rows="2" placeholder="Texto do passo"></textarea>
+                  </div>
+                  <div class="item-acoes">
+                    <button type="button" class="btn mini" (click)="mover(passosItens, i, -1)" aria-label="Mover pra cima">↑</button>
+                    <button type="button" class="btn mini" (click)="mover(passosItens, i, 1)" aria-label="Mover pra baixo">↓</button>
+                    <button type="button" class="btn mini perigo" (click)="remover(passosItens, i)" aria-label="Remover">✕</button>
+                  </div>
+                </div>
+              }
+            </div>
+            <button type="button" class="btn adicionar" (click)="adicionarPasso()">+ Passo</button>
+          </div>
+        </details>
+
+        <details class="secao" formGroupName="investimento">
+          <summary>Investimento (tabela de valores)</summary>
+          <div class="campos">
+            <label class="check"><input type="checkbox" formControlName="visivel"> Mostrar esta seção</label>
+            <label>Eyebrow <input formControlName="eyebrow"></label>
+            <label>Título <input formControlName="titulo"></label>
+            <div formArrayName="colunas" class="sub-repetidor">
+              <span class="sub-titulo">Cabeçalhos da tabela</span>
+              <div class="linha-dupla">
+                @for (coluna of colunas.controls; track coluna; let i = $index) {
+                  <input [formControlName]="i">
+                }
+              </div>
+            </div>
+            <div formArrayName="linhas" class="repetidor">
+              @for (linha of linhas.controls; track linha; let i = $index) {
+                <div class="item" [formGroupName]="i">
+                  <div class="item-campos">
+                    <div class="linha-dupla">
+                      <label>Opção <input formControlName="rotulo" placeholder="Site institucional — Premium"></label>
+                      <label>Nota entre parênteses <input formControlName="nota" placeholder="recomendada"></label>
+                    </div>
+                    <div class="linha-dupla">
+                      <label>Valor "de" (riscado) <input formControlName="de" placeholder="R$ 210"></label>
+                      <label>Valor <input formControlName="valor" placeholder="R$ 168/mês"></label>
+                      <label>Total <input formControlName="total" placeholder="R$ 2.016"></label>
+                    </div>
+                    <label class="check"><input type="checkbox" formControlName="destaque"> Linha destacada</label>
+                  </div>
+                  <div class="item-acoes">
+                    <button type="button" class="btn mini" (click)="mover(linhas, i, -1)" aria-label="Mover pra cima">↑</button>
+                    <button type="button" class="btn mini" (click)="mover(linhas, i, 1)" aria-label="Mover pra baixo">↓</button>
+                    <button type="button" class="btn mini perigo" (click)="remover(linhas, i)" aria-label="Remover">✕</button>
+                  </div>
+                </div>
+              }
+            </div>
+            <button type="button" class="btn adicionar" (click)="adicionarLinha()">+ Linha</button>
+            <label>Texto explicativo <textarea formControlName="texto" rows="4"></textarea></label>
+            <label>Letras miúdas <textarea formControlName="letras_miudas" rows="3"></textarea></label>
+          </div>
+        </details>
+
+        <details class="secao" formGroupName="cta">
+          <summary>Chamada final (bloco escuro)</summary>
+          <div class="campos">
+            <label>Título <input formControlName="titulo" placeholder="Vamos colocar a Móveis Soares no Google?"></label>
+            <label>Texto <textarea formControlName="texto" rows="2"></textarea></label>
+            <div formArrayName="canais" class="repetidor">
+              @for (canal of canais.controls; track canal; let i = $index) {
+                <div class="item" [formGroupName]="i">
+                  <div class="item-campos">
+                    <div class="linha-dupla">
+                      <label>Rótulo <input formControlName="label" placeholder="WhatsApp (61) 99584-2100"></label>
+                      <label>Link <input formControlName="url" placeholder="https://wa.me/5561995842100"></label>
+                    </div>
+                    <label class="check"><input type="checkbox" formControlName="primario"> Botão principal</label>
+                  </div>
+                  <div class="item-acoes">
+                    <button type="button" class="btn mini" (click)="mover(canais, i, -1)" aria-label="Mover pra cima">↑</button>
+                    <button type="button" class="btn mini" (click)="mover(canais, i, 1)" aria-label="Mover pra baixo">↓</button>
+                    <button type="button" class="btn mini perigo" (click)="remover(canais, i)" aria-label="Remover">✕</button>
+                  </div>
+                </div>
+              }
+            </div>
+            <button type="button" class="btn adicionar" (click)="adicionarCanal()">+ Canal de contato</button>
+          </div>
+        </details>
+
+        <details class="secao">
+          <summary>Rodapé</summary>
+          <div class="campos" formArrayName="rodape">
+            @for (linha of rodape.controls; track linha; let i = $index) {
+              <div class="sub-item">
+                <input [formControlName]="i" placeholder="Linha do rodapé">
+                <button type="button" class="btn mini perigo" (click)="remover(rodape, i)" aria-label="Remover">✕</button>
+              </div>
+            }
+            <button type="button" class="btn adicionar" (click)="adicionarRodape()">+ Linha</button>
+          </div>
+        </details>
+      </form>
+
+      <aside class="painel-preview">
+        <div class="preview-topo">
+          <span>Preview ao vivo</span>
+          <span class="hint">atualiza sozinho enquanto você edita</span>
+        </div>
+        @if (previewHtml(); as html) {
+          <iframe [srcdoc]="html" title="Preview da proposta"></iframe>
+        } @else {
+          <div class="preview-vazio">O preview aparece aqui assim que você começar a preencher.</div>
+        }
+      </aside>
+    </div>
+  }
+</div>

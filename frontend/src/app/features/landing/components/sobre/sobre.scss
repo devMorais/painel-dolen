@@ -1,5 +1,5 @@
 .sobre {
-  background: var(--white);
+  background: var(--band, var(--white));
 }
 
 .sobre-grid {

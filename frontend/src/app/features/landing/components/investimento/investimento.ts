@@ -1,11 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 
 import { PrecosService } from '@core/services/landing/precos.service';
 
 @Component({
   selector: 'app-investimento',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './investimento.html',
   styleUrl: './investimento.scss',
 })
@@ -18,8 +19,8 @@ export class Investimento {
     return 'R$ ' + Math.round(parseFloat(preco)).toLocaleString('pt-BR');
   }
 
-  protected formatarMensal(preco: string): string {
-    const mensal = Math.ceil(parseFloat(preco) / 12);
-    return 'R$ ' + mensal.toLocaleString('pt-BR') + '/mês';
+  protected formatarParcela(preco: string): string {
+    const parcela = parseFloat(preco) / 12;
+    return 'R$ ' + parcela.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 }

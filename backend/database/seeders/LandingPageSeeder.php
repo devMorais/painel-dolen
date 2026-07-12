@@ -27,14 +27,14 @@ class LandingPageSeeder extends Seeder
     public function run(): void
     {
         SecaoHero::updateOrCreate(['id' => 1], [
-            'eyebrow' => 'Casa de tecnologia · Produtos com IA de verdade',
-            'titulo' => 'Tecnologia e sistemas',
-            'titulo_destaque' => 'com IA de verdade.',
-            'texto' => 'A Dolen constrói produtos próprios de IA como o EduCore — e usa essa mesma capacidade técnica para entregar sites, lojas e sistemas sob medida, mais rápido e mais barato que uma agência tradicional.',
+            'eyebrow' => 'Sites · Lojas · Sistemas sob medida',
+            'titulo' => 'Um site profissional,',
+            'titulo_destaque' => 'feito pra vender.',
+            'texto' => 'Criamos sites, lojas e sistemas sob medida pro seu negócio — com painel próprio pra você editar sozinho, no ar em dias e em até 12x no cartão.',
             'cta_primario_label' => 'Pedir orçamento',
-            'cta_primario_url' => '#contato',
-            'cta_secundario_label' => 'Ver produtos e serviços',
-            'cta_secundario_url' => '#produtos',
+            'cta_primario_url' => '/orcamento',
+            'cta_secundario_label' => 'Ver planos',
+            'cta_secundario_url' => '#precos',
             'prova_itens' => [],
             'visivel' => true,
         ]);
@@ -43,7 +43,7 @@ class LandingPageSeeder extends Seeder
             'eyebrow' => 'Quem somos',
             'titulo' => 'Não somos "mais uma agência de site".',
             'paragrafos' => [
-                'A Dolen nasceu de experiência real com software profissional: sistemas próprios rodando em produção e estudo constante de IA aplicada.',
+                'A Dolen nasceu de experiência real com software profissional: sistemas próprios rodando em produção, não templates genéricos.',
                 'Todo site que entregamos vem com painel administrativo próprio — você edita textos, fotos e preços sozinho, sem depender de programador e sem pagar por cada alteração.',
                 'Atendemos todo o Brasil, com preço em reais, pagamento em até 12x no cartão e entrega em dias, porque partimos de bases que já existem e funcionam.',
             ],
@@ -52,7 +52,7 @@ class LandingPageSeeder extends Seeder
             'destaque_texto' => 'Seu site, sob seu controle: painel simples pra trocar textos, fotos e preços quando quiser. Sem taxa por alteração, sem esperar programador.',
             'destaque_link_label' => 'Pedir orçamento →',
             'destaque_link_url' => '#contato',
-            'visivel' => true,
+            'visivel' => false,
         ]);
 
         SecaoDiferenciais::updateOrCreate(['id' => 1], [
@@ -64,56 +64,64 @@ class LandingPageSeeder extends Seeder
 
         Diferencial::query()->delete();
         collect([
-            ['ordem' => 1, 'imagem_url' => '/assets/diferenciais/prova-tecnica.svg', 'titulo' => 'Experiência real', 'descricao' => 'Software próprio rodando em produção. Você contrata quem já constrói e mantém sistemas de verdade.'],
-            ['ordem' => 2, 'imagem_url' => '/assets/diferenciais/usamos-o-que-vendemos.svg', 'titulo' => 'Usamos o que vendemos', 'descricao' => 'Nossos próprios sistemas gerenciam a Dolen no dia a dia. Se não funcionasse, não venderíamos.'],
-            ['ordem' => 3, 'imagem_url' => '/assets/diferenciais/velocidade-preco.svg', 'titulo' => 'Entrega em dias', 'descricao' => 'Partimos de bases prontas e testadas — mais rápido e mais barato que agência que começa do zero.'],
-            ['ordem' => 4, 'imagem_url' => '/assets/diferenciais/pagamento-nacional.svg', 'titulo' => 'Pagamento facilitado', 'descricao' => 'Preço em reais, em até 12x no cartão ou PIX. Sem surpresa, sem letra miúda.'],
+            ['ordem' => 1, 'imagem_url' => '/assets/diferenciais/painel-proprio.svg', 'titulo' => 'Você edita sozinho', 'descricao' => 'Painel próprio pra trocar textos, fotos e preços quando quiser. Sem depender de programador, sem taxa por alteração.'],
+            ['ordem' => 2, 'imagem_url' => '/assets/diferenciais/velocidade-preco.svg', 'titulo' => 'No ar em dias, não em meses', 'descricao' => 'Partimos de bases prontas e testadas — seu site sai do papel rápido.'],
+            ['ordem' => 3, 'imagem_url' => '/assets/diferenciais/prova-tecnica.svg', 'titulo' => 'Feito por quem constrói software', 'descricao' => 'Não é template genérico: são sistemas próprios rodando em produção de verdade.'],
+            ['ordem' => 4, 'imagem_url' => '/assets/diferenciais/pagamento-nacional.svg', 'titulo' => 'Preço transparente', 'descricao' => 'Em reais, até 12x no cartão ou PIX. Sem surpresa, sem letra miúda.'],
         ])->each(fn (array $item) => Diferencial::create($item));
 
         SecaoProdutos::updateOrCreate(['id' => 1], [
             'eyebrow' => 'O que fazemos',
             'titulo' => 'Escolha o que o seu negócio precisa.',
-            'subtexto' => 'Tudo com painel próprio pra você editar sozinho, hospedagem e domínio grátis, em até 12x no cartão.',
-            'visivel' => true,
+            'subtexto' => 'Do mais simples ao mais completo — hospedagem e domínio grátis no primeiro ano, tudo em até 12x no cartão.',
+            'visivel' => false,
         ]);
 
         Produto::query()->delete();
         collect([
             [
-                'ordem' => 1, 'slug' => 'crc', 'nome' => 'Site institucional',
-                'rotulo_ordem' => '01 · Foco imediato', 'badge' => 'Em até 12x no cartão',
-                'descricao' => 'Apareça no Google e passe confiança pro seu cliente. Blog, galeria, mapa — o que fizer sentido. Pronto em dias.',
-                'publico_alvo' => 'Oficinas, prestadores de serviço, clínicas, autônomos',
-                'preco_label' => 'a partir de R$ 70/mês', 'categoria' => 'sob_demanda', 'destaque' => false,
+                'ordem' => 1, 'slug' => 'landing', 'nome' => 'Landing Page',
+                'rotulo_ordem' => '01 · Mais simples', 'badge' => 'R$ 800 em 12x',
+                'descricao' => 'Uma página de alta conversão, feita pra transformar visita em contato. Ideal pra divulgar um serviço, produto ou campanha. Sem painel — foco total em converter.',
+                'publico_alvo' => 'Serviços, campanhas, lançamentos',
+                'preco_label' => 'R$ 800 em 12x', 'categoria' => 'sob_demanda', 'destaque' => false,
                 'cta_primario_label' => 'Pedir orçamento', 'cta_primario_url' => '#contato',
             ],
             [
-                'ordem' => 2, 'slug' => 'shopx', 'nome' => 'Loja virtual / E-commerce',
-                'rotulo_ordem' => '02 · Foco imediato', 'badge' => 'Em até 12x no cartão',
-                'descricao' => 'Venda online sem depender só do Instagram. PIX, cartão e frete configurados, com painel pra gerenciar tudo.',
-                'publico_alvo' => 'Pequeno lojista, artesão, revendedor',
-                'preco_label' => 'a partir de R$ 210/mês', 'categoria' => 'sob_demanda', 'destaque' => false,
+                'ordem' => 2, 'slug' => 'institucional', 'nome' => 'Sistema Institucional',
+                'rotulo_ordem' => '02 · Mais escolhido', 'badge' => 'R$ 2.000 em 12x',
+                'descricao' => 'Site completo com painel próprio: páginas, blog, serviços, depoimentos e caixa de mensagens. Você edita textos, fotos e conteúdo sozinho, sem depender de programador.',
+                'publico_alvo' => 'Empresas, clínicas, prestadores, lojas físicas',
+                'preco_label' => 'R$ 2.000 em 12x', 'categoria' => 'sob_demanda', 'destaque' => true,
                 'cta_primario_label' => 'Pedir orçamento', 'cta_primario_url' => '#contato',
             ],
             [
-                'ordem' => 3, 'slug' => 'votar', 'nome' => 'Votar — Votação e concurso',
-                'rotulo_ordem' => '03 · Case real', 'badge' => 'Já em produção',
+                'ordem' => 3, 'slug' => 'ecommerce', 'nome' => 'E-commerce',
+                'rotulo_ordem' => '03 · Venda online', 'badge' => 'R$ 3.000 em 12x',
+                'descricao' => 'Tudo do Institucional + loja pra vender pelo site: catálogo, carrinho, pagamento online e gestão de pedidos, com painel próprio.',
+                'publico_alvo' => 'Lojistas, revendedores, quem já vende pelo Instagram',
+                'preco_label' => 'R$ 3.000 em 12x', 'categoria' => 'sob_demanda', 'destaque' => false,
+                'cta_primario_label' => 'Pedir orçamento', 'cta_primario_url' => '#contato',
+            ],
+            [
+                'ordem' => 4, 'slug' => 'votar', 'nome' => 'Votar — Votação e concurso',
+                'rotulo_ordem' => '04 · Case real', 'badge' => 'Já em produção',
                 'descricao' => 'Votação organizada, com arrecadação e à prova de fraude. Já usado em evento real.',
                 'publico_alvo' => 'Eventos, festas, rádios, igrejas',
                 'preco_label' => 'R$ 1.500 – R$ 4.000', 'categoria' => 'case_cliente', 'destaque' => false,
                 'cta_primario_label' => 'Pedir orçamento', 'cta_primario_url' => '#contato',
             ],
             [
-                'ordem' => 4, 'slug' => 'agf', 'nome' => 'AGF — Site + doações',
-                'rotulo_ordem' => '04 · Case real', 'badge' => 'Já em produção',
+                'ordem' => 5, 'slug' => 'agf', 'nome' => 'AGF — Site + doações',
+                'rotulo_ordem' => '05 · Case real', 'badge' => 'Já em produção',
                 'descricao' => 'Receba doações e divulgue sua causa sem complicação. Em uso por associação real.',
                 'publico_alvo' => 'ONGs, associações, igrejas, projetos sociais',
                 'preco_label' => 'Sob consulta', 'categoria' => 'case_cliente', 'destaque' => false,
                 'cta_primario_label' => 'Pedir orçamento', 'cta_primario_url' => '#contato',
             ],
             [
-                'ordem' => 5, 'slug' => 'educore', 'nome' => 'EduCore',
-                'rotulo_ordem' => '05 · Produto próprio', 'badge' => 'IA em produção',
+                'ordem' => 6, 'slug' => 'educore', 'nome' => 'EduCore',
+                'rotulo_ordem' => '06 · Produto próprio', 'badge' => 'IA em produção',
                 'descricao' => 'Transforma PDF em quiz, resumo e apresentação em segundos. Produto próprio de IA da Dolen.',
                 'publico_alvo' => 'Professores, instituições, infoprodutores',
                 'preco_label' => 'Condições comerciais a confirmar', 'categoria' => 'vitrine_tecnica', 'destaque' => false,
@@ -121,8 +129,8 @@ class LandingPageSeeder extends Seeder
                 'cta_secundario_label' => 'Saber mais', 'cta_secundario_url' => '#contato',
             ],
             [
-                'ordem' => 6, 'slug' => 'avante', 'nome' => 'Avante — Gestão de tarefas',
-                'rotulo_ordem' => '06', 'badge' => 'SaaS recorrente',
+                'ordem' => 7, 'slug' => 'avante', 'nome' => 'Avante — Gestão de tarefas',
+                'rotulo_ordem' => '07', 'badge' => 'SaaS recorrente',
                 'descricao' => 'Gestão de tarefas simples pra não perder prazo. Usamos todo dia — e você pode usar também.',
                 'publico_alvo' => 'Freelancers, squads de 2-10 pessoas',
                 'preco_label' => 'Free a R$ 99/mês', 'categoria' => 'saas', 'destaque' => false,
@@ -130,8 +138,8 @@ class LandingPageSeeder extends Seeder
                 'cta_secundario_label' => 'Falar com a gente', 'cta_secundario_url' => '#contato',
             ],
             [
-                'ordem' => 7, 'slug' => 'numen', 'nome' => 'Numen — Plataforma de cursos',
-                'rotulo_ordem' => '07 · Em breve', 'badge' => 'Venda ou aluguel',
+                'ordem' => 8, 'slug' => 'numen', 'nome' => 'Numen — Plataforma de cursos',
+                'rotulo_ordem' => '08 · Em breve', 'badge' => 'Venda ou aluguel',
                 'descricao' => 'Venda seus cursos com a sua cara, sem plataforma genérica. Em breve — entre na lista de espera.',
                 'publico_alvo' => 'Professores, cursinhos, infoprodutores',
                 'preco_label' => 'Em desenvolvimento', 'categoria' => 'saas', 'destaque' => false,
@@ -149,7 +157,7 @@ class LandingPageSeeder extends Seeder
             'eyebrow' => 'Como funciona',
             'titulo' => 'Do orçamento à entrega, sem enrolação.',
             'subtexto' => null,
-            'visivel' => true,
+            'visivel' => false,
         ]);
 
         Passo::query()->delete();
@@ -157,38 +165,31 @@ class LandingPageSeeder extends Seeder
             ['ordem' => 1, 'titulo' => 'Você conta o que precisa', 'descricao' => 'Chama no WhatsApp ou pelo formulário. Entendemos seu negócio e indicamos a melhor solução.'],
             ['ordem' => 2, 'titulo' => 'Orçamento e contrato', 'descricao' => 'Proposta clara, contrato de 1 página, primeira mensalidade no cartão e começamos.'],
             ['ordem' => 3, 'titulo' => 'Construção sobre base pronta', 'descricao' => 'Partimos de sistemas já em produção — por isso o prazo é dias, não meses.'],
-            ['ordem' => 4, 'titulo' => 'Entrega e manutenção', 'descricao' => 'Você recebe pronto. A manutenção mensal (a partir de R$ 100) mantém hospedagem, domínio e funcionamento sempre em dia.'],
+            ['ordem' => 4, 'titulo' => 'Entrega e manutenção', 'descricao' => 'Você recebe pronto. A partir do 2º ano, R$ 120/mês mantêm hospedagem, domínio e suporte técnico sempre em dia.'],
         ])->each(fn (array $item) => Passo::create($item));
 
         PlanoPreco::query()->delete();
         GrupoPreco::query()->delete();
 
-        $site = GrupoPreco::create(['ordem' => 1, 'nome' => 'Site institucional']);
+        $planos = GrupoPreco::create(['ordem' => 1, 'nome' => 'Planos']);
         collect([
-            ['ordem' => 1, 'nome' => 'Essencial', 'descricao' => '1 página, responsivo, WhatsApp, formulário', 'preco' => 840, 'destaque' => false],
-            ['ordem' => 2, 'nome' => 'Profissional ⭐', 'descricao' => 'Até 5 páginas, SEO básico, Google Maps, galeria', 'preco' => 1560, 'destaque' => true],
-            ['ordem' => 3, 'nome' => 'Premium', 'descricao' => '+ blog, redes sociais integradas, animações', 'preco' => 2520, 'destaque' => false],
-        ])->each(fn (array $item) => $site->planos()->create($item));
-
-        $loja = GrupoPreco::create(['ordem' => 2, 'nome' => 'Loja virtual / E-commerce']);
-        collect([
-            ['ordem' => 1, 'nome' => 'Start', 'descricao' => 'Até 30 produtos, PIX/cartão, frete, painel admin', 'preco' => 2520, 'destaque' => false],
-            ['ordem' => 2, 'nome' => 'Pro ⭐', 'descricao' => 'Produtos ilimitados, cupons, relatórios, treinamento', 'preco' => 4080, 'destaque' => true],
-            ['ordem' => 3, 'nome' => 'Plus', 'descricao' => '+ multi-vendedor, integrações sob medida', 'preco' => 6000, 'destaque' => false],
-        ])->each(fn (array $item) => $loja->planos()->create($item));
+            ['ordem' => 1, 'nome' => 'Landing Page', 'descricao' => 'Uma página de alta conversão, feita pra transformar visita em contato. Ideal pra divulgar um serviço, produto ou campanha.', 'preco' => 800, 'destaque' => false],
+            ['ordem' => 2, 'nome' => 'Sistema Institucional', 'descricao' => 'Site completo com painel próprio: páginas, blog, serviços, depoimentos e caixa de mensagens. Você edita tudo sozinho.', 'preco' => 2000, 'destaque' => true],
+            ['ordem' => 3, 'nome' => 'E-commerce', 'descricao' => 'Tudo do Institucional + loja pra vender pelo site, com pagamento online integrado e gestão de pedidos.', 'preco' => 3000, 'destaque' => false],
+        ])->each(fn (array $item) => $planos->planos()->create($item));
 
         SecaoPrecos::updateOrCreate(['id' => 1], [
-            'eyebrow' => 'Investimento',
-            'titulo' => 'Um valor mensal que cabe no bolso.',
-            'subtexto' => 'Você paga uma mensalidade em 12x no cartão enquanto construímos — com hospedagem e domínio grátis em todos os planos. Depois da entrega, manutenção a partir de R$ 100/mês, que mantém seu site sempre no ar: hospedagem, renovação do domínio e garantia de funcionamento (alterações de conteúdo não inclusas). Sistemas sob medida são orçados sob consulta.',
-            'nota_fundador_texto' => 'Somos uma empresa nova — e assumimos isso. Os 3 primeiros clientes ganham 20% de desconto em troca de depoimento e autorização de portfólio.',
-            'nota_fundador_cta_label' => 'Quero ser cliente fundador',
-            'nota_fundador_cta_url' => '#contato',
+            'eyebrow' => 'Planos',
+            'titulo' => 'Escolha o tamanho do seu projeto.',
+            'subtexto' => 'Hospedagem e domínio grátis no 1º ano. Tudo em até 12x no cartão.',
+            'nota_fundador_texto' => '',
+            'nota_fundador_cta_label' => '',
+            'nota_fundador_cta_url' => '',
             'visivel' => true,
         ]);
 
         SecaoCta::updateOrCreate(['id' => 1], [
-            'titulo' => 'Vamos construir o seu sistema?',
+            'titulo' => 'Vamos colocar seu negócio no ar?',
             'texto' => 'Manda uma mensagem contando o que você precisa. Respondemos com orçamento e prazo.',
             'instagram_label' => 'Chamar no Instagram (@dolen.ia)',
             'instagram_url' => 'https://instagram.com/dolen.ia',
@@ -201,16 +202,16 @@ class LandingPageSeeder extends Seeder
 
         ConfiguracaoSite::updateOrCreate(['id' => 1], [
             'nome_site' => 'Dolen',
-            'tagline' => 'Tecnologia e sistemas com IA de verdade.',
+            'tagline' => 'Sites, lojas e sistemas sob medida.',
             'instagram_url' => 'https://instagram.com/dolen.ia',
-            'whatsapp_numero' => '5561996140988',
+            'whatsapp_numero' => '5561995842100',
             'email_contato' => 'contato@dolen.com.br',
-            'copyright_texto' => '© 2026 Dolen — tecnologia e sistemas com IA de verdade.',
-            'meta_title' => 'Dolen — Tecnologia e sistemas com IA de verdade',
-            'meta_description' => 'A Dolen constrói produtos próprios de IA como o EduCore e entrega sites, lojas e sistemas sob medida — mais rápido e mais barato que uma agência tradicional.',
-            'meta_keywords' => 'tecnologia, inteligência artificial, IA, desenvolvimento de sistemas, site institucional, loja virtual, software house',
-            'og_title' => 'Dolen — Tecnologia e sistemas com IA de verdade',
-            'og_description' => 'Casa de tecnologia que constrói produtos próprios com IA e entrega sites, lojas e sistemas sob medida.',
+            'copyright_texto' => '© 2026 Dolen — sites, lojas e sistemas sob medida.',
+            'meta_title' => 'Dolen — Sites profissionais, lojas e sistemas sob medida',
+            'meta_description' => 'Criamos sites, lojas e sistemas sob medida com painel próprio pra você editar sozinho. No ar em dias e em até 12x no cartão. Peça seu orçamento.',
+            'meta_keywords' => 'criação de sites, site profissional, loja virtual, e-commerce, sistema sob medida, site para empresas, painel administrativo, landing page',
+            'og_title' => 'Dolen — Sites profissionais, lojas e sistemas sob medida',
+            'og_description' => 'Sites, lojas e sistemas sob medida com painel próprio pra editar sozinho. No ar em dias, em até 12x no cartão.',
             'og_image_url' => 'https://www.dolen.com.br/assets/images/dolen-capa-facebook.png',
             'og_type' => 'website',
             'twitter_card' => 'summary_large_image',
@@ -220,7 +221,7 @@ class LandingPageSeeder extends Seeder
             'robots_follow' => true,
             'structured_data_tipo_negocio' => 'ProfessionalService',
             'structured_data_nome_negocio' => 'Dolen',
-            'structured_data_telefone' => '+5561996140988',
+            'structured_data_telefone' => '+5561995842100',
             'sitemap_prioridade' => 0.8,
         ]);
     }

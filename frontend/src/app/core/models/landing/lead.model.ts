@@ -1,7 +1,9 @@
 export interface NovoLead {
   nome: string;
-  email: string;
-  telefone?: string | null;
+  telefone: string;
+  email?: string | null;
+  produto_interesse?: string | null;
+  instagram?: string | null;
   mensagem?: string | null;
   origem?: string;
 }

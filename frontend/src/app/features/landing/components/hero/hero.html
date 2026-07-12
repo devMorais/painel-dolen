@@ -10,7 +10,7 @@
       <h1>{{ c.titulo }} <em>{{ c.titulo_destaque }}</em></h1>
       <p class="lead">{{ c.texto }}</p>
       <div class="hero-ctas">
-        <a [href]="c.cta_primario_url" class="btn btn-solid btn-hero-solid">{{ c.cta_primario_label }}</a>
+        <a routerLink="/orcamento" class="btn btn-solid btn-hero-solid">{{ c.cta_primario_label }}</a>
         <a [href]="c.cta_secundario_url" class="btn btn-ghost-dark">{{ c.cta_secundario_label }}</a>
       </div>
       <div class="proof-strip">

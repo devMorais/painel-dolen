@@ -7,6 +7,10 @@
   --gray-light: #e5e5e5;
   --gray-mid: #8a8a8a;
   --erro: #ff7b7b;
+  /* Bandas alternadas das seções da landing (o layout decide qual tom cada seção recebe).
+     O tom "suave" é mais claro que --gray-light pra as bordas de card continuarem visíveis. */
+  --band-light: var(--white);
+  --band-soft: #f4f4f4;
   --display: 'Space Grotesk', sans-serif;
   --body: 'Inter', sans-serif;
   --maxw: 1120px;
@@ -128,4 +132,46 @@ h2 {
 .btn-ghost-dark:hover {
   background: var(--white);
   color: var(--black);
+}
+
+/* Status pills do painel (mini-CRM) — cor semântica, separada do acento da marca. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--body);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  padding: 4px 11px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+.pill::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.pill-novo {
+  background: #eaf1ff;
+  color: #2563c9;
+}
+
+.pill-em_contato {
+  background: #fff2e0;
+  color: #b7791f;
+}
+
+.pill-fechado {
+  background: #e6f6ec;
+  color: #1c7d47;
+}
+
+.pill-perdido {
+  background: #f0f0f1;
+  color: #6b7280;
 }

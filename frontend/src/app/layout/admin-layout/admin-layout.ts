@@ -1,17 +1,46 @@
-import { Component, inject } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 import { AuthService } from '@core/services/admin';
+import { AdminUser } from '@core/models/admin';
 
 @Component({
   selector: 'app-admin-layout',
-  imports: [RouterOutlet],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet],
   templateUrl: './admin-layout.html',
   styleUrl: './admin-layout.scss',
 })
 export class AdminLayout {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+
+  protected readonly usuario = signal<AdminUser | null>(null);
+  protected readonly menuAberto = signal(false);
+
+  constructor() {
+    this.authService.me().subscribe({
+      next: (user) => this.usuario.set(user),
+      error: () => {},
+    });
+  }
+
+  protected iniciais(nome: string | undefined): string {
+    if (!nome) {
+      return 'D';
+    }
+    const partes = nome.trim().split(/\s+/);
+    const primeira = partes[0]?.[0] ?? '';
+    const ultima = partes.length > 1 ? partes[partes.length - 1][0] : '';
+    return (primeira + ultima).toUpperCase();
+  }
+
+  protected alternarMenu(): void {
+    this.menuAberto.update((v) => !v);
+  }
+
+  protected fecharMenu(): void {
+    this.menuAberto.set(false);
+  }
 
   protected sair(): void {
     this.authService.logout().subscribe({

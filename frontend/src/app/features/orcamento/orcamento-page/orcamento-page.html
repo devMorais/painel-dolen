@@ -1,0 +1,126 @@
+<header class="orc-top">
+  <a routerLink="/" class="orc-logo">
+    <img src="/assets/images/dolen-icone-preto.png" alt="Dolen" width="28" height="28" />
+    <span>{{ configuracoes()?.nome_site ?? 'dolen' }}</span>
+  </a>
+  <a routerLink="/" class="orc-voltar">← Voltar ao site</a>
+</header>
+
+<main class="orc-main">
+  <div class="orc-card">
+    @if (mensagemSucesso(); as sucesso) {
+      <!-- Sucesso -->
+      <div class="orc-sucesso" role="status">
+        <div class="orc-check">✓</div>
+        <strong>{{ sucesso }}</strong>
+        <p>Se quiser adiantar, chama a gente no WhatsApp ou no direct do Instagram.</p>
+        <a routerLink="/" class="btn btn-solid">Voltar ao site</a>
+      </div>
+    } @else if (passo() === 1) {
+      <!-- Passo 1: escolher produto -->
+      <div class="orc-passo-tag">Passo 1 de 2</div>
+      <h1>O que seu negócio precisa?</h1>
+      <p class="orc-sub">Escolha uma opção — você acerta os detalhes com a gente depois.</p>
+
+      <div class="orc-opcoes">
+        @for (opcao of opcoes; track opcao.valor) {
+          <button type="button" class="opt-row" (click)="escolher(opcao.valor)">
+            <span class="opt-main">
+              <span class="opt-nome">{{ opcao.nome }}</span>
+              <span class="opt-desc">{{ opcao.descricao }}</span>
+            </span>
+            <span class="opt-preco">{{ opcao.preco }}</span>
+            <span class="opt-arrow" aria-hidden="true">›</span>
+          </button>
+        }
+      </div>
+    } @else {
+      <!-- Passo 2: dados -->
+      <div class="orc-passo-tag">Passo 2 de 2</div>
+      <button type="button" class="orc-trocar" (click)="voltar()">← Trocar produto</button>
+
+      @if (opcaoAtual(); as opcao) {
+        <div class="orc-resumo">
+          <span class="orc-resumo-nome">{{ opcao.nome }}</span>
+          <span class="orc-resumo-preco">{{ opcao.preco }}</span>
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="enviar()" class="orc-form" novalidate>
+        <div class="orc-linha">
+          <div class="orc-campo">
+            <label for="orc-nome">Nome *</label>
+            <input
+              id="orc-nome"
+              type="text"
+              formControlName="nome"
+              autocomplete="name"
+              placeholder="Seu nome"
+              [class.invalido]="campoInvalido('nome')"
+            />
+            @if (campoInvalido('nome')) {
+              <span class="orc-erro-campo">Informe seu nome.</span>
+            }
+          </div>
+
+          <div class="orc-campo">
+            <label for="orc-telefone">WhatsApp *</label>
+            <input
+              id="orc-telefone"
+              type="tel"
+              formControlName="telefone"
+              autocomplete="tel"
+              inputmode="tel"
+              placeholder="(00) 00000-0000"
+              [class.invalido]="campoInvalido('telefone')"
+            />
+            @if (campoInvalido('telefone')) {
+              <span class="orc-erro-campo">Informe seu WhatsApp.</span>
+            }
+          </div>
+        </div>
+
+        <div class="orc-campo">
+          <label for="orc-instagram">Instagram <span class="orc-opcional">(opcional)</span></label>
+          <input
+            id="orc-instagram"
+            type="text"
+            formControlName="instagram"
+            autocomplete="off"
+            placeholder="@seu.negocio"
+          />
+        </div>
+
+        <div class="orc-campo">
+          <label for="orc-mensagem">Detalhes <span class="orc-opcional">(opcional)</span></label>
+          <textarea
+            id="orc-mensagem"
+            rows="2"
+            formControlName="mensagem"
+            placeholder="Ex.: loja de móveis, quero vender pelo site"
+          ></textarea>
+        </div>
+
+        @if (mensagemErro(); as erro) {
+          <div class="orc-erro" role="alert">{{ erro }}</div>
+        }
+
+        <button type="submit" class="btn btn-solid orc-enviar" [disabled]="enviando()">
+          {{ enviando() ? 'Enviando…' : 'Enviar pedido' }}
+        </button>
+      </form>
+    }
+  </div>
+
+  <!-- Rodapé de confiança / alternativa -->
+  @if (!mensagemSucesso()) {
+    <div class="orc-rodape">
+      <span>Hospedagem grátis no 1º ano · 12x no cartão · resposta em 1 dia útil</span>
+      @if (configuracoes()?.whatsapp_numero; as whatsapp) {
+        <a [href]="linkWhatsApp(whatsapp)" target="_blank" rel="noopener" class="orc-wpp-link">
+          ou fale agora no WhatsApp
+        </a>
+      }
+    </div>
+  }
+</main>

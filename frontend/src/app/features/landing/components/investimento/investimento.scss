@@ -1,94 +1,97 @@
 .precos {
-  background: var(--white);
+  background: var(--band, var(--white));
 }
 
-.price-tabs {
+.price-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
 }
 
-.price-group h3 {
-  font-family: var(--display);
-  font-size: 1.2rem;
-  margin-bottom: 18px;
-}
-
-.price-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+@media (max-width: 860px) {
+  .price-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .price-card {
+  position: relative;
   border: 1px solid var(--gray-light);
-  border-radius: 14px;
-  padding: 20px 22px;
+  border-radius: 16px;
+  padding: 28px 26px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .price-card.starred {
   border: 1.5px solid var(--black);
 }
 
-.price-card .pname {
+.badge {
+  position: absolute;
+  top: -11px;
+  left: 26px;
+  background: var(--black);
+  color: var(--white);
+  font-size: 0.68rem;
   font-weight: 600;
-  font-size: 0.98rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 11px;
+  border-radius: 100px;
+}
+
+.price-card .pname {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.2rem;
 }
 
 .price-card .pdesc {
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   color: var(--gray-mid);
-  margin-top: 3px;
+  line-height: 1.45;
 }
 
-.price-card .pval {
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: 1.15rem;
-  white-space: nowrap;
+.pval {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
   gap: 2px;
+  margin-top: auto;
+  padding-top: 6px;
 }
 
-.price-card .pval-avista {
-  font-family: var(--body);
-  font-weight: 400;
+.pval .ptotal {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 2.2rem;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.pval .ptotal .pmes {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gray-mid);
+  letter-spacing: 0;
+}
+
+.pval .pparcela {
+  font-size: 0.85rem;
+  color: var(--gray-dark);
+}
+
+.pmaint {
   font-size: 0.78rem;
   color: var(--gray-mid);
+  line-height: 1.4;
+  padding-top: 12px;
+  border-top: 1px solid var(--gray-light);
 }
 
-.founder-note {
-  margin-top: 28px;
-  padding: 20px 22px;
-  border-radius: 14px;
-  background: var(--black);
-  color: var(--white);
-  font-size: 0.92rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
+.pbtn {
+  margin-top: 4px;
+  width: 100%;
 }
 
-.btn-founder {
-  background: var(--white);
-  color: var(--black);
-  border-color: var(--white);
-  white-space: nowrap;
-}
-
-@media (max-width: 860px) {
-  .price-tabs {
-    grid-template-columns: 1fr;
-  }
-}

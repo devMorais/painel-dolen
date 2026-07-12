@@ -1,3 +1,13 @@
+/* Bandas alternadas: o layout marca cada seção visível como clara (padrão) ou suave.
+   A seção herda o tom via a variável --band (ver background das seções). */
+.band {
+  --band: var(--band-light);
+}
+
+.band.band-soft {
+  --band: var(--band-soft);
+}
+
 .logo {
   display: flex;
   align-items: center;

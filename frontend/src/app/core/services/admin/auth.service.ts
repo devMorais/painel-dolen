@@ -22,6 +22,10 @@ export class AuthService {
       .pipe(tap((resposta) => localStorage.setItem(CHAVE_TOKEN, resposta.token)));
   }
 
+  me(): Observable<AdminUser> {
+    return this.http.get<AdminUser>(`${environment.apiUrl}/admin/me`);
+  }
+
   logout(): Observable<{ message: string }> {
     return this.http
       .post<{ message: string }>(`${environment.apiUrl}/admin/logout`, {})

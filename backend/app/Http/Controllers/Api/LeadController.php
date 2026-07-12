@@ -19,13 +19,15 @@ class LeadController extends Controller
     {
         $dados = $request->validate([
             'nome' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
-            'telefone' => ['nullable', 'string', 'max:30'],
+            'telefone' => ['required', 'string', 'max:30'],
+            'email' => ['nullable', 'email', 'max:255'],
+            'produto_interesse' => ['nullable', 'string', 'max:100'],
+            'instagram' => ['nullable', 'string', 'max:100'],
             'mensagem' => ['nullable', 'string', 'max:5000'],
             'origem' => ['nullable', 'string', 'max:100'],
         ], [
             'nome.required' => 'Informe seu nome.',
-            'email.required' => 'Informe seu e-mail.',
+            'telefone.required' => 'Informe seu WhatsApp.',
             'email.email' => 'Informe um e-mail válido.',
         ]);
 
@@ -35,16 +37,25 @@ class LeadController extends Controller
         // o lead já está salvo no banco e a resposta continua 201.
         try {
             $destino = ConfiguracaoSite::first()?->email_contato ?? 'contato@dolen.com.br';
-            Mail::raw(
-                "Novo pedido de orçamento pelo site:\n\n"
+            $corpo = "Novo pedido de orçamento pelo site:\n\n"
                 . "Nome: {$lead->nome}\n"
-                . "E-mail: {$lead->email}\n"
-                . 'Telefone: ' . ($lead->telefone ?: '—') . "\n\n"
-                . 'Mensagem: ' . ($lead->mensagem ?: '—'),
-                fn ($mensagem) => $mensagem
-                    ->to($destino)
-                    ->replyTo($lead->email, $lead->nome)
-                    ->subject('Novo pedido de orçamento — ' . $lead->nome),
+                . "WhatsApp: {$lead->telefone}\n"
+                . 'Produto de interesse: ' . ($lead->produto_interesse ?: '—') . "\n"
+                . 'Instagram: ' . ($lead->instagram ?: '—') . "\n"
+                . 'E-mail: ' . ($lead->email ?: '—') . "\n\n"
+                . 'Mensagem: ' . ($lead->mensagem ?: '—');
+
+            Mail::raw(
+                $corpo,
+                function ($mensagem) use ($destino, $lead) {
+                    $mensagem->to($destino)
+                        ->subject('Novo pedido de orçamento — ' . $lead->nome);
+
+                    // Só define reply-to se o cliente informou e-mail.
+                    if ($lead->email) {
+                        $mensagem->replyTo($lead->email, $lead->nome);
+                    }
+                },
             );
         } catch (\Throwable $e) {
             report($e);
