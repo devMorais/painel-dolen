@@ -56,7 +56,7 @@ Monorepo com 2 projetos: `frontend/` (Angular 20.3) e `backend/` (Laravel 13, PH
 - Sistemas sob medida (votação, doações etc.): orçamento sob consulta.
 - Fluxo de fechamento: proposta clara, contrato de 1 página, primeira parcela no cartão e começa.
 - **Estrutura do Sistema Institucional / E-commerce = clone da CRC** (`C:\Users\UITEC\Herd\crc`, Angular 20.3 + Laravel 13 + MySQL, mesma família do dolen). Páginas públicas: Home, Sobre, Serviços, Vídeos, Blog (lista+detalhe), Contato (form). Painel admin (Sanctum): Dashboard (stats), Mensagens (inbox do form: ler/marcar/excluir), Blog (CRUD + publicar/despublicar), Serviços (CRUD), Depoimentos (CRUD), Configurações (settings do site + upload logo/favicon). O E-commerce difere só por adicionar a venda pelo site (InfinityPay).
-- O site NO AR ainda mostra o modelo ANTIGO (R$ 70–500/mês, planos Essencial/Profissional/Premium + Loja) — a seção de preços precisa ser reescrita pros 3 produtos novos (pendente).
+- Produção atualizada em 2026-07-12: o site NO AR já mostra o modelo novo (3 produtos, valor mensal). Deploy completo daquele dia = landing redesenhada + /orcamento + módulo de propostas + token do Instagram + painel com Leads em Kanban.
 - **EduCore NÃO tem mais vínculo com Senac/Innovaday — nunca mencionar Senac na copy.** EduCore fica como produto próprio, sem destaque.
 
 ## Módulo de propostas comerciais (criado 2026-07-10)
