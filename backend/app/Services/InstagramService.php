@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\ConfiguracaoSite;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
@@ -116,17 +117,18 @@ class InstagramService
 
         $id = $resposta['id'];
 
-        if ($video) {
-            $this->esperarProcessamento($id, $token);
-        }
+        // Mesmo imagens às vezes não ficam prontas na hora (erro "Media ID is
+        // not available" no publish) — espera o container terminar de processar.
+        // Vídeo demora mais (até 2min), imagem costuma ser quase instantâneo.
+        $this->esperarProcessamento($id, $token, $video ? 40 : 8);
 
         return $id;
     }
 
-    /** Aguarda o vídeo terminar de processar (status_code = FINISHED). */
-    private function esperarProcessamento(string $containerId, string $token): void
+    /** Aguarda a mídia terminar de processar (status_code = FINISHED). */
+    private function esperarProcessamento(string $containerId, string $token, int $maxTentativas): void
     {
-        for ($tentativa = 0; $tentativa < 40; $tentativa++) {
+        for ($tentativa = 0; $tentativa < $maxTentativas; $tentativa++) {
             $status = Http::get(self::API_BASE."/{$containerId}", [
                 'fields' => 'status_code',
                 'access_token' => $token,
@@ -136,25 +138,39 @@ class InstagramService
                 return;
             }
             if ($status === 'ERROR') {
-                throw new RuntimeException('O Instagram não conseguiu processar o vídeo.');
+                throw new RuntimeException('O Instagram não conseguiu processar a mídia.');
             }
 
             sleep(3);
         }
 
-        throw new RuntimeException('Tempo esgotado esperando o vídeo processar no Instagram.');
+        throw new RuntimeException('Tempo esgotado esperando a mídia processar no Instagram.');
     }
 
     /** Publica um container já criado e devolve [midia_id, permalink]. */
     private function publicarContainer(string $creationId, string $token): array
     {
-        $resultado = Http::asForm()
-            ->post(self::API_BASE.'/me/media_publish', [
-                'creation_id' => $creationId,
-                'access_token' => $token,
-            ])
-            ->throw()
-            ->json();
+        // "Media ID is not available" pode acontecer mesmo após o status FINISHED
+        // (atraso interno da Meta) — tenta de novo com um pequeno intervalo.
+        $resultado = null;
+        for ($tentativa = 0; $tentativa < 3; $tentativa++) {
+            try {
+                $resultado = Http::asForm()
+                    ->post(self::API_BASE.'/me/media_publish', [
+                        'creation_id' => $creationId,
+                        'access_token' => $token,
+                    ])
+                    ->throw()
+                    ->json();
+                break;
+            } catch (RequestException $e) {
+                $msg = $e->response?->json('error.message') ?? '';
+                if (! str_contains((string) $msg, 'Media ID is not available') || $tentativa === 2) {
+                    throw $e;
+                }
+                sleep(5);
+            }
+        }
 
         $midiaId = $resultado['id'];
 
