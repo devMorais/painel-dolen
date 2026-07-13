@@ -4,6 +4,7 @@ Caderno de contexto do projeto (criado na auditoria de 2026-07-05, atualizado em
 
 ## Visão geral
 Monorepo com 2 projetos: `frontend/` (Angular 20.3) e `backend/` (Laravel 13, PHP 8.3). É o site institucional da própria Dolen — vitrine e ferramenta de venda. **Foco comercial: vender sites** (institucional, e-commerce, blog, sob medida) para todo o Brasil, com painel administrativo próprio como diferencial.
+- `artes/` (raiz): artes de marketing aprovadas do Instagram — `stories-servicos/` (6 stories c/ preços), `carrossel-apresentacao/` (post "Prazer, Dolen"), `capas-destaques/` (capas bordadas dos destaques) e `_gerador/` (scripts Python+HTML que geram os PNGs via Chrome headless; estilo editorial: grão feTurbulence, ghost text em outline, halftone, zonas seguras do story ~240px topo/~320px rodapé, SEM contador — o Instagram já mostra). Regra: toda arte é aprovada pelo Fernando ANTES de publicar.
 
 ## Stack
 - Frontend: Angular 20.3 (código tem SSR configurado em server.ts, mas produção roda CSR estático — ver Produção)
