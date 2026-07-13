@@ -37,9 +37,9 @@ export class OrcamentoPage {
   protected readonly mensagemErro = signal<string | null>(null);
 
   protected readonly opcoes: OpcaoProduto[] = [
-    { valor: 'Landing Page', nome: 'Landing Page', descricao: 'Uma página de alta conversão', preco: '12x R$ 66,67' },
-    { valor: 'Site Institucional', nome: 'Site Institucional', descricao: 'Site completo com painel próprio', preco: '12x R$ 166,67' },
-    { valor: 'E-commerce', nome: 'E-commerce', descricao: 'Loja pra vender pelo site', preco: '12x R$ 250,00' },
+    { valor: 'Landing Page', nome: 'Landing Page', descricao: 'Uma página de alta conversão', preco: '12x R$ 84' },
+    { valor: 'Site institucional Premium', nome: 'Site institucional · Premium', descricao: 'Site completo com painel próprio', preco: '12x R$ 168' },
+    { valor: 'Loja virtual Pro', nome: 'Loja virtual · Pro', descricao: 'Venda pelo site com PIX e cartão', preco: '12x R$ 272' },
     { valor: 'Sistema personalizado', nome: 'Sistema personalizado', descricao: 'Algo maior ou sob medida', preco: 'Sob consulta' },
   ];
 

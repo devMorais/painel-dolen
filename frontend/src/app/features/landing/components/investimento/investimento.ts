@@ -23,4 +23,11 @@ export class Investimento {
     const parcela = parseFloat(preco) / 12;
     return 'R$ ' + parcela.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
+
+  protected formatarMensalTabela(valor: string | null): string | null {
+    if (!valor) {
+      return null;
+    }
+    return 'R$ ' + Math.round(parseFloat(valor)).toLocaleString('pt-BR');
+  }
 }

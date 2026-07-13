@@ -46,17 +46,17 @@ Monorepo com 2 projetos: `frontend/` (Angular 20.3) e `backend/` (Laravel 13, PH
 - users (auth do admin)
 - Plano ainda adiciona: cases, landing_secundarias, eventos_conversao, posts_marketing, templates_post, pacotes_precos
 
-## Modelo comercial (atualizado 2026-07-11 — SUBSTITUI o modelo de 2026-07-08)
-- Preço em 12x no cartão (gateway: InfinitePay / "InfinityPay" — a Dolen usa pra cobrar os clientes; o nome do gateway NÃO aparece no site). Três produtos, valor do 1º ano:
-  - **Landing Page (básico)** — **R$ 800** em 12x. UMA página de alta conversão, **SEM painel administrativo**.
-  - **Sistema Institucional (intermediário)** — **R$ 2.000** em 12x. **COM painel administrativo próprio**. É clone da estrutura da CRC (ver abaixo). "Sistema Padrão" = este produto (mesma coisa, nomes usados como sinônimo).
-  - **E-commerce (vender pelo site)** — **R$ 3.000** em 12x. MESMA estrutura do Institucional + venda pelo site. InfinityPay como meio de pagamento padrão pra todos os clientes.
-- Hospedagem e domínio grátis durante a construção (inclusos no 1º ano).
-- A partir do 2º ano, TODOS os produtos (inclusive a Landing Page): **manutenção R$ 120/mês** — cobre hospedagem + renovação de domínio + correção de problemas técnicos alheios ao uso. NÃO cobre alterações de conteúdo nem novas funcionalidades. Se o tráfego/uso crescer e exigir mais estrutura, cobra-se um valor negociável à parte pra escalar.
+## Modelo comercial (atualizado 2026-07-13 — SUBSTITUI o de 2026-07-11; base = proposta Móveis Soares nº 2026-003)
+- Exibição pública: **mensal "de tabela" RISCADO → mensal com desconto de fundador (-20%)**, 12x no cartão. `planos_preco.preco` = TOTAL do 1º ano JÁ com desconto; `preco_de_mensal` = mensal de tabela (riscado). Gateway: InfinitePay (nome NÃO aparece no site).
+  - **Landing Page** — de R$ 105/mês → **R$ 84/mês** · 1º ano **R$ 1.008**. UMA página de alta conversão, SEM painel.
+  - **Site institucional · Premium** (Mais escolhido) — de R$ 210/mês → **R$ 168/mês** · 1º ano **R$ 2.016**. COM painel próprio; clone da estrutura CRC (ver abaixo).
+  - **Loja virtual · Pro** — de R$ 340/mês → **R$ 272/mês** · 1º ano **R$ 3.264**. Tudo do Premium + carrinho/PIX/cartão/frete.
+- **Condição fundador é PÚBLICA de novo** (banda preta na seção de preços): 3 primeiros clientes, 20% off já aplicado, em troca de depoimento + portfólio.
+- **"Valores sujeitos a alteração"** aparece no subtexto da seção de preços e no rodapé do /orcamento — decisão do Fernando (13/07) pra não travar preço fixo pra sempre.
+- Hospedagem e domínio grátis no 1º ano. A partir do 2º ano, TODOS os produtos: **manutenção ANUAL de R$ 1.500 (≈ R$ 125/mês)** — hospedagem + domínio + correção técnica; NÃO cobre alterações de conteúdo (pra isso existe o painel) nem novas funcionalidades.
 - Sistemas sob medida (votação, doações etc.): orçamento sob consulta.
 - Fluxo de fechamento: proposta clara, contrato de 1 página, primeira parcela no cartão e começa.
-- **Estrutura do Sistema Institucional / E-commerce = clone da CRC** (`C:\Users\UITEC\Herd\crc`, Angular 20.3 + Laravel 13 + MySQL, mesma família do dolen). Páginas públicas: Home, Sobre, Serviços, Vídeos, Blog (lista+detalhe), Contato (form). Painel admin (Sanctum): Dashboard (stats), Mensagens (inbox do form: ler/marcar/excluir), Blog (CRUD + publicar/despublicar), Serviços (CRUD), Depoimentos (CRUD), Configurações (settings do site + upload logo/favicon). O E-commerce difere só por adicionar a venda pelo site (InfinityPay).
-- Produção atualizada em 2026-07-12: o site NO AR já mostra o modelo novo (3 produtos, valor mensal). Deploy completo daquele dia = landing redesenhada + /orcamento + módulo de propostas + token do Instagram + painel com Leads em Kanban.
+- **Estrutura do Premium / Loja Pro = clone da CRC** (`C:\Users\UITEC\Herd\crc`, Angular 20.3 + Laravel 13 + MySQL). Páginas públicas: Home, Sobre, Serviços, Vídeos, Blog (lista+detalhe), Contato (form). Painel admin (Sanctum): Dashboard, Mensagens, Blog (CRUD), Serviços (CRUD), Depoimentos (CRUD), Configurações. A Loja Pro difere só por adicionar a venda pelo site (InfinitePay).
 - **EduCore NÃO tem mais vínculo com Senac/Innovaday — nunca mencionar Senac na copy.** EduCore fica como produto próprio, sem destaque.
 
 ## Módulo de propostas comerciais (criado 2026-07-10)

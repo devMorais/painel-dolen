@@ -14,11 +14,13 @@ class PlanoPreco extends Model
         'nome',
         'descricao',
         'preco',
+        'preco_de_mensal',
         'destaque',
     ];
 
     protected $casts = [
         'preco' => 'decimal:2',
+        'preco_de_mensal' => 'decimal:2',
         'destaque' => 'boolean',
     ];
 

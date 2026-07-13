@@ -165,26 +165,29 @@ class LandingPageSeeder extends Seeder
             ['ordem' => 1, 'titulo' => 'Você conta o que precisa', 'descricao' => 'Chama no WhatsApp ou pelo formulário. Entendemos seu negócio e indicamos a melhor solução.'],
             ['ordem' => 2, 'titulo' => 'Orçamento e contrato', 'descricao' => 'Proposta clara, contrato de 1 página, primeira mensalidade no cartão e começamos.'],
             ['ordem' => 3, 'titulo' => 'Construção sobre base pronta', 'descricao' => 'Partimos de sistemas já em produção — por isso o prazo é dias, não meses.'],
-            ['ordem' => 4, 'titulo' => 'Entrega e manutenção', 'descricao' => 'Você recebe pronto. A partir do 2º ano, R$ 120/mês mantêm hospedagem, domínio e suporte técnico sempre em dia.'],
+            ['ordem' => 4, 'titulo' => 'Entrega e manutenção', 'descricao' => 'Você recebe pronto. A partir do 2º ano, a manutenção anual de R$ 1.500 mantém hospedagem, domínio e funcionamento sempre em dia.'],
         ])->each(fn (array $item) => Passo::create($item));
 
         PlanoPreco::query()->delete();
         GrupoPreco::query()->delete();
 
+        // Modelo comercial 2026-07-13 (base: proposta Móveis Soares):
+        // `preco` = total do 1º ano JÁ com desconto de fundador (-20%); o front divide por 12.
+        // `preco_de_mensal` = mensal de tabela (riscado no site).
         $planos = GrupoPreco::create(['ordem' => 1, 'nome' => 'Planos']);
         collect([
-            ['ordem' => 1, 'nome' => 'Landing Page', 'descricao' => 'Uma página de alta conversão, feita pra transformar visita em contato. Ideal pra divulgar um serviço, produto ou campanha.', 'preco' => 800, 'destaque' => false],
-            ['ordem' => 2, 'nome' => 'Sistema Institucional', 'descricao' => 'Site completo com painel próprio: páginas, blog, serviços, depoimentos e caixa de mensagens. Você edita tudo sozinho.', 'preco' => 2000, 'destaque' => true],
-            ['ordem' => 3, 'nome' => 'E-commerce', 'descricao' => 'Tudo do Institucional + loja pra vender pelo site, com pagamento online integrado e gestão de pedidos.', 'preco' => 3000, 'destaque' => false],
+            ['ordem' => 1, 'nome' => 'Landing Page', 'descricao' => 'Uma página de alta conversão, feita pra transformar visita em contato. Ideal pra divulgar um serviço, produto ou campanha.', 'preco' => 1008, 'preco_de_mensal' => 105, 'destaque' => false],
+            ['ordem' => 2, 'nome' => 'Site institucional · Premium', 'descricao' => 'Site completo com painel próprio: páginas, blog, SEO local e caixa de mensagens. Você edita tudo sozinho.', 'preco' => 2016, 'preco_de_mensal' => 210, 'destaque' => true],
+            ['ordem' => 3, 'nome' => 'Loja virtual · Pro', 'descricao' => 'Tudo do Premium + carrinho, pagamento por PIX e cartão no próprio site e configuração de frete.', 'preco' => 3264, 'preco_de_mensal' => 340, 'destaque' => false],
         ])->each(fn (array $item) => $planos->planos()->create($item));
 
         SecaoPrecos::updateOrCreate(['id' => 1], [
             'eyebrow' => 'Planos',
             'titulo' => 'Escolha o tamanho do seu projeto.',
-            'subtexto' => 'Hospedagem e domínio grátis no 1º ano. Tudo em até 12x no cartão.',
-            'nota_fundador_texto' => '',
-            'nota_fundador_cta_label' => '',
-            'nota_fundador_cta_url' => '',
+            'subtexto' => 'Hospedagem e domínio grátis no 1º ano. Tudo em até 12x no cartão. Valores sujeitos a alteração.',
+            'nota_fundador_texto' => 'Somos uma empresa nova — e assumimos isso. Os 3 primeiros clientes ganham 20% de desconto (já aplicado nos valores acima) em troca de depoimento e autorização de portfólio.',
+            'nota_fundador_cta_label' => 'Quero ser cliente fundador',
+            'nota_fundador_cta_url' => '/orcamento',
             'visivel' => true,
         ]);
 

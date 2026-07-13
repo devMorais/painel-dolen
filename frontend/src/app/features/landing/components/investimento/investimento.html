@@ -16,15 +16,24 @@
               <div class="pname">{{ plano.nome }}</div>
               <p class="pdesc">{{ plano.descricao }}</p>
               <div class="pval">
+                @if (formatarMensalTabela(plano.preco_de_mensal); as tabela) {
+                  <span class="pde">de {{ tabela }}/mês</span>
+                }
                 <span class="ptotal">{{ formatarParcela(plano.preco) }}<span class="pmes">/mês</span></span>
-                <span class="pparcela">12x no cartão · total {{ formatarPreco(plano.preco) }}</span>
+                <span class="pparcela">12x no cartão · 1º ano {{ formatarPreco(plano.preco) }}</span>
               </div>
-              <div class="pmaint">A partir do 2º ano: R$ 120/mês (hospedagem, domínio e suporte)</div>
+              <div class="pmaint">A partir do 2º ano: manutenção de R$ 1.500/ano (equivale a R$ 125/mês)</div>
               <a routerLink="/orcamento" class="btn btn-solid pbtn">Pedir orçamento</a>
             </div>
           }
         }
       </div>
+      @if (c.nota_fundador_texto) {
+        <div class="founder-note">
+          <span>{{ c.nota_fundador_texto }}</span>
+          <a routerLink="/orcamento" class="btn btn-founder">{{ c.nota_fundador_cta_label }}</a>
+        </div>
+      }
     </div>
   </section>
 }
