@@ -18,7 +18,7 @@ class LeadsController extends Controller
      */
     public function index(): JsonResponse
     {
-        $leads = Lead::query()->latest()->get();
+        $leads = Lead::query()->with('tags')->latest()->get();
 
         return response()->json(['data' => $leads]);
     }
@@ -61,7 +61,22 @@ class LeadsController extends Controller
 
         $lead->update($dados);
 
-        return response()->json(['data' => $lead]);
+        return response()->json(['data' => $lead->load('tags')]);
+    }
+
+    /**
+     * Sincroniza as etiquetas de um lead (recebe a lista completa de tag_ids).
+     */
+    public function syncTags(Request $request, Lead $lead): JsonResponse
+    {
+        $dados = $request->validate([
+            'tag_ids' => ['present', 'array'],
+            'tag_ids.*' => ['integer', 'exists:tags,id'],
+        ]);
+
+        $lead->tags()->sync($dados['tag_ids']);
+
+        return response()->json(['data' => $lead->load('tags')]);
     }
 
     public function destroy(Lead $lead): JsonResponse

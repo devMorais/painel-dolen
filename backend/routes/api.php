@@ -3,7 +3,9 @@
 use App\Http\Controllers\Api\Admin\AuthController;
 use App\Http\Controllers\Api\Admin\LeadsController;
 use App\Http\Controllers\Api\Admin\PropostasController;
+use App\Http\Controllers\Api\Admin\PublicacoesController;
 use App\Http\Controllers\Api\Admin\SecoesController;
+use App\Http\Controllers\Api\Admin\TagsController;
 use App\Http\Controllers\Api\InstagramController;
 use App\Http\Controllers\Api\LandingController;
 use App\Http\Controllers\Api\LeadController;
@@ -30,7 +32,17 @@ Route::prefix('admin')->group(function () {
         Route::get('/dashboard', [LeadsController::class, 'dashboard']);
         Route::get('/leads', [LeadsController::class, 'index']);
         Route::patch('/leads/{lead}', [LeadsController::class, 'update']);
+        Route::post('/leads/{lead}/tags', [LeadsController::class, 'syncTags']);
         Route::delete('/leads/{lead}', [LeadsController::class, 'destroy']);
+
+        Route::get('/tags', [TagsController::class, 'index']);
+        Route::post('/tags', [TagsController::class, 'store']);
+        Route::delete('/tags/{tag}', [TagsController::class, 'destroy']);
+
+        Route::get('/publicacoes', [PublicacoesController::class, 'index']);
+        Route::post('/publicacoes', [PublicacoesController::class, 'store']);
+        Route::post('/publicacoes/{publicacao}/publicar', [PublicacoesController::class, 'publicarAgora']);
+        Route::delete('/publicacoes/{publicacao}', [PublicacoesController::class, 'destroy']);
 
         Route::get('/propostas', [PropostasController::class, 'index']);
         Route::post('/propostas', [PropostasController::class, 'store']);

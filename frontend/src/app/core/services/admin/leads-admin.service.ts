@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { environment } from '@env/environment';
-import { DashboardStats, LeadAdmin, LeadStatus } from '@core/models/admin';
+import { DashboardStats, LeadAdmin, LeadStatus, Tag } from '@core/models/admin';
 
 @Injectable({ providedIn: 'root' })
 export class LeadsAdminService {
@@ -33,5 +33,20 @@ export class LeadsAdminService {
 
   excluir(id: number): Observable<void> {
     return this.http.delete<void>(`${this.base}/leads/${id}`);
+  }
+
+  // ---- Etiquetas ----
+  listarTags(): Observable<Tag[]> {
+    return this.http.get<{ data: Tag[] }>(`${this.base}/tags`).pipe(map((r) => r.data));
+  }
+
+  criarTag(nome: string, cor: string): Observable<Tag> {
+    return this.http.post<{ data: Tag }>(`${this.base}/tags`, { nome, cor }).pipe(map((r) => r.data));
+  }
+
+  sincronizarTags(leadId: number, tagIds: number[]): Observable<LeadAdmin> {
+    return this.http
+      .post<{ data: LeadAdmin }>(`${this.base}/leads/${leadId}/tags`, { tag_ids: tagIds })
+      .pipe(map((r) => r.data));
   }
 }

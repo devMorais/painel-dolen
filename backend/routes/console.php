@@ -11,3 +11,6 @@ Artisan::command('inspire', function () {
 // O token de acesso do Instagram expira em 60 dias; renovamos toda semana
 // pra nunca chegar perto do limite (precisa rodar `php artisan schedule:work` ou um cron real).
 Schedule::command('instagram:refresh-token')->weekly();
+
+// Publica as publicações agendadas que já chegaram na hora (a cada minuto).
+Schedule::command('publicacoes:processar')->everyMinute()->withoutOverlapping();

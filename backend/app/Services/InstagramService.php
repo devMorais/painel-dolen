@@ -47,6 +47,133 @@ class InstagramService
         Cache::forget(self::CACHE_KEY);
     }
 
+    /** Publica uma imagem no feed. Retorna [midia_id, permalink]. */
+    public function publicarPost(string $imagemUrl, ?string $legenda = null): array
+    {
+        $token = $this->configuracaoObrigatoria()->instagram_access_token;
+        $container = $this->criarContainer(['image_url' => $imagemUrl, 'caption' => $legenda], $token, false);
+
+        return $this->publicarContainer($container, $token);
+    }
+
+    /** Publica uma imagem ou vídeo como Story. */
+    public function publicarStory(string $url, bool $video = false): array
+    {
+        $token = $this->configuracaoObrigatoria()->instagram_access_token;
+        $params = $video
+            ? ['media_type' => 'STORIES', 'video_url' => $url]
+            : ['media_type' => 'STORIES', 'image_url' => $url];
+        $container = $this->criarContainer($params, $token, $video);
+
+        return $this->publicarContainer($container, $token);
+    }
+
+    /** Publica um Reels (vídeo no feed). */
+    public function publicarReels(string $videoUrl, ?string $legenda = null): array
+    {
+        $token = $this->configuracaoObrigatoria()->instagram_access_token;
+        $container = $this->criarContainer(
+            ['media_type' => 'REELS', 'video_url' => $videoUrl, 'caption' => $legenda],
+            $token,
+            true,
+        );
+
+        return $this->publicarContainer($container, $token);
+    }
+
+    /**
+     * Publica um carrossel (2–10 mídias).
+     * $midias = [['url' => ..., 'tipo' => 'imagem'|'video'], ...].
+     */
+    public function publicarCarrossel(array $midias, ?string $legenda = null): array
+    {
+        $token = $this->configuracaoObrigatoria()->instagram_access_token;
+
+        $filhos = [];
+        foreach ($midias as $midia) {
+            $ehVideo = ($midia['tipo'] ?? 'imagem') === 'video';
+            $params = ['is_carousel_item' => 'true'];
+            $params[$ehVideo ? 'video_url' : 'image_url'] = $midia['url'];
+            $filhos[] = $this->criarContainer($params, $token, $ehVideo);
+        }
+
+        $parent = $this->criarContainer([
+            'media_type' => 'CAROUSEL',
+            'children' => implode(',', $filhos),
+            'caption' => $legenda,
+        ], $token, false);
+
+        return $this->publicarContainer($parent, $token);
+    }
+
+    /** Cria um container de mídia. Se for vídeo, espera o Instagram processar. */
+    private function criarContainer(array $parametros, string $token, bool $video): string
+    {
+        $resposta = Http::asForm()
+            ->post(self::API_BASE.'/me/media', array_filter($parametros + ['access_token' => $token], fn ($v) => $v !== null))
+            ->throw()
+            ->json();
+
+        $id = $resposta['id'];
+
+        if ($video) {
+            $this->esperarProcessamento($id, $token);
+        }
+
+        return $id;
+    }
+
+    /** Aguarda o vídeo terminar de processar (status_code = FINISHED). */
+    private function esperarProcessamento(string $containerId, string $token): void
+    {
+        for ($tentativa = 0; $tentativa < 40; $tentativa++) {
+            $status = Http::get(self::API_BASE."/{$containerId}", [
+                'fields' => 'status_code',
+                'access_token' => $token,
+            ])->throw()->json('status_code');
+
+            if ($status === 'FINISHED') {
+                return;
+            }
+            if ($status === 'ERROR') {
+                throw new RuntimeException('O Instagram não conseguiu processar o vídeo.');
+            }
+
+            sleep(3);
+        }
+
+        throw new RuntimeException('Tempo esgotado esperando o vídeo processar no Instagram.');
+    }
+
+    /** Publica um container já criado e devolve [midia_id, permalink]. */
+    private function publicarContainer(string $creationId, string $token): array
+    {
+        $resultado = Http::asForm()
+            ->post(self::API_BASE.'/me/media_publish', [
+                'creation_id' => $creationId,
+                'access_token' => $token,
+            ])
+            ->throw()
+            ->json();
+
+        $midiaId = $resultado['id'];
+
+        // Busca o permalink da mídia recém-publicada (melhor esforço).
+        $permalink = null;
+        try {
+            $permalink = Http::get(self::API_BASE."/{$midiaId}", [
+                'fields' => 'permalink',
+                'access_token' => $token,
+            ])->throw()->json('permalink');
+        } catch (\Throwable $e) {
+            // ignora — o post já foi publicado
+        }
+
+        Cache::flush(); // invalida o feed pra o novo post aparecer no site
+
+        return ['midia_id' => $midiaId, 'permalink' => $permalink];
+    }
+
     private function configuracaoObrigatoria(): ConfiguracaoSite
     {
         $config = ConfiguracaoSite::first();

@@ -1,5 +1,42 @@
 .pg-head {
   margin-bottom: 22px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.pg-busca {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--white);
+  border: 1.5px solid var(--gray-light);
+  border-radius: 100px;
+  padding: 9px 16px;
+  min-width: 280px;
+}
+
+.pg-busca:focus-within {
+  border-color: var(--black);
+}
+
+.pg-busca svg {
+  width: 17px;
+  height: 17px;
+  color: var(--gray-mid);
+  flex: none;
+}
+
+.pg-busca input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--body);
+  font-size: 0.92rem;
+  width: 100%;
+  color: var(--black);
 }
 
 .pg-head h1 {
@@ -33,7 +70,8 @@
 .col {
   flex: 0 0 272px;
   width: 272px;
-  background: #f4f4f4;
+  background: #f7f7f7;
+  border: 1px solid var(--gray-light);
   border-radius: 16px;
   padding: 12px;
   display: flex;
@@ -90,6 +128,100 @@
   padding: 2px;
 }
 
+/* ---- Etiquetas (tags) ---- */
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.tagpill {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 100px;
+  line-height: 1.5;
+}
+
+.tags-pick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.tagchip {
+  font-family: var(--body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 100px;
+  border: 1.5px solid;
+  cursor: pointer;
+  transition: transform 0.1s ease, filter 0.12s ease;
+  opacity: 0.85;
+}
+
+.tagchip:hover {
+  transform: translateY(-1px);
+  opacity: 1;
+}
+
+.tagchip.on {
+  opacity: 1;
+}
+
+.tags-nova {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.tags-cores {
+  display: flex;
+  gap: 5px;
+}
+
+.swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.1s ease;
+}
+
+.swatch:hover {
+  transform: scale(1.12);
+}
+
+.swatch.on {
+  border-color: var(--black);
+  box-shadow: 0 0 0 2px var(--white) inset;
+}
+
+.tags-input {
+  flex: 1;
+  min-width: 130px;
+  font-family: var(--body);
+  font-size: 0.88rem;
+  padding: 8px 12px;
+  border: 1.5px solid var(--gray-light);
+  border-radius: 10px;
+}
+
+.tags-input:focus {
+  outline: none;
+  border-color: var(--black);
+}
+
+.tags-add {
+  padding: 8px 16px;
+  min-height: 0;
+}
+
 /* ---- Card ---- */
 .card {
   background: var(--white);
@@ -100,6 +232,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-height: 92px;
   transition: box-shadow 0.15s ease, border-color 0.15s ease, transform 0.05s ease;
 }
 
@@ -120,13 +253,12 @@
 }
 
 .card-prod {
-  align-self: flex-start;
-  font-size: 0.76rem;
-  font-weight: 600;
-  color: var(--gray-dark);
-  background: #f0f0f0;
-  border-radius: 100px;
-  padding: 3px 10px;
+  font-size: 0.78rem;
+  color: var(--gray-mid);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 62%;
 }
 
 .card-foot {
@@ -134,7 +266,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-top: 2px;
+  margin-top: auto;
 }
 
 .card-wpp {
@@ -215,8 +347,8 @@
 
 .modal {
   width: 100%;
-  max-width: 560px;
-  max-height: 90vh;
+  max-width: 640px;
+  max-height: 92vh;
   background: var(--white);
   border-radius: 20px;
   display: flex;

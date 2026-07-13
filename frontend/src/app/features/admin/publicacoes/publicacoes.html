@@ -1,0 +1,140 @@
+<header class="pg-head">
+  <div>
+    <h1>Publicações</h1>
+    <p>Componha e publique no Instagram — foto, carrossel, story ou reels — agora ou agendado, sem sair do painel.</p>
+  </div>
+</header>
+
+<div class="pub-layout">
+  <!-- Compor -->
+  <section class="compor">
+    <h2>Nova publicação</h2>
+
+    <div class="campo">
+      <label>Tipo</label>
+      <div class="seg seg-tipos">
+        @for (t of tipos; track t.valor) {
+          <button type="button" class="seg-btn" [class.on]="tipo() === t.valor" (click)="trocarTipo(t.valor)">
+            {{ t.rotulo }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="campo">
+      <label>Mídia <span class="dica">· {{ dica() }}</span></label>
+
+      @if (previas().length) {
+        <div class="previa-grid">
+          @for (p of previas(); track p.url; let i = $index) {
+            <div class="previa">
+              @if (p.video) {
+                <video [src]="p.url" muted playsinline></video>
+                <span class="previa-vid">Vídeo</span>
+              } @else {
+                <img [src]="p.url" alt="Prévia" />
+              }
+              <button type="button" class="previa-x" (click)="removerMidia(i)" aria-label="Remover">×</button>
+            </div>
+          }
+          @if (multiplo() && previas().length < 10) {
+            <label class="previa-add">
+              +
+              <input type="file" [accept]="aceita()" [multiple]="multiplo()" (change)="selecionarMidias($event)" hidden />
+            </label>
+          }
+        </div>
+      } @else {
+        <label class="upload">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21"/></svg>
+          <strong>Escolher mídia</strong>
+          <small>{{ dica() }}</small>
+          <input type="file" [accept]="aceita()" [multiple]="multiplo()" (change)="selecionarMidias($event)" hidden />
+        </label>
+      }
+    </div>
+
+    <div class="campo">
+      <label>Legenda</label>
+      <textarea
+        rows="3"
+        placeholder="Escreva a legenda…"
+        [value]="legenda()"
+        (input)="legenda.set($any($event.target).value)"
+      ></textarea>
+    </div>
+
+    <div class="campo">
+      <label>Quando</label>
+      <div class="seg">
+        <button type="button" class="seg-btn" [class.on]="quando() === 'agora'" (click)="quando.set('agora')">Publicar agora</button>
+        <button type="button" class="seg-btn" [class.on]="quando() === 'agendar'" (click)="quando.set('agendar')">Agendar</button>
+      </div>
+      @if (quando() === 'agendar') {
+        <input
+          class="dt"
+          type="datetime-local"
+          [value]="agendadoPara()"
+          (input)="agendadoPara.set($any($event.target).value)"
+        />
+      }
+    </div>
+
+    @if (erro(); as e) {
+      <div class="form-erro">{{ e }}</div>
+    }
+
+    <button type="button" class="btn btn-solid pub-enviar" [disabled]="!podeEnviar()" (click)="publicar()">
+      {{ enviando() ? 'Enviando…' : (quando() === 'agora' ? 'Publicar no Instagram' : 'Agendar publicação') }}
+    </button>
+  </section>
+
+  <!-- Lista -->
+  <section class="lista">
+    <h2>Suas publicações</h2>
+
+    @if (carregando()) {
+      <div class="lista-vazia">Carregando…</div>
+    } @else if (publicacoes().length === 0) {
+      <div class="lista-vazia">Nenhuma publicação ainda. Componha a primeira ao lado.</div>
+    } @else {
+      <div class="pub-grid">
+        @for (pub of publicacoes(); track pub.id) {
+          <article class="pub-card">
+            <div class="pub-thumb">
+              @if (primeiraEhVideo(pub)) {
+                <video class="pub-media" [src]="pub.imagem_url" muted playsinline></video>
+              } @else {
+                <div class="pub-media" [style.background-image]="'url(' + pub.imagem_url + ')'"></div>
+              }
+              <span class="pub-badge pub-{{ pub.status }}">{{ rotulo(pub.status) }}</span>
+              <span class="pub-tipo">{{ rotuloTipo(pub.tipo) }}</span>
+            </div>
+            <div class="pub-info">
+              @if (pub.legenda) {
+                <p class="pub-legenda">{{ pub.legenda }}</p>
+              }
+              @if (pub.status === 'agendado' && pub.agendado_para) {
+                <span class="pub-quando">Agendado p/ {{ quando_(pub.agendado_para) }}</span>
+              } @else if (pub.status === 'publicado' && pub.publicado_em) {
+                <span class="pub-quando">Publicado {{ quando_(pub.publicado_em) }}</span>
+              }
+              @if (pub.status === 'erro' && pub.erro) {
+                <span class="pub-erromsg">{{ pub.erro }}</span>
+              }
+              <div class="pub-acoes">
+                @if (pub.status === 'publicado' && pub.permalink) {
+                  <a [href]="pub.permalink" target="_blank" rel="noopener" class="pub-link">Ver no Instagram</a>
+                }
+                @if (pub.status === 'agendado' || pub.status === 'erro') {
+                  <button type="button" class="pub-btn" (click)="publicarAgora(pub)">Publicar agora</button>
+                }
+                <button type="button" class="pub-excluir" (click)="excluir(pub)">Excluir</button>
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </section>
+</div>

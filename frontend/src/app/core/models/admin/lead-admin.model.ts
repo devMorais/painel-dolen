@@ -1,5 +1,11 @@
 export type LeadStatus = 'novo' | 'em_contato' | 'proposta' | 'fechado' | 'perdido';
 
+export interface Tag {
+  id: number;
+  nome: string;
+  cor: string;
+}
+
 export interface LeadAdmin {
   id: number;
   nome: string;
@@ -11,6 +17,7 @@ export interface LeadAdmin {
   notas: string | null;
   origem: string | null;
   status: LeadStatus;
+  tags?: Tag[];
   created_at: string;
   updated_at: string;
 }
