@@ -1,0 +1,45 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+@import url("file:///C:/Users/UITEC/Herd/dolen-painel/artes/_gerador/fontface.css");
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Space Grotesk','Segoe UI',sans-serif;}
+html,body{width:1080px;height:1920px;overflow:hidden;}
+.c{position:relative;width:1080px;height:1920px;overflow:hidden;isolation:isolate;background:#f5f4f1;color:#101010;}
+.orbits{position:absolute;inset:0;z-index:1;}
+.grain{position:absolute;inset:0;z-index:40;opacity:0.26;mix-blend-mode:multiply;pointer-events:none;}
+.wrap{position:relative;z-index:20;height:100%;padding:150px 90px 160px;display:flex;flex-direction:column;}
+.top{display:flex;align-items:center;justify-content:space-between;}
+.brand{display:flex;align-items:center;gap:15px;}
+.brand img{width:42px;height:42px;}
+.brand .wm{font-size:30px;font-weight:700;}
+.tag{font-size:19px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;opacity:0.45;}
+.mid{margin:auto 0;}
+.kick{font-size:26px;font-weight:600;letter-spacing:0.26em;text-transform:uppercase;opacity:0.5;margin-bottom:40px;}
+h1{font-size:146px;font-weight:700;letter-spacing:-0.04em;line-height:0.93;}
+.u{position:relative;white-space:nowrap;}
+.u::after{content:"";position:absolute;left:0;right:0;bottom:0.04em;height:0.085em;background:#101010;border-radius:4px;}
+.foot{display:flex;align-items:center;justify-content:space-between;}
+.foot .s{font-size:31px;font-weight:500;opacity:0.6;}
+.foot .u2{font-size:23px;letter-spacing:0.14em;text-transform:uppercase;opacity:0.4;}
+</style></head>
+<body>
+<div class="c">
+  <svg class="orbits" viewBox="0 0 1080 1920" fill="none">
+    <circle cx="980" cy="380" r="400" stroke="#101010" stroke-opacity="0.10" stroke-width="2"/>
+    <circle cx="980" cy="380" r="560" stroke="#101010" stroke-opacity="0.055" stroke-width="2"/>
+    <circle cx="120" cy="1620" r="360" stroke="#101010" stroke-opacity="0.09" stroke-width="2"/>
+    <circle cx="120" cy="1620" r="520" stroke="#101010" stroke-opacity="0.05" stroke-width="2"/>
+    <circle cx="618" cy="35" r="7" fill="#101010" fill-opacity="0.5"/>
+    <circle cx="1035" cy="705" r="8" fill="#101010" fill-opacity="0.45"/>
+    <circle cx="-8" cy="1420" r="7" fill="#101010" fill-opacity="0.45"/>
+  </svg>
+  <div class="wrap">
+    <div class="top"><div class="brand"><img src="file:///C:/Users/UITEC/Herd/dolen-painel/frontend/public/assets/images/dolen-icone-preto.png"/><span class="wm">dolen</span></div><span class="tag">Sites sob medida</span></div>
+    <div class="mid">
+      <div class="kick">Pra todo tipo de negócio</div>
+      <h1>Um site pra<br/>cada <span class="u">profissão</span>.</h1>
+    </div>
+    <div class="foot"><span class="s">Do consultório ao restaurante.</span><span class="u2">dolen.com.br</span></div>
+  </div>
+  <svg class="grain" xmlns='http://www.w3.org/2000/svg'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(#g)' opacity='0.5'/></svg>
+</div>
+</body></html>

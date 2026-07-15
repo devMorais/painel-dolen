@@ -11,3 +11,7 @@ deploy-*.bat
 # Sistema
 .DS_Store
 Thumbs.db
+
+artes/reels/_gerador/node_modules/
+artes/reels/_gerador/frames*/
+artes/reels/_gerador/tpl*/
