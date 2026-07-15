@@ -33,4 +33,11 @@ Formato final: **1080×1920 (9:16, Reel tela cheia)**, ~13,6s, sem áudio (a tri
 Trocar textos em `cover_c9.html` / `overlay_body9.html` / `endcard9.html`, escolher os sites em
 `translate.js` e `build_reel9.py` (lista `TEMPLATES`), e rodar as 3 etapas. Regra: **Fernando aprova antes de publicar.**
 
+## Zonas seguras do Reel (IMPORTANTE — feedback Fernando 2026-07-14)
+A UI do Instagram cobre as bordas do Reel: **~250px topo**, **~480px rodapé** (nome, legenda, áudio, botões),
+**~160px direita** (curtir/comentar/enviar). Manter texto/CTA/logo **centralizados no miolo**, nunca colados
+nas bordas. No `reel-sites-profissoes.mp4` (v1) o rodapé (`dolen.com.br` / "Comece o seu") ficou parcialmente
+coberto. Ajustar nos próximos: nas peças (`cover_c9.html`, `overlay_body9.html`, `endcard9.html`) subir os blocos
+de texto pro centro (ex.: rodapé a ≥480px do fundo; nada importante à direita além de ~920px).
+
 Fora do versionamento: `node_modules/`, `frames9/`, `tpl_pt/` (regeneráveis).
