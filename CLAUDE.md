@@ -76,9 +76,17 @@ Monorepo com 2 projetos: `frontend/` (Angular 20.3) e `backend/` (Laravel 13, PH
 Tokens centralizados em frontend/src/styles.scss (preto/branco/cinza + `--erro`, fontes Space Grotesk + Inter) — sempre reusar var(), nunca cor solta. Logo oficial integrado (D-02): `assets/images/dolen-icone-preto.png` no header/footer (footer usa filter invert), favicon oficial, og_image = dolen-capa-facebook.png.
 - **Identidade é monocromática (preto/branco/cinza) por decisão — sem cor de acento.** Uma tentativa de promover o coral `#ff7b7b` a acento de marca (10/07/2026) foi testada e REVERTIDA: o fundador não gostou. Coral permanece só como `--erro` (estados de erro de formulário). Não reintroduzir cor de destaque sem pedido explícito.
 
-## Status das demandas (board Dolen no Avante, board_id 14)
-- CONCLUÍDAS: D-00 (domínio/DNS/e-mail), D-01 (formulário de leads ponta a ponta), D-02 (logo oficial), D-03 (SEO/robots/sitemap/JSON-LD validado), D-04 (deploy produção), D-05 (imagens produtos/diferenciais — PR da Claudia)
-- PENDENTES: D-06 (breakpoints/tablet), D-07 (lazy loading/performance), D-08 a D-14 (CRUD do painel admin — inclui tela de leads, que hoje só existem no banco), D-15 a D-18 (marketing/landings secundárias/métricas), D-19/D-20 (preços dinâmicos)
+## Status das demandas (board Dolen no Avante, board_id 14 — REESCRITO 2026-07-15)
+Board auditado e reescrito com base no código real (SSH direto no MySQL de produção `u846585591_gestao_tarefas`, mesmo servidor do Dolen; credenciais no DEPLOY.md do repo `gestao-tarefas`/Avante). Concluídas antigas mantidas intactas.
+- CONCLUÍDAS: 3 de Marca (259/260/261) + D-00 (domínio/DNS/e-mail), D-01 (leads ponta a ponta), D-02 (logo), D-03 (SEO/sitemap/JSON-LD), D-04 (deploy), D-05 (imagens), D-12 (tela de leads = o CRM Kanban) + **[FEITO] Módulo de Publicações Instagram**, **[FEITO] Módulo de Propostas**, **[FEITO] Modelo comercial novo** (marcados como feitos no board agora).
+- BACKLOG NOVO (Em Fila), por épico — **foco atual = Painel**:
+  - **Painel Administrativo:** A1 CRUD de conteúdo da landing · A2 CRUD de preços · A3 configurações + upload de imagens/logo · A4 dashboard real · A5 evoluir CRM (modal anotações/tarefas/histórico, filtros, lista) · A6 cron real na Hostinger (dispara agendamento + refresh token IG)
+  - **Contratos:** B1 módulo de contratos (contrato de 1 página) · B2 integração de assinatura eletrônica (ZapSign/Autentique/Clicksign/D4Sign — ferramenta a decidir)
+  - **WhatsApp** (depende da conta Meta liberar): C1 Cloud API nº empresa → webhook cria lead · C2 central de conversas no painel
+  - **Facebook:** D1 criar Página (conta comercial) + vincular app Meta · D2 publicar no FB pelo painel
+  - **Qualidade & Performance:** E1 responsividade (Em Andamento) · E2 performance/lazy loading
+  - **Marketing:** F1 plano de conteúdo — ⏸️ AGUARDANDO Fernando passar ideias + áudios da Claudia (deixar posts agendados / semana livre de design). NÃO iniciar até as ideias chegarem.
+  - META-01 mantida (documentação viva; anexada nota da revisão de 15/07).
 - Colaboradora: Claudia (marceline-mrq no GitHub) trabalha via feature branches + PR. **Só Fernando (e Claude com ele) faz deploy/mexe em produção** — colaboradores param no PR. PRs dela podem estar desatualizados vs main: sempre conferir `git log --oneline origin/main..branch` e mergear main na branch antes de avaliar.
 
 ## Regra obrigatória para toda demanda deste projeto
