@@ -22,7 +22,9 @@
                 <span class="ptotal">{{ formatarParcela(plano.preco) }}<span class="pmes">/mês</span></span>
                 <span class="pparcela">12x no cartão · 1º ano {{ formatarPreco(plano.preco) }}</span>
               </div>
-              <div class="pmaint">A partir do 2º ano: manutenção de R$ 1.500/ano (equivale a R$ 125/mês)</div>
+              @if (c.nota_manutencao) {
+                <div class="pmaint">{{ c.nota_manutencao }}</div>
+              }
               <a routerLink="/orcamento" class="btn btn-solid pbtn">Pedir orçamento</a>
             </div>
           }

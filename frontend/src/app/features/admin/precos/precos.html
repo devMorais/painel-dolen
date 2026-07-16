@@ -1,0 +1,106 @@
+<div class="precos-page">
+  <header class="cabecalho">
+    <div>
+      <h1>Preços</h1>
+      <p class="subtitulo">Edite planos e valores da seção de Investimento. Ao salvar, já vale no site.</p>
+    </div>
+    <a class="ver-site" href="/#precos" target="_blank" rel="noopener">Ver no site ↗</a>
+  </header>
+
+  @if (carregando()) {
+    <p class="estado">Carregando preços...</p>
+  } @else if (erroCarregar()) {
+    <p class="estado erro">Não foi possível carregar. Recarregue a página.</p>
+  } @else if (dados) {
+    <!-- ===== Textos da seção ===== -->
+    @if (dados.secao; as s) {
+      <section class="bloco">
+        <h2>Textos da seção</h2>
+        <div class="form-grid">
+          <label>Eyebrow
+            <input type="text" [(ngModel)]="s.eyebrow" maxlength="255" />
+          </label>
+          <label>Título
+            <input type="text" [(ngModel)]="s.titulo" maxlength="255" />
+          </label>
+          <label class="larga">Subtexto (mantenha o aviso "Valores sujeitos a alteração")
+            <textarea rows="2" [(ngModel)]="s.subtexto" maxlength="2000"></textarea>
+          </label>
+          <label class="larga">Nota de manutenção (linha em cada card de plano)
+            <input type="text" [(ngModel)]="s.nota_manutencao" maxlength="255" />
+          </label>
+          <label class="larga">Banda da condição de fundador
+            <textarea rows="2" [(ngModel)]="s.nota_fundador_texto" maxlength="2000"></textarea>
+          </label>
+          <label>Fundador — botão (texto)
+            <input type="text" [(ngModel)]="s.nota_fundador_cta_label" maxlength="255" />
+          </label>
+          <label>Fundador — botão (link)
+            <input type="text" [(ngModel)]="s.nota_fundador_cta_url" maxlength="255" />
+          </label>
+        </div>
+      </section>
+    }
+
+    <!-- ===== Grupos e planos ===== -->
+    @for (grupo of dados.grupos; track trackGrupo($index, grupo); let gi = $index) {
+      <section class="bloco">
+        <div class="grupo-head">
+          <label class="grupo-nome">Grupo
+            <input type="text" [(ngModel)]="grupo.nome" maxlength="255" />
+          </label>
+          @if (dados.grupos.length > 1) {
+            <button type="button" class="remover-grupo" (click)="removerGrupo(gi)">Remover grupo</button>
+          }
+        </div>
+
+        @for (plano of grupo.planos; track trackPlano($index, plano); let i = $index) {
+          <div class="plano-card" [class.destacado]="plano.destaque">
+            <div class="plano-campos">
+              <div class="form-grid">
+                <label>Nome do plano
+                  <input type="text" [(ngModel)]="plano.nome" maxlength="255" />
+                </label>
+                <label class="destaque-toggle">
+                  <input type="checkbox" [checked]="plano.destaque" (change)="marcarDestaque(plano)" />
+                  <span>Mais escolhido (selo no site)</span>
+                </label>
+                <label class="larga">Descrição
+                  <textarea rows="2" [(ngModel)]="plano.descricao" maxlength="2000"></textarea>
+                </label>
+                <label>Total do 1º ano (R$) — já com desconto
+                  <input type="number" [(ngModel)]="plano.preco" min="0" step="1" />
+                </label>
+                <label>Mensal de tabela (R$) — aparece riscado; vazio esconde
+                  <input type="number" [(ngModel)]="plano.preco_de_mensal" min="0" step="1" />
+                </label>
+              </div>
+              <p class="previa">
+                No site: @if (inteiro(plano.preco_de_mensal) !== '—') {<s>de {{ inteiro(plano.preco_de_mensal) }}/mês</s> → }
+                <strong>{{ parcela(plano.preco) }}/mês</strong> · 12x no cartão · 1º ano {{ inteiro(plano.preco) }}
+              </p>
+            </div>
+            <div class="plano-acoes">
+              <button type="button" (click)="moverPlano(grupo, i, -1)" [disabled]="i === 0" aria-label="Mover pra cima">↑</button>
+              <button type="button" (click)="moverPlano(grupo, i, 1)" [disabled]="i === grupo.planos.length - 1" aria-label="Mover pra baixo">↓</button>
+              <button type="button" class="remover" (click)="removerPlano(grupo, i)" aria-label="Remover plano">×</button>
+            </div>
+          </div>
+        }
+
+        <button type="button" class="adicionar" (click)="adicionarPlano(grupo)">+ Adicionar plano</button>
+      </section>
+    }
+
+    <button type="button" class="adicionar grupo" (click)="adicionarGrupo()">+ Adicionar grupo</button>
+
+    <footer class="rodape">
+      @if (mensagem(); as msg) {
+        <span class="msg" [class.ok]="msg.tipo === 'ok'" [class.erro]="msg.tipo === 'erro'">{{ msg.texto }}</span>
+      }
+      <button type="button" class="salvar" (click)="salvar()" [disabled]="salvando()">
+        {{ salvando() ? 'Salvando...' : 'Salvar preços' }}
+      </button>
+    </footer>
+  }
+</div>

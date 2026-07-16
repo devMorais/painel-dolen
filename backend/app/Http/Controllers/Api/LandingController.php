@@ -59,7 +59,7 @@ class LandingController extends Controller
             ),
             'precos' => array_merge(
                 $secaoPrecos ? Arr::only($secaoPrecos->toArray(), [
-                    'eyebrow', 'titulo', 'subtexto',
+                    'eyebrow', 'titulo', 'subtexto', 'nota_manutencao',
                     'nota_fundador_texto', 'nota_fundador_cta_label', 'nota_fundador_cta_url',
                     'visivel',
                 ]) : [],

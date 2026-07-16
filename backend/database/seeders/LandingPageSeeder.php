@@ -185,6 +185,7 @@ class LandingPageSeeder extends Seeder
             'eyebrow' => 'Planos',
             'titulo' => 'Escolha o tamanho do seu projeto.',
             'subtexto' => 'Hospedagem e domínio grátis no 1º ano. Tudo em até 12x no cartão. Valores sujeitos a alteração.',
+            'nota_manutencao' => 'A partir do 2º ano: manutenção de R$ 1.500/ano (equivale a R$ 125/mês)',
             'nota_fundador_texto' => 'Somos uma empresa nova — e assumimos isso. Os 3 primeiros clientes ganham 20% de desconto (já aplicado nos valores acima) em troca de depoimento e autorização de portfólio.',
             'nota_fundador_cta_label' => 'Quero ser cliente fundador',
             'nota_fundador_cta_url' => '/orcamento',

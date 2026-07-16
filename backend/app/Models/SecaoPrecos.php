@@ -12,6 +12,7 @@ class SecaoPrecos extends Model
         'eyebrow',
         'titulo',
         'subtexto',
+        'nota_manutencao',
         'nota_fundador_texto',
         'nota_fundador_cta_label',
         'nota_fundador_cta_url',

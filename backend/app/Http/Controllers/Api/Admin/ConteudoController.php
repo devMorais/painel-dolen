@@ -42,7 +42,7 @@ class ConteudoController extends Controller
         'como-funciona' => [SecaoComoFunciona::class, ['eyebrow', 'titulo', 'subtexto']],
         'instagram' => [SecaoInstagram::class, ['eyebrow', 'titulo']],
         'precos' => [SecaoPrecos::class, [
-            'eyebrow', 'titulo', 'subtexto',
+            'eyebrow', 'titulo', 'subtexto', 'nota_manutencao',
             'nota_fundador_texto', 'nota_fundador_cta_label', 'nota_fundador_cta_url',
         ]],
         'cta' => [SecaoCta::class, [
@@ -63,7 +63,7 @@ class ConteudoController extends Controller
     {
         $payload = [];
 
-        foreach (self::SECOES as $slug => [$modelo, $campos]) {
+        foreach (self::SECOES as $slug => [$modelo]) {
             $registro = $modelo::first();
             $payload[$slug] = ['secao' => $registro];
         }

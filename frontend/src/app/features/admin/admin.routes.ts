@@ -5,6 +5,7 @@ import { AdminLayout } from '@layout/admin-layout/admin-layout';
 import { Login } from '@features/admin/auth/login/login';
 import { Conteudo } from '@features/admin/conteudo/conteudo';
 import { Dashboard } from '@features/admin/dashboard/dashboard';
+import { Precos } from '@features/admin/precos/precos';
 import { Leads } from '@features/admin/leads/leads';
 import { Publicacoes } from '@features/admin/publicacoes/publicacoes';
 import { PropostaEditor } from '@features/admin/propostas/proposta-editor/proposta-editor';
@@ -23,6 +24,7 @@ export const adminRoutes: Routes = [
       { path: 'leads', component: Leads },
       { path: 'publicacoes', component: Publicacoes },
       { path: 'conteudo', component: Conteudo },
+      { path: 'precos', component: Precos },
       { path: 'secoes', component: SecoesList },
       { path: 'propostas', component: PropostasList },
       { path: 'propostas/nova', component: PropostaEditor },

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Admin\AuthController;
 use App\Http\Controllers\Api\Admin\ConteudoController;
 use App\Http\Controllers\Api\Admin\LeadsController;
+use App\Http\Controllers\Api\Admin\PrecosController;
 use App\Http\Controllers\Api\Admin\PropostasController;
 use App\Http\Controllers\Api\Admin\PublicacoesController;
 use App\Http\Controllers\Api\Admin\SecoesController;
@@ -32,6 +33,9 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/conteudo', [ConteudoController::class, 'index']);
         Route::put('/conteudo/{slug}', [ConteudoController::class, 'update']);
+
+        Route::get('/precos', [PrecosController::class, 'index']);
+        Route::put('/precos', [PrecosController::class, 'update']);
 
         Route::get('/dashboard', [LeadsController::class, 'dashboard']);
         Route::get('/leads', [LeadsController::class, 'index']);
