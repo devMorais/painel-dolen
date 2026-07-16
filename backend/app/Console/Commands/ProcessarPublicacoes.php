@@ -22,7 +22,8 @@ class ProcessarPublicacoes extends Command
 
         foreach ($pendentes as $pub) {
             $controller->publicarRegistro($pub, $instagram);
-            $this->info("Publicação #{$pub->id}: {$pub->fresh()->status}");
+            $status = $pub->fresh()->status ?? 'removida durante o processamento';
+            $this->info("Publicação #{$pub->id}: {$status}");
         }
 
         $this->info($pendentes->isEmpty() ? 'Nada agendado pra agora.' : "{$pendentes->count()} processada(s).");
