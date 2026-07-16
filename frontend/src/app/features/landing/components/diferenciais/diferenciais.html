@@ -14,7 +14,7 @@
             <div class="num">{{ numero(item.ordem) }}</div>
             <div class="dif-icon">
               @if (item.imagem_url) {
-                <img [src]="item.imagem_url" [alt]="item.titulo" loading="lazy" />
+                <img [src]="item.imagem_url" [alt]="item.titulo" loading="lazy" width="40" height="40" />
               } @else {
                 <span class="dif-icon-fallback">{{ item.titulo.charAt(0) }}</span>
               }

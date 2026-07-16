@@ -1,5 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
 
+/* Fontes self-hosted (evita depender do Google Fonts: menos 1 conexão externa,
+   sem FOUT/CLS por atraso de rede de terceiro). Variable fonts — 1 arquivo cobre os pesos usados. */
+@font-face {
+  font-family: 'Space Grotesk';
+  src: url('/assets/fonts/space-grotesk-latin-ext.woff2') format('woff2');
+  font-weight: 500 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/assets/fonts/inter-latin-ext.woff2') format('woff2');
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --black: #0a0a0a;
   --white: #ffffff;
