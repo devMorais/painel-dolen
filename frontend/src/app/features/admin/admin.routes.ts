@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { authGuard } from '@core/guards/auth.guard';
 import { AdminLayout } from '@layout/admin-layout/admin-layout';
 import { Login } from '@features/admin/auth/login/login';
+import { Conteudo } from '@features/admin/conteudo/conteudo';
 import { Dashboard } from '@features/admin/dashboard/dashboard';
 import { Leads } from '@features/admin/leads/leads';
 import { Publicacoes } from '@features/admin/publicacoes/publicacoes';
@@ -21,6 +22,7 @@ export const adminRoutes: Routes = [
       { path: 'dashboard', component: Dashboard },
       { path: 'leads', component: Leads },
       { path: 'publicacoes', component: Publicacoes },
+      { path: 'conteudo', component: Conteudo },
       { path: 'secoes', component: SecoesList },
       { path: 'propostas', component: PropostasList },
       { path: 'propostas/nova', component: PropostaEditor },

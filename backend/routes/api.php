@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\AuthController;
+use App\Http\Controllers\Api\Admin\ConteudoController;
 use App\Http\Controllers\Api\Admin\LeadsController;
 use App\Http\Controllers\Api\Admin\PropostasController;
 use App\Http\Controllers\Api\Admin\PublicacoesController;
@@ -28,6 +29,9 @@ Route::prefix('admin')->group(function () {
         Route::get('/me', [AuthController::class, 'me']);
         Route::get('/secoes', [SecoesController::class, 'index']);
         Route::patch('/secoes/{slug}', [SecoesController::class, 'updateVisibilidade']);
+
+        Route::get('/conteudo', [ConteudoController::class, 'index']);
+        Route::put('/conteudo/{slug}', [ConteudoController::class, 'update']);
 
         Route::get('/dashboard', [LeadsController::class, 'dashboard']);
         Route::get('/leads', [LeadsController::class, 'index']);

@@ -1,0 +1,293 @@
+<div class="conteudo-page">
+  <header class="cabecalho">
+    <div>
+      <h1>Conteúdo do site</h1>
+      <p class="subtitulo">Edite os textos de cada seção da landing. Ao salvar, a mudança já vale no site.</p>
+    </div>
+    <a class="ver-site" href="/" target="_blank" rel="noopener">Ver o site ↗</a>
+  </header>
+
+  @if (carregando()) {
+    <p class="estado">Carregando conteúdo...</p>
+  } @else if (erroCarregar()) {
+    <p class="estado erro">Não foi possível carregar o conteúdo. Recarregue a página.</p>
+  } @else if (dados) {
+    <nav class="abas" aria-label="Seções">
+      @for (aba of abas; track aba.slug) {
+        <button
+          type="button"
+          class="aba"
+          [class.ativa]="abaAtiva() === aba.slug"
+          (click)="trocarAba(aba.slug)"
+        >{{ aba.label }}</button>
+      }
+    </nav>
+
+    <section class="painel">
+      <!-- ===================== HERO ===================== -->
+      @if (abaAtiva() === 'hero' && dados.hero.secao; as s) {
+        <div class="form-grid">
+          <label>Eyebrow (linha pequena acima do título)
+            <input type="text" [(ngModel)]="s.eyebrow" maxlength="255" />
+          </label>
+          <label>Título
+            <input type="text" [(ngModel)]="s.titulo" maxlength="255" />
+          </label>
+          <label>Palavra em destaque no título
+            <input type="text" [(ngModel)]="s.titulo_destaque" maxlength="255" />
+          </label>
+          <label class="larga">Texto de apoio
+            <textarea rows="3" [(ngModel)]="s.texto" maxlength="2000"></textarea>
+          </label>
+          <label>Botão principal — texto
+            <input type="text" [(ngModel)]="s.cta_primario_label" maxlength="255" />
+          </label>
+          <label>Botão principal — link
+            <input type="text" [(ngModel)]="s.cta_primario_url" maxlength="255" />
+          </label>
+          <label>Botão secundário — texto
+            <input type="text" [(ngModel)]="s.cta_secundario_label" maxlength="255" />
+          </label>
+          <label>Botão secundário — link
+            <input type="text" [(ngModel)]="s.cta_secundario_url" maxlength="255" />
+          </label>
+          <label class="larga">Itens de prova (um por linha)
+            <textarea rows="3" [(ngModel)]="heroProva" placeholder="Ex.: Painel próprio incluso"></textarea>
+          </label>
+        </div>
+      }
+
+      <!-- ===================== SOBRE ===================== -->
+      @if (abaAtiva() === 'sobre' && dados.sobre.secao; as s) {
+        <div class="form-grid">
+          <label>Eyebrow
+            <input type="text" [(ngModel)]="s.eyebrow" maxlength="255" />
+          </label>
+          <label>Título
+            <input type="text" [(ngModel)]="s.titulo" maxlength="255" />
+          </label>
+          <label class="larga">Parágrafos (um por linha)
+            <textarea rows="5" [(ngModel)]="sobreParagrafos"></textarea>
+          </label>
+          <label>Destaque — tag
+            <input type="text" [(ngModel)]="s.destaque_tag" maxlength="255" />
+          </label>
+          <label>Destaque — título
+            <input type="text" [(ngModel)]="s.destaque_titulo" maxlength="255" />
+          </label>
+          <label class="larga">Destaque — texto
+            <textarea rows="3" [(ngModel)]="s.destaque_texto" maxlength="2000"></textarea>
+          </label>
+          <label>Destaque — link (texto)
+            <input type="text" [(ngModel)]="s.destaque_link_label" maxlength="255" />
+          </label>
+          <label>Destaque — link (URL)
+            <input type="text" [(ngModel)]="s.destaque_link_url" maxlength="255" />
+          </label>
+        </div>
+      }
+
+      <!-- ===================== DIFERENCIAIS ===================== -->
+      @if (abaAtiva() === 'diferenciais' && dados.diferenciais.secao; as s) {
+        <div class="form-grid">
+          <label>Eyebrow
+            <input type="text" [(ngModel)]="s.eyebrow" maxlength="255" />
+          </label>
+          <label>Título
+            <input type="text" [(ngModel)]="s.titulo" maxlength="255" />
+          </label>
+          <label class="larga">Subtexto
+            <textarea rows="2" [(ngModel)]="s.subtexto" maxlength="2000"></textarea>
+          </label>
+        </div>
+
+        <h2 class="itens-titulo">Itens ({{ dados.diferenciais.itens.length }})</h2>
+        @for (item of dados.diferenciais.itens; track trackItem($index, item); let i = $index) {
+          <div class="item-card">
+            <div class="item-campos">
+              <label>Título
+                <input type="text" [(ngModel)]="item.titulo" maxlength="255" />
+              </label>
+              <label class="larga">Descrição
+                <textarea rows="2" [(ngModel)]="item.descricao" maxlength="2000"></textarea>
+              </label>
+            </div>
+            <div class="item-acoes">
+              <button type="button" (click)="moverItem(dados.diferenciais.itens, i, -1)" [disabled]="i === 0" aria-label="Mover pra cima">↑</button>
+              <button type="button" (click)="moverItem(dados.diferenciais.itens, i, 1)" [disabled]="i === dados.diferenciais.itens.length - 1" aria-label="Mover pra baixo">↓</button>
+              <button type="button" class="remover" (click)="removerItem(dados.diferenciais.itens, i)" aria-label="Remover item">×</button>
+            </div>
+          </div>
+        }
+        <button type="button" class="adicionar" (click)="adicionarItem(dados.diferenciais.itens)">+ Adicionar item</button>
+      }
+
+      <!-- ===================== PRODUTOS ===================== -->
+      @if (abaAtiva() === 'produtos' && dados.produtos.secao; as s) {
+        <div class="form-grid">
+          <label>Eyebrow
+            <input type="text" [(ngModel)]="s.eyebrow" maxlength="255" />
+          </label>
+          <label>Título
+            <input type="text" [(ngModel)]="s.titulo" maxlength="255" />
+          </label>
+          <label class="larga">Subtexto
+            <textarea rows="2" [(ngModel)]="s.subtexto" maxlength="2000"></textarea>
+          </label>
+        </div>
+
+        <h2 class="itens-titulo">Produtos ({{ dados.produtos.itens.length }})</h2>
+        <p class="itens-nota">Aqui você edita os textos de cada produto. Criar/remover produto e preços ficam em outras telas.</p>
+        @for (produto of dados.produtos.itens; track trackProduto($index, produto)) {
+          <details class="produto-card">
+            <summary>{{ produto.nome || 'Produto sem nome' }}</summary>
+            <div class="form-grid">
+              <label>Nome
+                <input type="text" [(ngModel)]="produto.nome" maxlength="255" />
+              </label>
+              <label>Badge
+                <input type="text" [(ngModel)]="produto.badge" maxlength="255" />
+              </label>
+              <label>Rótulo de ordem
+                <input type="text" [(ngModel)]="produto.rotulo_ordem" maxlength="255" />
+              </label>
+              <label>Preço (texto exibido)
+                <input type="text" [(ngModel)]="produto.preco_label" maxlength="255" />
+              </label>
+              <label class="larga">Descrição
+                <textarea rows="3" [(ngModel)]="produto.descricao" maxlength="2000"></textarea>
+              </label>
+              <label class="larga">Público-alvo
+                <textarea rows="2" [(ngModel)]="produto.publico_alvo" maxlength="2000"></textarea>
+              </label>
+              <label>Botão principal — texto
+                <input type="text" [(ngModel)]="produto.cta_primario_label" maxlength="255" />
+              </label>
+              <label>Botão principal — link
+                <input type="text" [(ngModel)]="produto.cta_primario_url" maxlength="255" />
+              </label>
+              <label>Botão secundário — texto
+                <input type="text" [(ngModel)]="produto.cta_secundario_label" maxlength="255" />
+              </label>
+              <label>Botão secundário — link
+                <input type="text" [(ngModel)]="produto.cta_secundario_url" maxlength="255" />
+              </label>
+            </div>
+          </details>
+        }
+      }
+
+      <!-- ===================== COMO FUNCIONA ===================== -->
+      @if (abaAtiva() === 'como-funciona' && dados['como-funciona'].secao; as s) {
+        <div class="form-grid">
+          <label>Eyebrow
+            <input type="text" [(ngModel)]="s.eyebrow" maxlength="255" />
+          </label>
+          <label>Título
+            <input type="text" [(ngModel)]="s.titulo" maxlength="255" />
+          </label>
+          <label class="larga">Subtexto
+            <textarea rows="2" [(ngModel)]="s.subtexto" maxlength="2000"></textarea>
+          </label>
+        </div>
+
+        <h2 class="itens-titulo">Passos ({{ dados['como-funciona'].itens.length }})</h2>
+        @for (item of dados['como-funciona'].itens; track trackItem($index, item); let i = $index) {
+          <div class="item-card">
+            <div class="item-campos">
+              <label>Título
+                <input type="text" [(ngModel)]="item.titulo" maxlength="255" />
+              </label>
+              <label class="larga">Descrição
+                <textarea rows="2" [(ngModel)]="item.descricao" maxlength="2000"></textarea>
+              </label>
+            </div>
+            <div class="item-acoes">
+              <button type="button" (click)="moverItem(dados['como-funciona'].itens, i, -1)" [disabled]="i === 0" aria-label="Mover pra cima">↑</button>
+              <button type="button" (click)="moverItem(dados['como-funciona'].itens, i, 1)" [disabled]="i === dados['como-funciona'].itens.length - 1" aria-label="Mover pra baixo">↓</button>
+              <button type="button" class="remover" (click)="removerItem(dados['como-funciona'].itens, i)" aria-label="Remover passo">×</button>
+            </div>
+          </div>
+        }
+        <button type="button" class="adicionar" (click)="adicionarItem(dados['como-funciona'].itens)">+ Adicionar passo</button>
+      }
+
+      <!-- ===================== INSTAGRAM ===================== -->
+      @if (abaAtiva() === 'instagram' && dados.instagram.secao; as s) {
+        <div class="form-grid">
+          <label>Eyebrow
+            <input type="text" [(ngModel)]="s.eyebrow" maxlength="255" />
+          </label>
+          <label>Título
+            <input type="text" [(ngModel)]="s.titulo" maxlength="255" />
+          </label>
+        </div>
+        <p class="itens-nota">Os posts vêm automaticamente do &#64;dolen.ia — aqui só o cabeçalho da seção.</p>
+      }
+
+      <!-- ===================== PREÇOS ===================== -->
+      @if (abaAtiva() === 'precos' && dados.precos.secao; as s) {
+        <div class="form-grid">
+          <label>Eyebrow
+            <input type="text" [(ngModel)]="s.eyebrow" maxlength="255" />
+          </label>
+          <label>Título
+            <input type="text" [(ngModel)]="s.titulo" maxlength="255" />
+          </label>
+          <label class="larga">Subtexto
+            <textarea rows="2" [(ngModel)]="s.subtexto" maxlength="2000"></textarea>
+          </label>
+          <label class="larga">Nota da condição de fundador
+            <textarea rows="2" [(ngModel)]="s.nota_fundador_texto" maxlength="2000"></textarea>
+          </label>
+          <label>Nota fundador — botão (texto)
+            <input type="text" [(ngModel)]="s.nota_fundador_cta_label" maxlength="255" />
+          </label>
+          <label>Nota fundador — botão (link)
+            <input type="text" [(ngModel)]="s.nota_fundador_cta_url" maxlength="255" />
+          </label>
+        </div>
+        <p class="itens-nota">Grupos e planos de preço (valores) serão editáveis na tela de Preços (em breve).</p>
+      }
+
+      <!-- ===================== CTA FINAL ===================== -->
+      @if (abaAtiva() === 'cta' && dados.cta.secao; as s) {
+        <div class="form-grid">
+          <label>Título
+            <input type="text" [(ngModel)]="s.titulo" maxlength="255" />
+          </label>
+          <label class="larga">Texto
+            <textarea rows="3" [(ngModel)]="s.texto" maxlength="2000"></textarea>
+          </label>
+          <label>Instagram — texto do botão
+            <input type="text" [(ngModel)]="s.instagram_label" maxlength="255" />
+          </label>
+          <label>Instagram — URL
+            <input type="text" [(ngModel)]="s.instagram_url" maxlength="255" />
+          </label>
+          <label>E-mail — texto do botão
+            <input type="text" [(ngModel)]="s.email_label" maxlength="255" />
+          </label>
+          <label>E-mail — destino
+            <input type="text" [(ngModel)]="s.email_destino" maxlength="255" />
+          </label>
+          <label>E-mail — assunto
+            <input type="text" [(ngModel)]="s.email_assunto" maxlength="255" />
+          </label>
+          <label class="larga">Nota (linha pequena)
+            <textarea rows="2" [(ngModel)]="s.nota" maxlength="2000"></textarea>
+          </label>
+        </div>
+      }
+
+      <footer class="rodape">
+        @if (mensagem(); as msg) {
+          <span class="msg" [class.ok]="msg.tipo === 'ok'" [class.erro]="msg.tipo === 'erro'">{{ msg.texto }}</span>
+        }
+        <button type="button" class="salvar" (click)="salvar()" [disabled]="salvando()">
+          {{ salvando() ? 'Salvando...' : 'Salvar seção' }}
+        </button>
+      </footer>
+    </section>
+  }
+</div>
