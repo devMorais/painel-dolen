@@ -69,12 +69,21 @@ class InstagramService
         return $this->publicarContainer($container, $token);
     }
 
-    /** Publica um Reels (vídeo no feed). */
-    public function publicarReels(string $videoUrl, ?string $legenda = null): array
+    /**
+     * Publica um Reels (vídeo no feed).
+     * $thumbOffsetMs escolhe a capa a partir de um frame do próprio vídeo
+     * (em milissegundos); null deixa a Meta escolher automaticamente.
+     */
+    public function publicarReels(string $videoUrl, ?string $legenda = null, ?int $thumbOffsetMs = null): array
     {
         $token = $this->configuracaoObrigatoria()->instagram_access_token;
         $container = $this->criarContainer(
-            ['media_type' => 'REELS', 'video_url' => $videoUrl, 'caption' => $legenda],
+            [
+                'media_type' => 'REELS',
+                'video_url' => $videoUrl,
+                'caption' => $legenda,
+                'thumb_offset' => $thumbOffsetMs,
+            ],
             $token,
             true,
         );

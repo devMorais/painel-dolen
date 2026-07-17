@@ -102,12 +102,16 @@ class PublicacoesController extends Controller
             $primeira = $midias[0] ?? ['url' => $pub->imagem_url, 'tipo' => 'imagem'];
             $ehVideo = ($primeira['tipo'] ?? 'imagem') === 'video';
 
+            // 500ms: cai dentro da cena de capa (preta, com o texto de abertura)
+            // que todo Reels da Dolen renderiza nos primeiros ~1,3s.
+            $thumbOffsetMs = 500;
+
             $resultado = match ($pub->tipo) {
-                'reels' => $instagram->publicarReels($primeira['url'], $pub->legenda),
+                'reels' => $instagram->publicarReels($primeira['url'], $pub->legenda, $thumbOffsetMs),
                 'carrossel' => $instagram->publicarCarrossel($midias, $pub->legenda),
                 'story' => $instagram->publicarStory($primeira['url'], $ehVideo),
                 default => $ehVideo
-                    ? $instagram->publicarReels($primeira['url'], $pub->legenda)
+                    ? $instagram->publicarReels($primeira['url'], $pub->legenda, $thumbOffsetMs)
                     : $instagram->publicarPost($primeira['url'], $pub->legenda),
             };
 
