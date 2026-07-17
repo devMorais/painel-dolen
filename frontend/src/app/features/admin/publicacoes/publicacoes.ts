@@ -18,9 +18,11 @@ interface Previa {
 })
 export class Publicacoes {
   private readonly service = inject(PublicacoesAdminService);
+  private static readonly CHAVE_COLAPSADOS = 'dolen:admin:publicacoes-grupos-colapsados';
 
   protected readonly publicacoes = signal<Publicacao[]>([]);
   protected readonly carregando = signal(true);
+  protected readonly gruposColapsados = signal<Set<string>>(this.lerColapsadosSalvos());
 
   // Formulário de composição
   protected readonly arquivos = signal<File[]>([]);
@@ -103,6 +105,32 @@ export class Publicacoes {
 
   constructor() {
     this.carregar();
+  }
+
+  private lerColapsadosSalvos(): Set<string> {
+    try {
+      const bruto = localStorage.getItem(Publicacoes.CHAVE_COLAPSADOS);
+      return bruto ? new Set(JSON.parse(bruto)) : new Set();
+    } catch {
+      return new Set();
+    }
+  }
+
+  protected estaColapsado(chave: string): boolean {
+    return this.gruposColapsados().has(chave);
+  }
+
+  protected alternarGrupo(chave: string): void {
+    this.gruposColapsados.update((atual) => {
+      const novo = new Set(atual);
+      if (novo.has(chave)) {
+        novo.delete(chave);
+      } else {
+        novo.add(chave);
+      }
+      localStorage.setItem(Publicacoes.CHAVE_COLAPSADOS, JSON.stringify([...novo]));
+      return novo;
+    });
   }
 
   private carregar(): void {

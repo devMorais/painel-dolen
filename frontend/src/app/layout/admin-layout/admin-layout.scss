@@ -1,5 +1,6 @@
 :host {
   --sb-w: 260px;
+  --sb-w-colapsada: 76px;
   --ink: #0d0d0f;
   --ink-2: #16161a;
   --line: rgba(255, 255, 255, 0.08);
@@ -59,6 +60,52 @@
   flex-direction: column;
   border-right: 1px solid var(--line);
   z-index: 40;
+  transition: width 0.18s ease;
+}
+
+.sidebar.colapsada {
+  width: var(--sb-w-colapsada);
+}
+
+.sidebar.colapsada .sb-label {
+  display: none;
+}
+
+.sidebar.colapsada .sb-brand {
+  justify-content: center;
+  padding: 22px 0 20px;
+}
+
+.sidebar.colapsada .sb-brand-txt {
+  display: none;
+}
+
+.sidebar.colapsada .sb-glabel {
+  display: none;
+}
+
+.sidebar.colapsada .sb-user-txt {
+  display: none;
+}
+
+.sidebar.colapsada .sb-nav a,
+.sidebar.colapsada .sb-soon {
+  justify-content: center;
+  padding: 10px;
+}
+
+.sidebar.colapsada .sb-glabel {
+  text-align: center;
+  padding: 4px 4px 6px;
+}
+
+.sidebar.colapsada .sb-user {
+  justify-content: center;
+}
+
+.sidebar.colapsada .sb-sair {
+  justify-content: center;
+  padding: 9px;
 }
 
 .sb-brand {
@@ -66,6 +113,38 @@
   align-items: center;
   gap: 11px;
   padding: 22px 20px 20px;
+  transition: padding 0.18s ease;
+}
+
+.sb-colapsar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 26px;
+  right: -12px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--ink-2);
+  color: var(--txt);
+  cursor: pointer;
+  z-index: 41;
+  transition: color 0.15s ease, transform 0.18s ease;
+}
+
+.sb-colapsar:hover {
+  color: var(--txt-strong);
+}
+
+.sb-colapsar svg {
+  width: 14px;
+  height: 14px;
+}
+
+.sidebar.colapsada .sb-colapsar svg {
+  transform: rotate(180deg);
 }
 
 .sb-logo {
@@ -251,6 +330,11 @@
   margin-left: var(--sb-w);
   padding: 40px 44px 64px;
   min-height: 100vh;
+  transition: margin-left 0.18s ease;
+}
+
+.sidebar.colapsada ~ .admin-main {
+  margin-left: var(--sb-w-colapsada);
 }
 
 .sb-backdrop {
@@ -273,9 +357,14 @@
     box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
   }
 
-  .admin-main {
+  .admin-main,
+  .sidebar.colapsada ~ .admin-main {
     margin-left: 0;
     padding: 24px 20px 48px;
+  }
+
+  .sb-colapsar {
+    display: none;
   }
 
   .sb-backdrop {

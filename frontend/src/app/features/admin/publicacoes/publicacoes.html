@@ -99,30 +99,36 @@
       <div class="lista-vazia">Nenhuma publicação ainda. Componha a primeira ao lado.</div>
     } @else {
       @if (agendadas().length) {
-        <div class="grupo grupo-agendadas">
-          <h2 class="grupo-titulo">
+        <div class="grupo grupo-agendadas" [class.colapsado]="estaColapsado('agendadas')">
+          <button type="button" class="grupo-titulo" (click)="alternarGrupo('agendadas')">
+            <svg class="grupo-seta" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
             Agendadas
             <span class="grupo-count">{{ agendadas().length }}</span>
-          </h2>
-          <div class="pub-grid">
-            @for (pub of agendadas(); track pub.id) {
-              <ng-container [ngTemplateOutlet]="card" [ngTemplateOutletContext]="{ $implicit: pub }" />
-            }
-          </div>
+          </button>
+          @if (!estaColapsado('agendadas')) {
+            <div class="pub-grid">
+              @for (pub of agendadas(); track pub.id) {
+                <ng-container [ngTemplateOutlet]="card" [ngTemplateOutletContext]="{ $implicit: pub }" />
+              }
+            </div>
+          }
         </div>
       }
 
       @for (grupo of gruposPorTipo(); track grupo.tipo) {
-        <div class="grupo">
-          <h2 class="grupo-titulo">
+        <div class="grupo" [class.colapsado]="estaColapsado(grupo.tipo)">
+          <button type="button" class="grupo-titulo" (click)="alternarGrupo(grupo.tipo)">
+            <svg class="grupo-seta" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
             {{ grupo.rotulo }}
             <span class="grupo-count">{{ grupo.itens.length }}</span>
-          </h2>
-          <div class="pub-grid">
-            @for (pub of grupo.itens; track pub.id) {
-              <ng-container [ngTemplateOutlet]="card" [ngTemplateOutletContext]="{ $implicit: pub }" />
-            }
-          </div>
+          </button>
+          @if (!estaColapsado(grupo.tipo)) {
+            <div class="pub-grid">
+              @for (pub of grupo.itens; track pub.id) {
+                <ng-container [ngTemplateOutlet]="card" [ngTemplateOutletContext]="{ $implicit: pub }" />
+              }
+            </div>
+          }
         </div>
       }
     }

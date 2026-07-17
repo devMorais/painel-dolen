@@ -14,8 +14,11 @@ export class AdminLayout {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
+  private static readonly CHAVE_COLAPSADO = 'dolen:admin:sidebar-colapsado';
+
   protected readonly usuario = signal<AdminUser | null>(null);
   protected readonly menuAberto = signal(false);
+  protected readonly colapsada = signal(localStorage.getItem(AdminLayout.CHAVE_COLAPSADO) === '1');
 
   constructor() {
     this.authService.me().subscribe({
@@ -36,6 +39,14 @@ export class AdminLayout {
 
   protected alternarMenu(): void {
     this.menuAberto.update((v) => !v);
+  }
+
+  protected alternarColapso(): void {
+    this.colapsada.update((v) => {
+      const novo = !v;
+      localStorage.setItem(AdminLayout.CHAVE_COLAPSADO, novo ? '1' : '0');
+      return novo;
+    });
   }
 
   protected fecharMenu(): void {
