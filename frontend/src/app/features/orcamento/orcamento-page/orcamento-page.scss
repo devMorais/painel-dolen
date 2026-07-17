@@ -339,3 +339,41 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Telas baixas (celulares compactos como iPhone SE, ~640-700px de altura):
+   o critério é caber sem rolar, então aqui cortamos ar vertical, não largura. */
+@media (max-height: 700px) {
+  .orc-top {
+    padding: 12px 22px;
+  }
+
+  .orc-main {
+    justify-content: flex-start;
+    padding: 8px 22px 20px;
+  }
+
+  .orc-card {
+    padding: 20px 20px;
+  }
+
+  .orc-passo-tag {
+    margin-bottom: 6px;
+  }
+
+  .orc-sub {
+    margin-top: 4px;
+    margin-bottom: 14px;
+  }
+
+  .orc-opcoes {
+    gap: 6px;
+  }
+
+  .opt-row {
+    padding: 11px 14px;
+  }
+
+  .orc-rodape {
+    display: none;
+  }
+}
