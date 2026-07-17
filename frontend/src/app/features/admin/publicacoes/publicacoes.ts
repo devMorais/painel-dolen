@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { NgTemplateOutlet } from '@angular/common';
 
 import { PublicacoesAdminService } from '@core/services/admin';
 import { Publicacao, PublicacaoStatus, PublicacaoTipo } from '@core/models/admin';
@@ -11,7 +12,7 @@ interface Previa {
 
 @Component({
   selector: 'app-publicacoes',
-  imports: [],
+  imports: [NgTemplateOutlet],
   templateUrl: './publicacoes.html',
   styleUrl: './publicacoes.scss',
 })
@@ -39,6 +40,25 @@ export class Publicacoes {
   ];
 
   protected readonly multiplo = computed(() => this.tipo() === 'carrossel');
+
+  // Agrupamento da lista: agendadas primeiro (mais urgente), depois o resto
+  // por tipo — cada tipo vira sua própria seção, em vez de tudo misturado.
+  protected readonly agendadas = computed(() =>
+    this.publicacoes()
+      .filter((p) => p.status === 'agendado' || p.status === 'publicando')
+      .sort((a, b) => (a.agendado_para ?? '').localeCompare(b.agendado_para ?? '')),
+  );
+
+  protected readonly gruposPorTipo = computed(() => {
+    const restante = this.publicacoes().filter((p) => p.status !== 'agendado' && p.status !== 'publicando');
+    return this.tipos
+      .map((t) => ({
+        tipo: t.valor,
+        rotulo: t.rotulo,
+        itens: restante.filter((p) => p.tipo === t.valor),
+      }))
+      .filter((g) => g.itens.length > 0);
+  });
 
   protected readonly aceita = computed(() => {
     switch (this.tipo()) {

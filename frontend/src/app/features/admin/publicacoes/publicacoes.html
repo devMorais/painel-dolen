@@ -91,50 +91,76 @@
 
   <!-- Lista -->
   <section class="lista">
-    <h2>Suas publicações</h2>
-
     @if (carregando()) {
+      <h2>Suas publicações</h2>
       <div class="lista-vazia">Carregando…</div>
     } @else if (publicacoes().length === 0) {
+      <h2>Suas publicações</h2>
       <div class="lista-vazia">Nenhuma publicação ainda. Componha a primeira ao lado.</div>
     } @else {
-      <div class="pub-grid">
-        @for (pub of publicacoes(); track pub.id) {
-          <article class="pub-card">
-            <div class="pub-thumb">
-              @if (primeiraEhVideo(pub)) {
-                <video class="pub-media" [src]="pub.imagem_url" muted playsinline></video>
-              } @else {
-                <div class="pub-media" [style.background-image]="'url(' + pub.imagem_url + ')'"></div>
-              }
-              <span class="pub-badge pub-{{ pub.status }}">{{ rotulo(pub.status) }}</span>
-              <span class="pub-tipo">{{ rotuloTipo(pub.tipo) }}</span>
-            </div>
-            <div class="pub-info">
-              @if (pub.legenda) {
-                <p class="pub-legenda">{{ pub.legenda }}</p>
-              }
-              @if (pub.status === 'agendado' && pub.agendado_para) {
-                <span class="pub-quando">Agendado p/ {{ quando_(pub.agendado_para) }}</span>
-              } @else if (pub.status === 'publicado' && pub.publicado_em) {
-                <span class="pub-quando">Publicado {{ quando_(pub.publicado_em) }}</span>
-              }
-              @if (pub.status === 'erro' && pub.erro) {
-                <span class="pub-erromsg">{{ pub.erro }}</span>
-              }
-              <div class="pub-acoes">
-                @if (pub.status === 'publicado' && pub.permalink) {
-                  <a [href]="pub.permalink" target="_blank" rel="noopener" class="pub-link">Ver no Instagram</a>
-                }
-                @if (pub.status === 'agendado' || pub.status === 'erro') {
-                  <button type="button" class="pub-btn" (click)="publicarAgora(pub)">Publicar agora</button>
-                }
-                <button type="button" class="pub-excluir" (click)="excluir(pub)">Excluir</button>
-              </div>
-            </div>
-          </article>
-        }
-      </div>
+      @if (agendadas().length) {
+        <div class="grupo grupo-agendadas">
+          <h2 class="grupo-titulo">
+            Agendadas
+            <span class="grupo-count">{{ agendadas().length }}</span>
+          </h2>
+          <div class="pub-grid">
+            @for (pub of agendadas(); track pub.id) {
+              <ng-container [ngTemplateOutlet]="card" [ngTemplateOutletContext]="{ $implicit: pub }" />
+            }
+          </div>
+        </div>
+      }
+
+      @for (grupo of gruposPorTipo(); track grupo.tipo) {
+        <div class="grupo">
+          <h2 class="grupo-titulo">
+            {{ grupo.rotulo }}
+            <span class="grupo-count">{{ grupo.itens.length }}</span>
+          </h2>
+          <div class="pub-grid">
+            @for (pub of grupo.itens; track pub.id) {
+              <ng-container [ngTemplateOutlet]="card" [ngTemplateOutletContext]="{ $implicit: pub }" />
+            }
+          </div>
+        </div>
+      }
     }
   </section>
 </div>
+
+<ng-template #card let-pub>
+  <article class="pub-card">
+    <div class="pub-thumb">
+      @if (primeiraEhVideo(pub)) {
+        <video class="pub-media" [src]="pub.imagem_url" muted playsinline></video>
+      } @else {
+        <div class="pub-media" [style.background-image]="'url(' + pub.imagem_url + ')'"></div>
+      }
+      <span class="pub-badge pub-{{ pub.status }}">{{ rotulo(pub.status) }}</span>
+      <span class="pub-tipo">{{ rotuloTipo(pub.tipo) }}</span>
+    </div>
+    <div class="pub-info">
+      @if (pub.legenda) {
+        <p class="pub-legenda">{{ pub.legenda }}</p>
+      }
+      @if (pub.status === 'agendado' && pub.agendado_para) {
+        <span class="pub-quando">Agendado p/ {{ quando_(pub.agendado_para) }}</span>
+      } @else if (pub.status === 'publicado' && pub.publicado_em) {
+        <span class="pub-quando">Publicado {{ quando_(pub.publicado_em) }}</span>
+      }
+      @if (pub.status === 'erro' && pub.erro) {
+        <span class="pub-erromsg">{{ pub.erro }}</span>
+      }
+      <div class="pub-acoes">
+        @if (pub.status === 'publicado' && pub.permalink) {
+          <a [href]="pub.permalink" target="_blank" rel="noopener" class="pub-link">Ver no Instagram</a>
+        }
+        @if (pub.status === 'agendado' || pub.status === 'erro') {
+          <button type="button" class="pub-btn" (click)="publicarAgora(pub)">Publicar agora</button>
+        }
+        <button type="button" class="pub-excluir" (click)="excluir(pub)">Excluir</button>
+      </div>
+    </div>
+  </article>
+</ng-template>

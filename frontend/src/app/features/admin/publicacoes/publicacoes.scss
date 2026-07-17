@@ -238,13 +238,53 @@
 .lista {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 34px;
 }
 
 .lista-vazia {
   padding: 40px 0;
   text-align: center;
   color: var(--gray-mid);
+}
+
+.grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.grupo-titulo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.grupo-count {
+  font-family: var(--body);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--gray-mid);
+  background: var(--gray-light);
+  border-radius: 100px;
+  padding: 2px 9px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.grupo-agendadas {
+  padding: 16px 16px 18px;
+  border: 1.5px solid #3b82f6;
+  border-radius: 16px;
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.grupo-agendadas .grupo-titulo {
+  color: #3b82f6;
+}
+
+.grupo-agendadas .grupo-count {
+  background: #3b82f6;
+  color: var(--white);
 }
 
 .pub-grid {
