@@ -5,6 +5,87 @@
   </div>
 </header>
 
+<section class="metricas" [class.colapsado]="!metricasAbertas()">
+  <button type="button" class="metricas-titulo" (click)="alternarMetricas()">
+    <svg class="grupo-seta" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+    Métricas do Instagram
+    <span class="metricas-sub">@dolen.ia</span>
+  </button>
+
+  @if (metricasAbertas()) {
+    @if (carregandoMetricas()) {
+      <div class="metricas-vazio">Carregando métricas…</div>
+    } @else if (erroMetricas()) {
+      <div class="metricas-vazio">Não foi possível carregar as métricas agora.</div>
+    } @else if (metricas().length === 0) {
+      <div class="metricas-vazio">Ainda não há publicações com métricas.</div>
+    } @else {
+      <div class="metricas-resumo">
+        <div class="metrica-tile">
+          <span class="metrica-valor">{{ resumoMetricas().alcanceTotal }}</span>
+          <span class="metrica-rotulo">Alcance total</span>
+        </div>
+        <div class="metrica-tile">
+          <span class="metrica-valor">{{ resumoMetricas().curtidasTotal }}</span>
+          <span class="metrica-rotulo">Curtidas</span>
+        </div>
+        <div class="metrica-tile">
+          <span class="metrica-valor">{{ resumoMetricas().salvosTotal }}</span>
+          <span class="metrica-rotulo">Salvamentos</span>
+        </div>
+        <div class="metrica-tile">
+          <span class="metrica-valor">{{ resumoMetricas().viewsReelsTotal }}</span>
+          <span class="metrica-rotulo">Views em Reels</span>
+        </div>
+        <div class="metrica-tile">
+          <span class="metrica-valor">{{ resumoMetricas().alcanceMedioReels }}</span>
+          <span class="metrica-rotulo">Alcance médio · Reels</span>
+        </div>
+        <div class="metrica-tile">
+          <span class="metrica-valor">{{ resumoMetricas().alcanceMedioFeed }}</span>
+          <span class="metrica-rotulo">Alcance médio · Feed</span>
+        </div>
+      </div>
+
+      @if (resumoMetricas().melhorPost; as destaque) {
+        <a class="metrica-destaque" [href]="destaque.permalink" target="_blank" rel="noopener">
+          <span class="metrica-destaque-selo">🏆 Melhor alcance</span>
+          <span class="metrica-destaque-texto">{{ legendaResumo(destaque.caption) }}</span>
+          <span class="metrica-destaque-valor">{{ destaque.insights.reach }} contas alcançadas</span>
+        </a>
+      }
+
+      <div class="metricas-tabela">
+        <div class="mtab-cab">
+          <span>Publicação</span>
+          <span>Tipo</span>
+          <span>Alcance</span>
+          <span>Curtidas</span>
+          <span>Coment.</span>
+          <span>Salvos</span>
+          <span>Compart.</span>
+          <span>Views</span>
+        </div>
+        @for (m of metricasOrdenadas(); track m.id) {
+          <a class="mtab-linha" [href]="m.permalink" target="_blank" rel="noopener">
+            <span class="mtab-post">
+              <span class="mtab-legenda">{{ legendaResumo(m.caption) }}</span>
+              <span class="mtab-data">{{ dataResumo(m.timestamp) }}</span>
+            </span>
+            <span class="mtab-tipo mtab-tipo-{{ m.media_product_type.toLowerCase() }}">{{ rotuloProduto(m.media_product_type) }}</span>
+            <span>{{ m.insights.reach ?? '—' }}</span>
+            <span>{{ m.insights.likes ?? '—' }}</span>
+            <span>{{ m.insights.comments ?? '—' }}</span>
+            <span>{{ m.insights.saved ?? '—' }}</span>
+            <span>{{ m.insights.shares ?? '—' }}</span>
+            <span>{{ m.media_product_type === 'REELS' ? (m.insights.views ?? '—') : '—' }}</span>
+          </a>
+        }
+      </div>
+    }
+  }
+</section>
+
 <div class="pub-layout">
   <!-- Compor -->
   <section class="compor">

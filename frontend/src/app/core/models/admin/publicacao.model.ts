@@ -22,3 +22,25 @@ export interface Publicacao {
   created_at: string;
   updated_at: string;
 }
+
+export interface MetricaInsights {
+  reach?: number;
+  likes?: number;
+  comments?: number;
+  saved?: number;
+  shares?: number;
+  total_interactions?: number;
+  views?: number;
+}
+
+export interface MetricaPublicacao {
+  id: string;
+  caption: string | null;
+  media_type: string;
+  media_product_type: 'FEED' | 'REELS' | 'STORY' | string;
+  timestamp: string;
+  permalink: string;
+  thumbnail_url?: string;
+  media_url?: string;
+  insights: MetricaInsights;
+}

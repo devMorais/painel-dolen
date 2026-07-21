@@ -31,6 +31,53 @@ class InstagramService
         });
     }
 
+    /**
+     * Métricas (insights) das últimas mídias publicadas, mais recentes primeiro.
+     * Combina cada mídia com seus insights numa única lista pronta pra exibir.
+     */
+    public function metricas(int $limite = 12): array
+    {
+        return Cache::remember(self::CACHE_KEY.":metricas:{$limite}", self::CACHE_TTL_SEGUNDOS, function () use ($limite) {
+            $config = $this->configuracaoObrigatoria();
+            $token = $config->instagram_access_token;
+
+            $midias = Http::get(self::API_BASE.'/me/media', [
+                'fields' => 'id,caption,media_type,media_product_type,timestamp,permalink,thumbnail_url,media_url',
+                'limit' => $limite,
+                'access_token' => $token,
+            ])->throw()->json('data', []);
+
+            return array_map(fn (array $midia) => [
+                ...$midia,
+                'insights' => $this->insightsDaMidia($midia, $token),
+            ], $midias);
+        });
+    }
+
+    private function insightsDaMidia(array $midia, string $token): array
+    {
+        $ehReel = ($midia['media_product_type'] ?? null) === 'REELS';
+        $metricas = $ehReel
+            ? 'reach,likes,comments,saved,shares,total_interactions,views'
+            : 'reach,likes,comments,saved,shares,total_interactions';
+
+        try {
+            $resposta = Http::get(self::API_BASE."/{$midia['id']}/insights", [
+                'metric' => $metricas,
+                'access_token' => $token,
+            ])->throw()->json('data', []);
+        } catch (RequestException) {
+            return [];
+        }
+
+        $valores = [];
+        foreach ($resposta as $item) {
+            $valores[$item['name']] = $item['values'][0]['value'] ?? 0;
+        }
+
+        return $valores;
+    }
+
     public function renovarToken(): void
     {
         $config = $this->configuracaoObrigatoria();

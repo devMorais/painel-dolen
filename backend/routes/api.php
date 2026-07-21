@@ -48,6 +48,7 @@ Route::prefix('admin')->group(function () {
         Route::delete('/tags/{tag}', [TagsController::class, 'destroy']);
 
         Route::get('/publicacoes', [PublicacoesController::class, 'index']);
+        Route::get('/publicacoes/metricas', [PublicacoesController::class, 'metricas']);
         Route::post('/publicacoes', [PublicacoesController::class, 'store']);
         Route::post('/publicacoes/{publicacao}/publicar', [PublicacoesController::class, 'publicarAgora']);
         Route::delete('/publicacoes/{publicacao}', [PublicacoesController::class, 'destroy']);

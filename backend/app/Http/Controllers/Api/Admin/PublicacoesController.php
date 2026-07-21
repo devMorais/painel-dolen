@@ -18,6 +18,11 @@ class PublicacoesController extends Controller
         return response()->json(['data' => Publicacao::query()->latest()->get()]);
     }
 
+    public function metricas(InstagramService $instagram): JsonResponse
+    {
+        return response()->json(['data' => $instagram->metricas()]);
+    }
+
     public function store(Request $request, InstagramService $instagram): JsonResponse
     {
         $dados = $request->validate([

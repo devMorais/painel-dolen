@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { environment } from '@env/environment';
-import { Publicacao } from '@core/models/admin';
+import { MetricaPublicacao, Publicacao } from '@core/models/admin';
 
 @Injectable({ providedIn: 'root' })
 export class PublicacoesAdminService {
@@ -13,6 +13,12 @@ export class PublicacoesAdminService {
 
   listar(): Observable<Publicacao[]> {
     return this.http.get<{ data: Publicacao[] }>(`${this.base}/publicacoes`).pipe(map((r) => r.data));
+  }
+
+  metricas(): Observable<MetricaPublicacao[]> {
+    return this.http
+      .get<{ data: MetricaPublicacao[] }>(`${this.base}/publicacoes/metricas`)
+      .pipe(map((r) => r.data));
   }
 
   criar(form: FormData): Observable<Publicacao> {

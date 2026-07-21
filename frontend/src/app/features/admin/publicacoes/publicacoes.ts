@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { NgTemplateOutlet } from '@angular/common';
 
 import { PublicacoesAdminService } from '@core/services/admin';
-import { Publicacao, PublicacaoStatus, PublicacaoTipo } from '@core/models/admin';
+import { MetricaPublicacao, Publicacao, PublicacaoStatus, PublicacaoTipo } from '@core/models/admin';
 
 interface Previa {
   url: string;
@@ -23,6 +23,12 @@ export class Publicacoes {
   protected readonly publicacoes = signal<Publicacao[]>([]);
   protected readonly carregando = signal(true);
   protected readonly gruposColapsados = signal<Set<string>>(this.lerColapsadosSalvos());
+
+  // Métricas (Instagram Insights)
+  protected readonly metricas = signal<MetricaPublicacao[]>([]);
+  protected readonly carregandoMetricas = signal(true);
+  protected readonly erroMetricas = signal(false);
+  protected readonly metricasAbertas = signal(true);
 
   // Formulário de composição
   protected readonly arquivos = signal<File[]>([]);
@@ -60,6 +66,42 @@ export class Publicacoes {
         itens: restante.filter((p) => p.tipo === t.valor),
       }))
       .filter((g) => g.itens.length > 0);
+  });
+
+  // Ordena por data (mais recente primeiro) — a API já devolve assim, mas não custa garantir.
+  protected readonly metricasOrdenadas = computed(() =>
+    [...this.metricas()].sort((a, b) => b.timestamp.localeCompare(a.timestamp)),
+  );
+
+  protected readonly resumoMetricas = computed(() => {
+    const itens = this.metricas();
+    const somar = (campo: keyof MetricaPublicacao['insights']) =>
+      itens.reduce((acc, m) => acc + (m.insights[campo] ?? 0), 0);
+
+    const reels = itens.filter((m) => m.media_product_type === 'REELS');
+    const alcanceTotal = somar('reach');
+    const melhorAlcance = itens.reduce<MetricaPublicacao | null>(
+      (melhor, atual) => ((atual.insights.reach ?? 0) > (melhor?.insights.reach ?? -1) ? atual : melhor),
+      null,
+    );
+
+    return {
+      totalPosts: itens.length,
+      totalReels: reels.length,
+      alcanceTotal,
+      curtidasTotal: somar('likes'),
+      salvosTotal: somar('saved'),
+      compartTotal: somar('shares'),
+      viewsReelsTotal: reels.reduce((acc, m) => acc + (m.insights.views ?? 0), 0),
+      alcanceMedioReels: reels.length ? Math.round(reels.reduce((acc, m) => acc + (m.insights.reach ?? 0), 0) / reels.length) : 0,
+      alcanceMedioFeed: itens.length - reels.length
+        ? Math.round(
+            itens.filter((m) => m.media_product_type !== 'REELS').reduce((acc, m) => acc + (m.insights.reach ?? 0), 0) /
+              (itens.length - reels.length),
+          )
+        : 0,
+      melhorPost: melhorAlcance,
+    };
   });
 
   protected readonly aceita = computed(() => {
@@ -105,6 +147,40 @@ export class Publicacoes {
 
   constructor() {
     this.carregar();
+    this.carregarMetricas();
+  }
+
+  private carregarMetricas(): void {
+    this.service.metricas().subscribe({
+      next: (m) => {
+        this.metricas.set(m);
+        this.carregandoMetricas.set(false);
+      },
+      error: () => {
+        this.erroMetricas.set(true);
+        this.carregandoMetricas.set(false);
+      },
+    });
+  }
+
+  protected alternarMetricas(): void {
+    this.metricasAbertas.update((v) => !v);
+  }
+
+  protected legendaResumo(caption: string | null): string {
+    if (!caption) {
+      return '(sem legenda)';
+    }
+    const primeiraLinha = caption.split(/\r?\n/)[0].trim();
+    return primeiraLinha.length > 70 ? primeiraLinha.slice(0, 70) + '…' : primeiraLinha;
+  }
+
+  protected dataResumo(iso: string): string {
+    return new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+  }
+
+  protected rotuloProduto(tipo: string): string {
+    return tipo === 'REELS' ? 'Reels' : tipo === 'STORY' ? 'Story' : 'Feed';
   }
 
   private lerColapsadosSalvos(): Set<string> {
