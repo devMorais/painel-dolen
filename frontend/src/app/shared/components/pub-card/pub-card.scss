@@ -1,0 +1,130 @@
+.pub-card {
+  border: 1px solid var(--gray-light);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+}
+
+.pub-thumb {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background-color: var(--gray-light);
+  overflow: hidden;
+}
+
+.pub-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-size: cover;
+  background-position: center;
+}
+
+.pub-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 100px;
+  color: var(--white);
+  background: var(--gray-mid);
+}
+
+.pub-rascunho { background: #6b7280; }
+.pub-agendado { background: #3b82f6; }
+.pub-publicando { background: #f59e0b; }
+.pub-publicado { background: #22c55e; }
+.pub-erro { background: #ef4444; }
+
+.pub-tipo {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 100px;
+  background: rgba(10, 10, 10, 0.55);
+  color: var(--white);
+  backdrop-filter: blur(3px);
+}
+
+.pub-info {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.pub-legenda {
+  font-size: 0.88rem;
+  color: var(--gray-dark);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pub-quando {
+  font-size: 0.8rem;
+  color: var(--gray-mid);
+}
+
+.pub-erromsg {
+  font-size: 0.78rem;
+  color: var(--erro);
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pub-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+.pub-link,
+.pub-btn {
+  color: var(--black);
+}
+
+.pub-link,
+.pub-btn,
+.pub-excluir {
+  font-family: var(--body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.pub-link {
+  border-bottom: 1.5px solid var(--black);
+  padding-bottom: 1px;
+}
+
+.pub-btn:hover,
+.pub-link:hover {
+  color: var(--gray-dark);
+}
+
+.pub-excluir {
+  color: var(--erro);
+  margin-left: auto;
+}

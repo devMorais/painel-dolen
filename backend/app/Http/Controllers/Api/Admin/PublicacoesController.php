@@ -18,9 +18,45 @@ class PublicacoesController extends Controller
         return response()->json(['data' => Publicacao::query()->latest()->get()]);
     }
 
-    public function metricas(InstagramService $instagram): JsonResponse
+    public function metricas(Request $request, InstagramService $instagram): JsonResponse
     {
-        return response()->json(['data' => $instagram->metricas()]);
+        $limite = min((int) $request->query('limite', 12), 50);
+
+        return response()->json(['data' => $instagram->metricas($limite ?: 12)]);
+    }
+
+    public function publicados(Request $request, InstagramService $instagram): JsonResponse
+    {
+        $resultado = $instagram->publicadosPaginados($request->query('after'));
+
+        return response()->json([
+            'data' => $resultado['data'],
+            'proximo_cursor' => $resultado['proximo_cursor'],
+        ]);
+    }
+
+    public function comentarios(string $mediaId, InstagramService $instagram): JsonResponse
+    {
+        try {
+            return response()->json(['data' => $instagram->comentariosDaMidia($mediaId)]);
+        } catch (RequestException $e) {
+            return response()->json(['message' => $this->mensagemErro($e)], 422);
+        }
+    }
+
+    public function responderComentario(Request $request, string $commentId, InstagramService $instagram): JsonResponse
+    {
+        $dados = $request->validate([
+            'texto' => ['required', 'string', 'max:2200'],
+        ]);
+
+        try {
+            $resposta = $instagram->responderComentario($commentId, $dados['texto']);
+        } catch (RequestException $e) {
+            return response()->json(['message' => $this->mensagemErro($e)], 422);
+        }
+
+        return response()->json(['data' => $resposta], 201);
     }
 
     public function store(Request $request, InstagramService $instagram): JsonResponse

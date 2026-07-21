@@ -1,0 +1,123 @@
+<div class="compor-layout">
+  <section class="compor">
+    <div class="campo">
+      <label>Tipo</label>
+      <div class="seg seg-tipos">
+        @for (t of tipos; track t.valor) {
+          <button type="button" class="seg-btn" [class.on]="tipo() === t.valor" (click)="trocarTipo(t.valor)">
+            {{ t.rotulo }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="campo">
+      <label>Mídia <span class="dica">· {{ dica() }}</span></label>
+
+      @if (previas().length) {
+        <div class="previa-grid" cdkDropList (cdkDropListDropped)="reordenar($event)">
+          @for (p of previas(); track p.url; let i = $index) {
+            <div class="previa" cdkDrag>
+              @if (p.video) {
+                <video [src]="p.url" muted playsinline></video>
+                <span class="previa-vid">Vídeo</span>
+              } @else {
+                <img [src]="p.url" alt="Prévia" />
+              }
+              @if (i === 0) {
+                <span class="previa-capa">Capa</span>
+              }
+              <button type="button" class="previa-x" (click)="removerMidia(i)" aria-label="Remover">×</button>
+            </div>
+          }
+          @if (multiplo() && previas().length < 10) {
+            <label class="previa-add">
+              +
+              <input type="file" [accept]="aceita()" [multiple]="multiplo()" (change)="selecionarMidias($event)" hidden />
+            </label>
+          }
+        </div>
+        @if (multiplo() && previas().length > 1) {
+          <small class="previa-hint">Arraste pra reordenar — a primeira mídia é a capa do carrossel.</small>
+        }
+      } @else {
+        <label class="upload">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21"/></svg>
+          <strong>Escolher mídia</strong>
+          <small>{{ dica() }}</small>
+          <input type="file" [accept]="aceita()" [multiple]="multiplo()" (change)="selecionarMidias($event)" hidden />
+        </label>
+      }
+    </div>
+
+    <div class="campo">
+      <label>
+        Legenda
+        <span class="legenda-contador" [class.perto]="pertoDoLimite()" [class.passou]="passouDoLimite()">
+          {{ caracteresLegenda() }}/{{ LIMITE_LEGENDA }}
+        </span>
+      </label>
+      <textarea
+        rows="4"
+        placeholder="Escreva a legenda…"
+        [value]="legenda()"
+        (input)="legenda.set($any($event.target).value)"
+      ></textarea>
+    </div>
+
+    <div class="campo">
+      <label>Quando</label>
+      <div class="seg">
+        <button type="button" class="seg-btn" [class.on]="quando() === 'agora'" (click)="quando.set('agora')">Publicar agora</button>
+        <button type="button" class="seg-btn" [class.on]="quando() === 'agendar'" (click)="quando.set('agendar')">Agendar</button>
+      </div>
+      @if (quando() === 'agendar') {
+        <input
+          class="dt"
+          type="datetime-local"
+          [value]="agendadoPara()"
+          (input)="agendadoPara.set($any($event.target).value)"
+        />
+      }
+    </div>
+
+    @if (erro(); as e) {
+      <div class="form-erro">{{ e }}</div>
+    }
+
+    @if (progresso() !== null) {
+      <div class="progresso-barra">
+        <div class="progresso-preenchido" [style.width.%]="progresso()"></div>
+      </div>
+    }
+
+    <button type="button" class="btn btn-solid pub-enviar" [disabled]="!podeEnviar()" (click)="publicar()">
+      {{ enviando() ? (progresso() !== null && progresso()! < 100 ? 'Enviando… ' + progresso() + '%' : 'Publicando…') : (quando() === 'agora' ? 'Publicar no Instagram' : 'Agendar publicação') }}
+    </button>
+  </section>
+
+  <!-- Preview fiel -->
+  <aside class="preview-col">
+    <span class="preview-titulo">Prévia</span>
+    <div class="preview-mock" [class.mock-story]="proporcaoPreview() === '9/16'">
+      <div class="mock-topo">
+        <div class="mock-avatar"></div>
+        <span class="mock-conta">dolen.ia</span>
+      </div>
+      @if (slidesPreview().length) {
+        <app-media-carousel [slides]="slidesPreview()" [proporcao]="proporcaoPreview()" />
+      } @else {
+        <div class="mock-vazio" [style.aspect-ratio]="proporcaoPreview()">Escolha uma mídia pra ver a prévia</div>
+      }
+      @if (proporcaoPreview() === '1/1') {
+        <div class="mock-legenda">
+          @if (legenda()) {
+            <span><strong>dolen.ia</strong> {{ legendaPreview() }}</span>
+          } @else {
+            <span class="mock-legenda-vazia">A legenda aparece aqui…</span>
+          }
+        </div>
+      }
+    </div>
+  </aside>
+</div>

@@ -1,0 +1,23 @@
+.ag-vazio {
+  padding: 60px 0;
+  text-align: center;
+  color: var(--gray-mid);
+}
+
+.ag-grupo {
+  margin-bottom: 30px;
+}
+
+.ag-grupo-titulo {
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: var(--gray-dark);
+}
+
+.ag-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+}

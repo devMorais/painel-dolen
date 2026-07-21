@@ -65,6 +65,53 @@ class InstagramService
         return $this->metricas($limite);
     }
 
+    /**
+     * Publicações reais do Instagram paginadas pelo cursor da Graph API
+     * (aba "Publicados" do painel — sem cache, sempre a lista mais atual).
+     */
+    public function publicadosPaginados(?string $after = null, int $limite = 12): array
+    {
+        $token = $this->configuracaoObrigatoria()->instagram_access_token;
+
+        $parametros = [
+            'fields' => 'id,caption,media_type,media_product_type,timestamp,permalink,thumbnail_url,media_url,children{media_url,media_type,thumbnail_url}',
+            'limit' => $limite,
+            'access_token' => $token,
+        ];
+        if ($after) {
+            $parametros['after'] = $after;
+        }
+
+        $resposta = Http::get(self::API_BASE.'/me/media', $parametros)->throw()->json();
+
+        return [
+            'data' => $resposta['data'] ?? [],
+            'proximo_cursor' => $resposta['paging']['cursors']['after'] ?? null,
+        ];
+    }
+
+    /** Comentários de uma mídia, ao vivo (sem cache) — inclui respostas aninhadas. */
+    public function comentariosDaMidia(string $mediaId): array
+    {
+        $token = $this->configuracaoObrigatoria()->instagram_access_token;
+
+        return Http::get(self::API_BASE."/{$mediaId}/comments", [
+            'fields' => 'id,text,username,timestamp,like_count,replies{id,text,username,timestamp,like_count}',
+            'access_token' => $token,
+        ])->throw()->json('data', []);
+    }
+
+    /** Responde um comentário existente. Devolve o comentário de resposta criado. */
+    public function responderComentario(string $commentId, string $texto): array
+    {
+        $token = $this->configuracaoObrigatoria()->instagram_access_token;
+
+        return Http::asForm()->post(self::API_BASE."/{$commentId}/replies", [
+            'message' => $texto,
+            'access_token' => $token,
+        ])->throw()->json();
+    }
+
     private function insightsDaMidia(array $midia, string $token): array
     {
         $ehReel = ($midia['media_product_type'] ?? null) === 'REELS';

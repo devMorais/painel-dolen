@@ -44,3 +44,35 @@ export interface MetricaPublicacao {
   media_url?: string;
   insights: MetricaInsights;
 }
+
+export interface MidiaFilha {
+  id: string;
+  media_url: string;
+  media_type: 'IMAGE' | 'VIDEO';
+}
+
+export interface PublicadoInstagram {
+  id: string;
+  caption: string | null;
+  media_type: 'IMAGE' | 'VIDEO' | 'CAROUSEL_ALBUM';
+  media_product_type: 'FEED' | 'REELS' | 'STORY' | string;
+  timestamp: string;
+  permalink: string;
+  thumbnail_url?: string;
+  media_url?: string;
+  children?: { data: MidiaFilha[] };
+}
+
+export interface PublicadosPagina {
+  data: PublicadoInstagram[];
+  proximo_cursor: string | null;
+}
+
+export interface ComentarioInstagram {
+  id: string;
+  text: string;
+  username: string;
+  timestamp: string;
+  like_count?: number;
+  replies?: { data: ComentarioInstagram[] };
+}

@@ -5,249 +5,26 @@
   </div>
 </header>
 
-<section class="metricas" [class.colapsado]="!metricasAbertas()">
-  <button type="button" class="metricas-titulo" (click)="alternarMetricas()">
-    <svg class="grupo-seta" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-    Métricas do Instagram
-    <span class="metricas-sub">@dolen.ia</span>
-  </button>
+<app-tabs [abas]="abas()" [(ativa)]="aba" />
 
-  @if (metricasAbertas()) {
-    @if (carregandoMetricas()) {
-      <div class="metricas-vazio">Carregando métricas…</div>
-    } @else if (erroMetricas()) {
-      <div class="metricas-vazio">Não foi possível carregar as métricas agora.</div>
-    } @else if (metricas().length === 0) {
-      <div class="metricas-vazio">Ainda não há publicações com métricas.</div>
-    } @else {
-      <div class="metricas-resumo">
-        <div class="metrica-tile">
-          <span class="metrica-valor">{{ resumoMetricas().alcanceTotal }}</span>
-          <span class="metrica-rotulo">Alcance total</span>
-        </div>
-        <div class="metrica-tile">
-          <span class="metrica-valor">{{ resumoMetricas().curtidasTotal }}</span>
-          <span class="metrica-rotulo">Curtidas</span>
-        </div>
-        <div class="metrica-tile">
-          <span class="metrica-valor">{{ resumoMetricas().salvosTotal }}</span>
-          <span class="metrica-rotulo">Salvamentos</span>
-        </div>
-        <div class="metrica-tile">
-          <span class="metrica-valor">{{ resumoMetricas().viewsReelsTotal }}</span>
-          <span class="metrica-rotulo">Views em Reels</span>
-        </div>
-        <div class="metrica-tile">
-          <span class="metrica-valor">{{ resumoMetricas().alcanceMedioReels }}</span>
-          <span class="metrica-rotulo">Alcance médio · Reels</span>
-        </div>
-        <div class="metrica-tile">
-          <span class="metrica-valor">{{ resumoMetricas().alcanceMedioFeed }}</span>
-          <span class="metrica-rotulo">Alcance médio · Feed</span>
-        </div>
-      </div>
-
-      @if (resumoMetricas().melhorPost; as destaque) {
-        <a class="metrica-destaque" [href]="destaque.permalink" target="_blank" rel="noopener">
-          <span class="metrica-destaque-selo">🏆 Melhor alcance</span>
-          <span class="metrica-destaque-texto">{{ legendaResumo(destaque.caption) }}</span>
-          <span class="metrica-destaque-valor">{{ destaque.insights.reach }} contas alcançadas</span>
-        </a>
-      }
-
-      <div class="metricas-tabela">
-        <div class="mtab-cab">
-          <span>Publicação</span>
-          <span>Tipo</span>
-          <span>Alcance</span>
-          <span>Curtidas</span>
-          <span>Coment.</span>
-          <span>Salvos</span>
-          <span>Compart.</span>
-          <span>Views</span>
-        </div>
-        @for (m of metricasOrdenadas(); track m.id) {
-          <a class="mtab-linha" [href]="m.permalink" target="_blank" rel="noopener">
-            <span class="mtab-post">
-              <span class="mtab-legenda">{{ legendaResumo(m.caption) }}</span>
-              <span class="mtab-data">{{ dataResumo(m.timestamp) }}</span>
-            </span>
-            <span class="mtab-tipo mtab-tipo-{{ m.media_product_type.toLowerCase() }}">{{ rotuloProduto(m.media_product_type) }}</span>
-            <span>{{ m.insights.reach ?? '—' }}</span>
-            <span>{{ m.insights.likes ?? '—' }}</span>
-            <span>{{ m.insights.comments ?? '—' }}</span>
-            <span>{{ m.insights.saved ?? '—' }}</span>
-            <span>{{ m.insights.shares ?? '—' }}</span>
-            <span>{{ m.media_product_type === 'REELS' ? (m.insights.views ?? '—') : '—' }}</span>
-          </a>
-        }
-      </div>
+<div class="pg-corpo">
+  @switch (aba()) {
+    @case ('compor') {
+      <app-publicacoes-compor (publicada)="aoPublicar($event)" />
+    }
+    @case ('metricas') {
+      <app-publicacoes-metricas />
+    }
+    @case ('agendados') {
+      <app-publicacoes-agendados
+        [itens]="agendadas()"
+        [carregando]="carregando()"
+        (publicarAgora)="aoAtualizar($event)"
+        (excluir)="aoExcluir($event)"
+      />
+    }
+    @case ('publicados') {
+      <app-publicacoes-publicados />
     }
   }
-</section>
-
-<div class="pub-layout">
-  <!-- Compor -->
-  <section class="compor">
-    <h2>Nova publicação</h2>
-
-    <div class="campo">
-      <label>Tipo</label>
-      <div class="seg seg-tipos">
-        @for (t of tipos; track t.valor) {
-          <button type="button" class="seg-btn" [class.on]="tipo() === t.valor" (click)="trocarTipo(t.valor)">
-            {{ t.rotulo }}
-          </button>
-        }
-      </div>
-    </div>
-
-    <div class="campo">
-      <label>Mídia <span class="dica">· {{ dica() }}</span></label>
-
-      @if (previas().length) {
-        <div class="previa-grid">
-          @for (p of previas(); track p.url; let i = $index) {
-            <div class="previa">
-              @if (p.video) {
-                <video [src]="p.url" muted playsinline></video>
-                <span class="previa-vid">Vídeo</span>
-              } @else {
-                <img [src]="p.url" alt="Prévia" />
-              }
-              <button type="button" class="previa-x" (click)="removerMidia(i)" aria-label="Remover">×</button>
-            </div>
-          }
-          @if (multiplo() && previas().length < 10) {
-            <label class="previa-add">
-              +
-              <input type="file" [accept]="aceita()" [multiple]="multiplo()" (change)="selecionarMidias($event)" hidden />
-            </label>
-          }
-        </div>
-      } @else {
-        <label class="upload">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21"/></svg>
-          <strong>Escolher mídia</strong>
-          <small>{{ dica() }}</small>
-          <input type="file" [accept]="aceita()" [multiple]="multiplo()" (change)="selecionarMidias($event)" hidden />
-        </label>
-      }
-    </div>
-
-    <div class="campo">
-      <label>Legenda</label>
-      <textarea
-        rows="3"
-        placeholder="Escreva a legenda…"
-        [value]="legenda()"
-        (input)="legenda.set($any($event.target).value)"
-      ></textarea>
-    </div>
-
-    <div class="campo">
-      <label>Quando</label>
-      <div class="seg">
-        <button type="button" class="seg-btn" [class.on]="quando() === 'agora'" (click)="quando.set('agora')">Publicar agora</button>
-        <button type="button" class="seg-btn" [class.on]="quando() === 'agendar'" (click)="quando.set('agendar')">Agendar</button>
-      </div>
-      @if (quando() === 'agendar') {
-        <input
-          class="dt"
-          type="datetime-local"
-          [value]="agendadoPara()"
-          (input)="agendadoPara.set($any($event.target).value)"
-        />
-      }
-    </div>
-
-    @if (erro(); as e) {
-      <div class="form-erro">{{ e }}</div>
-    }
-
-    <button type="button" class="btn btn-solid pub-enviar" [disabled]="!podeEnviar()" (click)="publicar()">
-      {{ enviando() ? 'Enviando…' : (quando() === 'agora' ? 'Publicar no Instagram' : 'Agendar publicação') }}
-    </button>
-  </section>
-
-  <!-- Lista -->
-  <section class="lista">
-    @if (carregando()) {
-      <h2>Suas publicações</h2>
-      <div class="lista-vazia">Carregando…</div>
-    } @else if (publicacoes().length === 0) {
-      <h2>Suas publicações</h2>
-      <div class="lista-vazia">Nenhuma publicação ainda. Componha a primeira ao lado.</div>
-    } @else {
-      @if (agendadas().length) {
-        <div class="grupo grupo-agendadas" [class.colapsado]="estaColapsado('agendadas')">
-          <button type="button" class="grupo-titulo" (click)="alternarGrupo('agendadas')">
-            <svg class="grupo-seta" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-            Agendadas
-            <span class="grupo-count">{{ agendadas().length }}</span>
-          </button>
-          @if (!estaColapsado('agendadas')) {
-            <div class="pub-grid">
-              @for (pub of agendadas(); track pub.id) {
-                <ng-container [ngTemplateOutlet]="card" [ngTemplateOutletContext]="{ $implicit: pub }" />
-              }
-            </div>
-          }
-        </div>
-      }
-
-      @for (grupo of gruposPorTipo(); track grupo.tipo) {
-        <div class="grupo" [class.colapsado]="estaColapsado(grupo.tipo)">
-          <button type="button" class="grupo-titulo" (click)="alternarGrupo(grupo.tipo)">
-            <svg class="grupo-seta" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-            {{ grupo.rotulo }}
-            <span class="grupo-count">{{ grupo.itens.length }}</span>
-          </button>
-          @if (!estaColapsado(grupo.tipo)) {
-            <div class="pub-grid">
-              @for (pub of grupo.itens; track pub.id) {
-                <ng-container [ngTemplateOutlet]="card" [ngTemplateOutletContext]="{ $implicit: pub }" />
-              }
-            </div>
-          }
-        </div>
-      }
-    }
-  </section>
 </div>
-
-<ng-template #card let-pub>
-  <article class="pub-card">
-    <div class="pub-thumb">
-      @if (primeiraEhVideo(pub)) {
-        <video class="pub-media" [src]="pub.imagem_url" muted playsinline></video>
-      } @else {
-        <div class="pub-media" [style.background-image]="'url(' + pub.imagem_url + ')'"></div>
-      }
-      <span class="pub-badge pub-{{ pub.status }}">{{ rotulo(pub.status) }}</span>
-      <span class="pub-tipo">{{ rotuloTipo(pub.tipo) }}</span>
-    </div>
-    <div class="pub-info">
-      @if (pub.legenda) {
-        <p class="pub-legenda">{{ pub.legenda }}</p>
-      }
-      @if (pub.status === 'agendado' && pub.agendado_para) {
-        <span class="pub-quando">Agendado p/ {{ quando_(pub.agendado_para) }}</span>
-      } @else if (pub.status === 'publicado' && pub.publicado_em) {
-        <span class="pub-quando">Publicado {{ quando_(pub.publicado_em) }}</span>
-      }
-      @if (pub.status === 'erro' && pub.erro) {
-        <span class="pub-erromsg">{{ pub.erro }}</span>
-      }
-      <div class="pub-acoes">
-        @if (pub.status === 'publicado' && pub.permalink) {
-          <a [href]="pub.permalink" target="_blank" rel="noopener" class="pub-link">Ver no Instagram</a>
-        }
-        @if (pub.status === 'agendado' || pub.status === 'erro') {
-          <button type="button" class="pub-btn" (click)="publicarAgora(pub)">Publicar agora</button>
-        }
-        <button type="button" class="pub-excluir" (click)="excluir(pub)">Excluir</button>
-      </div>
-    </div>
-  </article>
-</ng-template>

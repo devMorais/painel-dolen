@@ -1,0 +1,37 @@
+@if (carregando()) {
+  <div class="pubs-vazio">Carregando publicações…</div>
+} @else if (erro()) {
+  <div class="pubs-vazio">Não foi possível carregar as publicações agora.</div>
+} @else if (itens().length === 0) {
+  <div class="pubs-vazio">Nenhuma publicação encontrada.</div>
+} @else {
+  <div class="pubs-grid">
+    @for (pub of itens(); track pub.id) {
+      <button type="button" class="pub-tile" (click)="abrir(pub)">
+        @if (ehVideo(pub)) {
+          <img [src]="miniatura(pub)" alt="" />
+          <span class="tile-play">▶</span>
+        } @else {
+          <img [src]="miniatura(pub)" alt="" />
+        }
+        @if (pub.media_type === 'CAROUSEL_ALBUM') {
+          <span class="tile-carrossel" aria-label="Carrossel">⧉</span>
+        }
+        <span class="tile-tipo tile-tipo-{{ pub.media_product_type.toLowerCase() }}">{{ rotuloTipo(pub.media_product_type) }}</span>
+        <div class="tile-overlay">
+          <span class="tile-legenda">{{ legendaResumo(pub.caption) }}</span>
+        </div>
+      </button>
+    }
+  </div>
+
+  @if (proximoCursor()) {
+    <button type="button" class="btn btn-ghost carregar-mais" [disabled]="carregandoMais()" (click)="carregarMais()">
+      {{ carregandoMais() ? 'Carregando…' : 'Carregar mais' }}
+    </button>
+  }
+}
+
+@if (selecionado(); as pub) {
+  <app-publicacao-detalhe-modal [publicacao]="pub" (fechar)="fechar()" />
+}

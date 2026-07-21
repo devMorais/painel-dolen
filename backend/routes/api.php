@@ -49,6 +49,9 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/publicacoes', [PublicacoesController::class, 'index']);
         Route::get('/publicacoes/metricas', [PublicacoesController::class, 'metricas']);
+        Route::get('/publicacoes/publicados', [PublicacoesController::class, 'publicados']);
+        Route::get('/publicacoes/instagram/{mediaId}/comentarios', [PublicacoesController::class, 'comentarios']);
+        Route::post('/publicacoes/instagram/comentarios/{commentId}/responder', [PublicacoesController::class, 'responderComentario']);
         Route::post('/publicacoes', [PublicacoesController::class, 'store']);
         Route::post('/publicacoes/{publicacao}/publicar', [PublicacoesController::class, 'publicarAgora']);
         Route::delete('/publicacoes/{publicacao}', [PublicacoesController::class, 'destroy']);

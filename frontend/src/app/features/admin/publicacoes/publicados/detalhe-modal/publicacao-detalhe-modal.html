@@ -1,0 +1,81 @@
+<div class="modal-backdrop" (click)="fechar.emit()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <button type="button" class="modal-x" (click)="fechar.emit()" aria-label="Fechar">×</button>
+
+    <div class="modal-corpo">
+      <div class="modal-midia">
+        <app-media-carousel [slides]="slides()" proporcao="1/1" />
+      </div>
+
+      <div class="modal-lado">
+        <div class="modal-cab">
+          <span class="modal-tipo">{{ rotuloTipo(publicacao().media_product_type) }}</span>
+          <span class="modal-data">{{ dataCompleta(publicacao().timestamp) }}</span>
+          <a class="modal-link" [href]="publicacao().permalink" target="_blank" rel="noopener">Ver no Instagram ↗</a>
+        </div>
+
+        @if (publicacao().caption) {
+          <p class="modal-legenda">{{ publicacao().caption }}</p>
+        }
+
+        <div class="modal-comentarios">
+          <h3 class="comentarios-titulo">Comentários</h3>
+
+          @if (carregandoComentarios()) {
+            <div class="comentarios-vazio">Carregando comentários…</div>
+          } @else if (comentariosIndisponiveis()) {
+            <div class="comentarios-aviso">
+              A leitura de comentários não está disponível para esta conta no momento — isso costuma acontecer quando o Instagram não tem uma Página do Facebook vinculada. Você ainda pode responder um comentário se souber o texto exato, mas a listagem automática está fora do ar.
+            </div>
+          } @else if (comentarios().length === 0) {
+            <div class="comentarios-vazio">Nenhum comentário ainda.</div>
+          } @else {
+            <div class="comentarios-lista">
+              @for (c of comentarios(); track c.id) {
+                <div class="comentario">
+                  <div class="comentario-linha">
+                    <strong>{{ c.username }}</strong>
+                    <span>{{ c.text }}</span>
+                  </div>
+                  <div class="comentario-acoes">
+                    <span class="comentario-data">{{ dataCompleta(c.timestamp) }}</span>
+                    <button type="button" class="comentario-responder" (click)="abrirResposta(c.id)">Responder</button>
+                  </div>
+
+                  @if (respondendo() === c.id) {
+                    <div class="resposta-form">
+                      <input
+                        type="text"
+                        placeholder="Escreva uma resposta…"
+                        [value]="textoResposta()"
+                        (input)="textoResposta.set($any($event.target).value)"
+                      />
+                      <button type="button" class="btn btn-solid" [disabled]="enviandoResposta() || !textoResposta().trim()" (click)="enviarResposta(c.id)">
+                        {{ enviandoResposta() ? 'Enviando…' : 'Enviar' }}
+                      </button>
+                      <button type="button" class="resposta-cancelar" (click)="cancelarResposta()">Cancelar</button>
+                    </div>
+                    @if (erroResposta(); as e) {
+                      <span class="resposta-erro">{{ e }}</span>
+                    }
+                  }
+
+                  @if (c.replies?.data?.length) {
+                    <div class="respostas-aninhadas">
+                      @for (r of c.replies!.data; track r.id) {
+                        <div class="comentario-linha resposta">
+                          <strong>{{ r.username }}</strong>
+                          <span>{{ r.text }}</span>
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+@if (carregando()) {
+  <div class="ag-vazio">Carregando…</div>
+} @else if (itens().length === 0) {
+  <div class="ag-vazio">Nenhuma publicação agendada no momento.</div>
+} @else {
+  @for (grupo of grupos(); track grupo.rotulo) {
+    <div class="ag-grupo">
+      <h2 class="ag-grupo-titulo">{{ grupo.rotulo }}</h2>
+      <div class="ag-grid">
+        @for (pub of grupo.itens; track pub.id) {
+          <app-pub-card [pub]="pub" (publicarAgora)="aoPublicarAgora($event)" (excluir)="aoExcluir($event)" />
+        }
+      </div>
+    </div>
+  }
+}

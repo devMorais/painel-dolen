@@ -1,0 +1,33 @@
+<article class="pub-card">
+  <div class="pub-thumb">
+    @if (primeiraEhVideo(pub())) {
+      <video class="pub-media" [src]="pub().imagem_url" muted playsinline></video>
+    } @else {
+      <div class="pub-media" [style.background-image]="'url(' + pub().imagem_url + ')'"></div>
+    }
+    <span class="pub-badge pub-{{ pub().status }}">{{ rotulo(pub().status) }}</span>
+    <span class="pub-tipo">{{ rotuloTipo(pub().tipo) }}</span>
+  </div>
+  <div class="pub-info">
+    @if (pub().legenda) {
+      <p class="pub-legenda">{{ pub().legenda }}</p>
+    }
+    @if (pub().status === 'agendado' && pub().agendado_para) {
+      <span class="pub-quando">Agendado p/ {{ quando(pub().agendado_para) }}</span>
+    } @else if (pub().status === 'publicado' && pub().publicado_em) {
+      <span class="pub-quando">Publicado {{ quando(pub().publicado_em) }}</span>
+    }
+    @if (pub().status === 'erro' && pub().erro) {
+      <span class="pub-erromsg">{{ pub().erro }}</span>
+    }
+    <div class="pub-acoes">
+      @if (pub().status === 'publicado' && pub().permalink) {
+        <a [href]="pub().permalink" target="_blank" rel="noopener" class="pub-link">Ver no Instagram</a>
+      }
+      @if (pub().status === 'agendado' || pub().status === 'erro') {
+        <button type="button" class="pub-btn" (click)="publicarAgora.emit(pub())">Publicar agora</button>
+      }
+      <button type="button" class="pub-excluir" (click)="excluir.emit(pub())">Excluir</button>
+    </div>
+  </div>
+</article>

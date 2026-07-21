@@ -1,0 +1,128 @@
+@if (carregando()) {
+  <div class="met-vazio">Carregando métricas…</div>
+} @else if (erro()) {
+  <div class="met-vazio">Não foi possível carregar as métricas agora.</div>
+} @else if (metricas().length === 0) {
+  <div class="met-vazio">Ainda não há publicações com métricas.</div>
+} @else {
+  <div class="met-filtros">
+    <div class="seg">
+      <button type="button" class="seg-btn" [class.on]="filtroTipo() === 'todos'" (click)="filtroTipo.set('todos')">Todos</button>
+      <button type="button" class="seg-btn" [class.on]="filtroTipo() === 'FEED'" (click)="filtroTipo.set('FEED')">Feed</button>
+      <button type="button" class="seg-btn" [class.on]="filtroTipo() === 'REELS'" (click)="filtroTipo.set('REELS')">Reels</button>
+    </div>
+    <div class="seg">
+      <button type="button" class="seg-btn" [class.on]="periodo() === 'todos'" (click)="periodo.set('todos')">Sempre</button>
+      <button type="button" class="seg-btn" [class.on]="periodo() === '30d'" (click)="periodo.set('30d')">30 dias</button>
+      <button type="button" class="seg-btn" [class.on]="periodo() === '7d'" (click)="periodo.set('7d')">7 dias</button>
+    </div>
+  </div>
+
+  <div class="met-resumo">
+    <div class="metrica-tile">
+      <span class="metrica-valor">{{ resumo().alcanceTotal }}</span>
+      <span class="metrica-rotulo">Alcance total</span>
+    </div>
+    <div class="metrica-tile">
+      <span class="metrica-valor">{{ resumo().curtidasTotal }}</span>
+      <span class="metrica-rotulo">Curtidas</span>
+    </div>
+    <div class="metrica-tile">
+      <span class="metrica-valor">{{ resumo().comentariosTotal }}</span>
+      <span class="metrica-rotulo">Comentários</span>
+    </div>
+    <div class="metrica-tile">
+      <span class="metrica-valor">{{ resumo().salvosTotal }}</span>
+      <span class="metrica-rotulo">Salvamentos</span>
+    </div>
+    <div class="metrica-tile">
+      <span class="metrica-valor">{{ resumo().compartTotal }}</span>
+      <span class="metrica-rotulo">Compartilhamentos</span>
+    </div>
+    <div class="metrica-tile">
+      <span class="metrica-valor">{{ resumo().viewsReelsTotal }}</span>
+      <span class="metrica-rotulo">Views em Reels</span>
+    </div>
+  </div>
+
+  @if (resumo().melhorPost; as destaque) {
+    <a class="metrica-destaque" [href]="destaque.permalink" target="_blank" rel="noopener">
+      <span class="metrica-destaque-selo">🏆 Melhor alcance</span>
+      <span class="metrica-destaque-texto">{{ legendaResumo(destaque.caption) }}</span>
+      <span class="metrica-destaque-valor">{{ destaque.insights.reach }} contas alcançadas</span>
+    </a>
+  }
+
+  <div class="met-painel">
+    <h3 class="met-painel-titulo">Alcance por publicação <span>últimas {{ barrasAlcance().length }}, cronológico</span></h3>
+    <div class="grafico">
+      @for (b of barrasAlcance(); track $index) {
+        <div class="barra-col" [title]="b.data + ' · ' + b.valor + ' contas'">
+          <span class="barra-valor">{{ b.valor }}</span>
+          <div class="barra" [class.reels]="b.reels" [style.height.%]="b.altura"></div>
+          <span class="barra-data">{{ b.data }}</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="met-painel met-comparativo">
+    <h3 class="met-painel-titulo">Reels vs Feed</h3>
+    <div class="comparativo-grid">
+      <div class="comp-col">
+        <span class="comp-tipo">Reels <small>({{ resumo().totalReels }})</small></span>
+        <div class="comp-linha">
+          <span class="comp-rotulo">Alcance médio</span>
+          <div class="comp-barra-track"><div class="comp-barra reels" [style.width.%]="resumo().alcanceMedioReels ? 100 : 0"></div></div>
+          <span class="comp-num">{{ resumo().alcanceMedioReels }}</span>
+        </div>
+        <div class="comp-linha">
+          <span class="comp-rotulo">Engajamento médio</span>
+          <div class="comp-barra-track"><div class="comp-barra reels" [style.width.%]="resumo().engajamentoMedioReels ? 100 : 0"></div></div>
+          <span class="comp-num">{{ resumo().engajamentoMedioReels }}</span>
+        </div>
+      </div>
+      <div class="comp-col">
+        <span class="comp-tipo">Feed <small>({{ resumo().totalFeed }})</small></span>
+        <div class="comp-linha">
+          <span class="comp-rotulo">Alcance médio</span>
+          <div class="comp-barra-track"><div class="comp-barra feed" [style.width.%]="resumo().alcanceMedioFeed ? 100 : 0"></div></div>
+          <span class="comp-num">{{ resumo().alcanceMedioFeed }}</span>
+        </div>
+        <div class="comp-linha">
+          <span class="comp-rotulo">Engajamento médio</span>
+          <div class="comp-barra-track"><div class="comp-barra feed" [style.width.%]="resumo().engajamentoMedioFeed ? 100 : 0"></div></div>
+          <span class="comp-num">{{ resumo().engajamentoMedioFeed }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="metricas-tabela">
+    <div class="mtab-cab">
+      <span>Publicação</span>
+      <span>Tipo</span>
+      <button type="button" class="mtab-orden" (click)="ordenarPor('reach')">Alcance {{ ordenacao().coluna === 'reach' ? (ordenacao().direcao === 'desc' ? '↓' : '↑') : '' }}</button>
+      <button type="button" class="mtab-orden" (click)="ordenarPor('likes')">Curtidas {{ ordenacao().coluna === 'likes' ? (ordenacao().direcao === 'desc' ? '↓' : '↑') : '' }}</button>
+      <button type="button" class="mtab-orden" (click)="ordenarPor('comments')">Coment. {{ ordenacao().coluna === 'comments' ? (ordenacao().direcao === 'desc' ? '↓' : '↑') : '' }}</button>
+      <button type="button" class="mtab-orden" (click)="ordenarPor('saved')">Salvos {{ ordenacao().coluna === 'saved' ? (ordenacao().direcao === 'desc' ? '↓' : '↑') : '' }}</button>
+      <button type="button" class="mtab-orden" (click)="ordenarPor('shares')">Compart. {{ ordenacao().coluna === 'shares' ? (ordenacao().direcao === 'desc' ? '↓' : '↑') : '' }}</button>
+      <button type="button" class="mtab-orden" (click)="ordenarPor('views')">Views {{ ordenacao().coluna === 'views' ? (ordenacao().direcao === 'desc' ? '↓' : '↑') : '' }}</button>
+    </div>
+    @for (m of ordenadas(); track m.id) {
+      <a class="mtab-linha" [href]="m.permalink" target="_blank" rel="noopener">
+        <span class="mtab-post">
+          <span class="mtab-legenda">{{ legendaResumo(m.caption) }}</span>
+          <span class="mtab-data">{{ dataResumo(m.timestamp) }}</span>
+        </span>
+        <span class="mtab-tipo mtab-tipo-{{ m.media_product_type.toLowerCase() }}">{{ rotuloProduto(m.media_product_type) }}</span>
+        <span>{{ m.insights.reach ?? '—' }}</span>
+        <span>{{ m.insights.likes ?? '—' }}</span>
+        <span>{{ m.insights.comments ?? '—' }}</span>
+        <span>{{ m.insights.saved ?? '—' }}</span>
+        <span>{{ m.insights.shares ?? '—' }}</span>
+        <span>{{ m.media_product_type === 'REELS' ? (m.insights.views ?? '—') : '—' }}</span>
+      </a>
+    }
+  </div>
+}

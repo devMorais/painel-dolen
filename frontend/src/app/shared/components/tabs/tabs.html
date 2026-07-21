@@ -1,0 +1,10 @@
+<nav class="tabs">
+  @for (aba of abas(); track aba.valor) {
+    <button type="button" class="tab" [class.on]="ativa() === aba.valor" (click)="ativa.set(aba.valor)">
+      {{ aba.rotulo }}
+      @if (aba.contagem !== undefined) {
+        <span class="tab-count">{{ aba.contagem }}</span>
+      }
+    </button>
+  }
+</nav>

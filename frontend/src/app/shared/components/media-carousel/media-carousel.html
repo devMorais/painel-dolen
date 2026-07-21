@@ -1,0 +1,24 @@
+<div class="mc" [style.aspect-ratio]="proporcao()">
+  @if (slides().length) {
+    @for (s of slides(); track s.url; let i = $index) {
+      <div class="mc-slide" [class.on]="i === indice()">
+        @if (s.video) {
+          <video [src]="s.url" muted playsinline loop autoplay></video>
+        } @else {
+          <img [src]="s.url" alt="" />
+        }
+      </div>
+    }
+
+    @if (slides().length > 1) {
+      <button type="button" class="mc-nav mc-prev" (click)="anterior()" aria-label="Anterior">‹</button>
+      <button type="button" class="mc-nav mc-next" (click)="proximo()" aria-label="Próximo">›</button>
+      <div class="mc-dots">
+        @for (s of slides(); track s.url; let i = $index) {
+          <button type="button" class="mc-dot" [class.on]="i === indice()" (click)="ir(i)" [attr.aria-label]="'Slide ' + (i + 1)"></button>
+        }
+      </div>
+      <span class="mc-contador">{{ indice() + 1 }}/{{ slides().length }}</span>
+    }
+  }
+</div>
