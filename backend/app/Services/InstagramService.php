@@ -54,6 +54,17 @@ class InstagramService
         });
     }
 
+    /**
+     * Força a busca de métricas frescas na Meta e grava no cache (usado pelo
+     * cron), pra o painel nunca precisar esperar a API do Instagram responder.
+     */
+    public function atualizarMetricas(int $limite = 12): array
+    {
+        Cache::forget(self::CACHE_KEY.":metricas:{$limite}");
+
+        return $this->metricas($limite);
+    }
+
     private function insightsDaMidia(array $midia, string $token): array
     {
         $ehReel = ($midia['media_product_type'] ?? null) === 'REELS';
