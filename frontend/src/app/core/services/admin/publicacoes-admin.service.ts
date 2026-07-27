@@ -54,8 +54,18 @@ export class PublicacoesAdminService {
     return this.http.post<{ data: Publicacao }>(`${this.base}/publicacoes`, form).pipe(map((r) => r.data));
   }
 
-  /** Como criar(), mas reporta progresso de upload — útil pra vídeos grandes de Reels. */
-  criarComProgresso(form: FormData): Observable<ProgressoEnvio> {
+  /**
+   * Como criar(), mas reporta progresso de upload — útil pra vídeos grandes de
+   * Reels. Se o backend detectar uma publicação parecida, a requisição falha
+   * com status 409 e `error.duplicata` (ver DuplicataInfo) — o chamador decide
+   * se reenvia com confirmarDuplicata=true (o form já deve trazer o mesmo
+   * conteúdo; esse método só acrescenta o campo de confirmação).
+   */
+  criarComProgresso(form: FormData, confirmarDuplicata = false): Observable<ProgressoEnvio> {
+    if (confirmarDuplicata) {
+      form.set('confirmar_duplicata', '1');
+    }
+
     return this.http
       .post<{ data: Publicacao }>(`${this.base}/publicacoes`, form, {
         reportProgress: true,

@@ -14,6 +14,7 @@ class Publicacao extends Model
         'legenda',
         'imagem_url',
         'midias',
+        'hash_visual',
         'status',
         'agendado_para',
         'publicado_em',

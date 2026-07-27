@@ -121,3 +121,23 @@
     </div>
   </aside>
 </div>
+
+@if (duplicataDetectada(); as d) {
+  <div class="modal-backdrop" (click)="cancelarDuplicata()">
+    <div class="modal-duplicata" (click)="$event.stopPropagation()">
+      <h3>Isso parece repetido</h3>
+      <p>
+        A {{ d.motivo === 'mídia parecida' ? 'mídia' : 'legenda' }} desta publicação está parecida com outra já
+        {{ d.quando ? ('feita em ' + (d.quando | date:'dd/MM/yy')) : 'publicada' }}.
+      </p>
+      @if (d.permalink) {
+        <a class="modal-duplicata-link" [href]="d.permalink" target="_blank" rel="noopener">Ver a publicação original ↗</a>
+      }
+      <p class="modal-duplicata-hint">Se for intencional (ex: reforçar uma oferta), pode publicar mesmo assim.</p>
+      <div class="modal-duplicata-acoes">
+        <button type="button" class="btn-ghost" (click)="cancelarDuplicata()">Cancelar</button>
+        <button type="button" class="btn btn-solid" (click)="confirmarApesarDaDuplicata()">Publicar mesmo assim</button>
+      </div>
+    </div>
+  </div>
+}

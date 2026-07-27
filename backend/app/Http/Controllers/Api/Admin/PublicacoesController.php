@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Publicacao;
+use App\Services\DuplicataService;
 use App\Services\InstagramService;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\JsonResponse;
@@ -59,7 +60,7 @@ class PublicacoesController extends Controller
         return response()->json(['data' => $resposta], 201);
     }
 
-    public function store(Request $request, InstagramService $instagram): JsonResponse
+    public function store(Request $request, InstagramService $instagram, DuplicataService $duplicata): JsonResponse
     {
         $dados = $request->validate([
             'tipo' => ['required', 'in:feed,carrossel,story,reels'],
@@ -68,6 +69,7 @@ class PublicacoesController extends Controller
             'legenda' => ['nullable', 'string', 'max:2200'],
             'quando' => ['required', 'in:agora,agendar'],
             'agendado_para' => ['required_if:quando,agendar', 'nullable', 'date', 'after:now'],
+            'confirmar_duplicata' => ['nullable', 'boolean'],
         ]);
 
         if ($dados['tipo'] === 'carrossel' && count($dados['midias']) < 2) {
@@ -83,12 +85,24 @@ class PublicacoesController extends Controller
             return response()->json(['message' => 'Reels precisa ser um vídeo.'], 422);
         }
 
+        $hashVisual = $midias[0]['tipo'] === 'imagem'
+            ? $duplicata->calcularHashImagem($this->caminhoLocalDaMidia($midias[0]['url']))
+            : null;
+
+        if (! ($dados['confirmar_duplicata'] ?? false)) {
+            $achado = $duplicata->verificar($dados['legenda'] ?? null, $hashVisual);
+            if ($achado) {
+                return response()->json(['duplicata' => $achado], 409);
+            }
+        }
+
         $pub = Publicacao::create([
             'rede' => 'instagram',
             'tipo' => $dados['tipo'],
             'legenda' => $dados['legenda'] ?? null,
             'imagem_url' => $midias[0]['url'],
             'midias' => $midias,
+            'hash_visual' => $hashVisual,
             'status' => $dados['quando'] === 'agendar' ? 'agendado' : 'rascunho',
             'agendado_para' => $dados['quando'] === 'agendar' ? $dados['agendado_para'] : null,
         ]);
@@ -98,6 +112,14 @@ class PublicacoesController extends Controller
         }
 
         return response()->json(['data' => $pub->fresh()], 201);
+    }
+
+    /** Converte a URL pública salva de volta pro caminho local (mesma pasta, servida direto). */
+    private function caminhoLocalDaMidia(string $url): string
+    {
+        $nome = basename($url);
+
+        return rtrim(config('publicacoes.upload_path'), '/').'/'.$nome;
     }
 
     public function publicarAgora(Publicacao $publicacao, InstagramService $instagram): JsonResponse

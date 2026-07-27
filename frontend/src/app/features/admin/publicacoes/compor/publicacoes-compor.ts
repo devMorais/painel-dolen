@@ -1,9 +1,10 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { DatePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, computed, inject, output, signal } from '@angular/core';
 
 import { PublicacoesAdminService } from '@core/services/admin';
-import { Publicacao, PublicacaoTipo } from '@core/models/admin';
+import { DuplicataInfo, Publicacao, PublicacaoTipo } from '@core/models/admin';
 import { MediaCarousel, SlideCarousel } from '@shared/components/media-carousel/media-carousel';
 
 interface Previa {
@@ -15,7 +16,7 @@ const LIMITE_LEGENDA = 2200;
 
 @Component({
   selector: 'app-publicacoes-compor',
-  imports: [CdkDropList, CdkDrag, MediaCarousel],
+  imports: [CdkDropList, CdkDrag, MediaCarousel, DatePipe],
   templateUrl: './publicacoes-compor.html',
   styleUrl: './publicacoes-compor.scss',
 })
@@ -33,6 +34,7 @@ export class PublicacoesCompor {
   protected readonly enviando = signal(false);
   protected readonly progresso = signal<number | null>(null);
   protected readonly erro = signal<string | null>(null);
+  protected readonly duplicataDetectada = signal<DuplicataInfo | null>(null);
 
   protected readonly tipos: { valor: PublicacaoTipo; rotulo: string }[] = [
     { valor: 'feed', rotulo: 'Foto' },
@@ -140,10 +142,20 @@ export class PublicacoesCompor {
     if (!this.podeEnviar()) {
       return;
     }
-    this.enviando.set(true);
-    this.progresso.set(0);
-    this.erro.set(null);
+    this.enviar(this.montarFormData(), false);
+  }
 
+  /** Chamado pelo modal de aviso quando o usuário confirma que quer publicar mesmo assim. */
+  protected confirmarApesarDaDuplicata(): void {
+    this.duplicataDetectada.set(null);
+    this.enviar(this.montarFormData(), true);
+  }
+
+  protected cancelarDuplicata(): void {
+    this.duplicataDetectada.set(null);
+  }
+
+  private montarFormData(): FormData {
     const fd = new FormData();
     for (const f of this.arquivos()) {
       fd.append('midias[]', f);
@@ -154,8 +166,15 @@ export class PublicacoesCompor {
     if (this.quando() === 'agendar') {
       fd.append('agendado_para', this.agendadoPara());
     }
+    return fd;
+  }
 
-    this.service.criarComProgresso(fd).subscribe({
+  private enviar(fd: FormData, confirmarDuplicata: boolean): void {
+    this.enviando.set(true);
+    this.progresso.set(0);
+    this.erro.set(null);
+
+    this.service.criarComProgresso(fd, confirmarDuplicata).subscribe({
       next: (evento) => {
         if ('progresso' in evento) {
           this.progresso.set(evento.progresso);
@@ -166,10 +185,14 @@ export class PublicacoesCompor {
           this.progresso.set(null);
         }
       },
-      error: (e) => {
-        this.erro.set(this.msgErro(e));
+      error: (e: HttpErrorResponse) => {
         this.enviando.set(false);
         this.progresso.set(null);
+        if (e.status === 409 && e.error?.duplicata) {
+          this.duplicataDetectada.set(e.error.duplicata);
+          return;
+        }
+        this.erro.set(this.msgErro(e));
       },
     });
   }

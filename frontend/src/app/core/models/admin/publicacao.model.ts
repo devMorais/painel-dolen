@@ -76,3 +76,12 @@ export interface ComentarioInstagram {
   like_count?: number;
   replies?: { data: ComentarioInstagram[] };
 }
+
+/** Devolvido pelo backend (HTTP 409) quando a legenda ou a mídia parece repetir uma publicação já feita. */
+export interface DuplicataInfo {
+  motivo: 'legenda parecida' | 'mídia parecida';
+  publicacao_id: number;
+  tipo_conteudo: PublicacaoTipo;
+  permalink: string | null;
+  quando: string | null;
+}
