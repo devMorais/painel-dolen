@@ -107,8 +107,21 @@ class PublicacoesController extends Controller
         return response()->json(['data' => $publicacao->fresh()]);
     }
 
-    public function destroy(Publicacao $publicacao): JsonResponse
+    /**
+     * Remove a publicação. Se já foi publicada de verdade (tem midia_id), apaga
+     * também do Instagram — sem isso o post duplicado continuaria no ar mesmo
+     * depois de "excluído" no painel.
+     */
+    public function destroy(Publicacao $publicacao, InstagramService $instagram): JsonResponse
     {
+        if ($publicacao->status === 'publicado' && $publicacao->midia_id) {
+            try {
+                $instagram->excluirMidia($publicacao->midia_id);
+            } catch (RequestException $e) {
+                return response()->json(['message' => 'Não foi possível apagar do Instagram: '.$this->mensagemErro($e)], 422);
+            }
+        }
+
         $publicacao->delete();
 
         return response()->json(['message' => 'Publicação removida.']);

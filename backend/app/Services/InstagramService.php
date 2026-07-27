@@ -112,6 +112,22 @@ class InstagramService
         ])->throw()->json();
     }
 
+    /**
+     * Apaga uma mídia publicada de verdade no Instagram (irreversível — a Meta
+     * não permite restaurar). Usado ao excluir uma publicação já publicada,
+     * pra não deixar o post duplicado real no ar depois de removido do painel.
+     */
+    public function excluirMidia(string $mediaId): void
+    {
+        $token = $this->configuracaoObrigatoria()->instagram_access_token;
+
+        Http::delete(self::API_BASE."/{$mediaId}", [
+            'access_token' => $token,
+        ])->throw();
+
+        Cache::flush();
+    }
+
     private function insightsDaMidia(array $midia, string $token): array
     {
         $ehReel = ($midia['media_product_type'] ?? null) === 'REELS';
