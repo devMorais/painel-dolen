@@ -134,9 +134,14 @@ class PublicacoesController extends Controller
      * também do Instagram — sem isso o post duplicado continuaria no ar mesmo
      * depois de "excluído" no painel.
      */
-    public function destroy(Publicacao $publicacao, InstagramService $instagram): JsonResponse
+    public function destroy(Request $request, Publicacao $publicacao, InstagramService $instagram): JsonResponse
     {
-        if ($publicacao->status === 'publicado' && $publicacao->midia_id) {
+        // Uso: quando o post já foi apagado manualmente pelo app do Instagram (ex:
+        // ao remover um duplicado), a Meta rejeita a exclusão via API porque o
+        // objeto não existe mais — nesse caso o painel só limpa o registro local.
+        $jaRemovidoDoInstagram = $request->boolean('ja_removido_do_instagram');
+
+        if ($publicacao->status === 'publicado' && $publicacao->midia_id && ! $jaRemovidoDoInstagram) {
             try {
                 $instagram->excluirMidia($publicacao->midia_id);
             } catch (RequestException $e) {
