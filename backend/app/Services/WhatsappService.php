@@ -85,6 +85,7 @@ class WhatsappService
             'client_id' => $appId,
             'client_secret' => $appSecret,
             'code' => $code,
+            'redirect_uri' => config('whatsapp.embedded_signup_redirect_uri'),
         ])->throw()->json('access_token');
 
         $tokenLongo = Http::get(self::API_BASE.'/oauth/access_token', [

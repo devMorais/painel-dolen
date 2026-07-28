@@ -32,4 +32,12 @@ return [
     'app_secret' => env('META_APP_SECRET'),
     'config_id' => env('META_WHATSAPP_CONFIG_ID'),
 
+    /*
+    | Deve ser IDÊNTICO à URL de onde o botão "Conectar WhatsApp" roda no
+    | painel — é o mesmo valor cadastrado em "URIs de redirecionamento do
+    | OAuth válidos" no app Meta. O SDK JS usa a URL da página como
+    | redirect_uri implícito; a troca do code no backend precisa repeti-lo.
+    */
+    'embedded_signup_redirect_uri' => env('META_WHATSAPP_REDIRECT_URI', 'https://www.dolen.com.br/admin/configuracoes'),
+
 ];
