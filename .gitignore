@@ -1,5 +1,7 @@
 # Config local do Claude Code (não é código do projeto)
-/.claude/
+# Exceção: comandos de projeto (slash commands) são compartilháveis, versionam
+/.claude/*
+!/.claude/commands/
 
 # Deploy (contêm dados sensíveis de infraestrutura, nunca sobe pro GitHub)
 *.private.md
