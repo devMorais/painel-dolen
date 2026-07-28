@@ -1,0 +1,91 @@
+<div class="conversas-page">
+  <aside class="lista-contatos">
+    <header class="lc-head">
+      <h1>Conversas</h1>
+      <p>WhatsApp — {{ conversas().length }} conversa(s)</p>
+    </header>
+
+    @if (carregandoLista()) {
+      <p class="estado">Carregando…</p>
+    } @else if (conversas().length === 0) {
+      <div class="vazio">
+        <p>Nenhuma conversa ainda.</p>
+        <p class="hint">Assim que um cliente mandar mensagem no WhatsApp da empresa, aparece aqui.</p>
+      </div>
+    } @else {
+      <ul class="contatos">
+        @for (c of conversas(); track c.lead_id) {
+          <li>
+            <button
+              type="button"
+              class="contato-btn"
+              [class.ativo]="conversaAtiva()?.lead_id === c.lead_id"
+              (click)="abrir(c)"
+            >
+              <span class="avatar">{{ c.nome.charAt(0).toUpperCase() }}</span>
+              <span class="contato-info">
+                <strong>{{ c.nome }}</strong>
+                <span class="preview">{{ c.ultima_mensagem?.texto || '—' }}</span>
+              </span>
+              <span class="contato-quando">{{ quando(c.ultima_mensagem?.created_at ?? null) }}</span>
+            </button>
+          </li>
+        }
+      </ul>
+    }
+  </aside>
+
+  <section class="painel-thread">
+    @if (!conversaAtiva()) {
+      <div class="thread-vazia">
+        <p>Selecione uma conversa pra ver as mensagens.</p>
+      </div>
+    } @else {
+      <header class="thread-head">
+        <div>
+          <strong>{{ conversaAtiva()!.nome }}</strong>
+          <span>{{ conversaAtiva()!.telefone }}</span>
+        </div>
+        <a class="btn" [routerLink]="['/admin/leads']">Ver no CRM →</a>
+      </header>
+
+      <div class="thread" #thread>
+        @if (carregandoThread()) {
+          <p class="estado">Carregando…</p>
+        } @else {
+          @for (m of mensagens(); track m.id) {
+            <div class="bolha-wrap" [class.saida]="m.direcao === 'saida'">
+              <div class="bolha">
+                <p>{{ m.texto }}</p>
+                <span class="bolha-hora">
+                  {{ horaCurta(m.enviado_em ?? m.created_at) }}
+                  @if (m.direcao === 'saida' && m.status) {
+                    · {{ m.status }}
+                  }
+                </span>
+              </div>
+            </div>
+          }
+        }
+      </div>
+
+      @if (erro()) {
+        <p class="aviso-erro">{{ erro() }}</p>
+      }
+
+      <footer class="thread-compor">
+        <input
+          type="text"
+          placeholder="Escreva uma mensagem…"
+          [value]="novaMensagem()"
+          (input)="novaMensagem.set($any($event.target).value)"
+          (keyup.enter)="enviar()"
+          [disabled]="enviando()"
+        />
+        <button type="button" class="btn btn-solido" [disabled]="enviando() || !novaMensagem().trim()" (click)="enviar()">
+          {{ enviando() ? 'Enviando…' : 'Enviar' }}
+        </button>
+      </footer>
+    }
+  </section>
+</div>

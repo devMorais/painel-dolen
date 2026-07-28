@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lead;
-use App\Models\Proposta;
+use App\Models\LeadHistorico;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -14,54 +14,59 @@ class LeadsController extends Controller
     private const STATUS = ['novo', 'em_contato', 'proposta', 'fechado', 'perdido'];
 
     /**
-     * Lista todos os leads, mais recentes primeiro.
+     * Lista os leads, mais recentes primeiro. Aceita filtros avançados via query string:
+     * tag_id, origem, de (data inicial), ate (data final) — todos opcionais e combináveis.
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $leads = Lead::query()->with('tags')->latest()->get();
+        $query = Lead::query()->with('tags')->latest();
 
-        return response()->json(['data' => $leads]);
+        if ($tagId = $request->query('tag_id')) {
+            $query->whereHas('tags', fn ($q) => $q->where('tags.id', $tagId));
+        }
+        if ($origem = $request->query('origem')) {
+            $query->where('origem', $origem);
+        }
+        if ($de = $request->query('de')) {
+            $query->whereDate('created_at', '>=', $de);
+        }
+        if ($ate = $request->query('ate')) {
+            $query->whereDate('created_at', '<=', $ate);
+        }
+
+        return response()->json(['data' => $query->get()]);
     }
 
     /**
-     * Números do topo do painel (Dashboard).
-     */
-    public function dashboard(): JsonResponse
-    {
-        $porStatus = Lead::query()
-            ->selectRaw('status, count(*) as total')
-            ->groupBy('status')
-            ->pluck('total', 'status');
-
-        return response()->json([
-            'leads' => [
-                'total' => Lead::count(),
-                'novos' => (int) ($porStatus['novo'] ?? 0),
-                'em_contato' => (int) ($porStatus['em_contato'] ?? 0),
-                'fechados' => (int) ($porStatus['fechado'] ?? 0),
-                'perdidos' => (int) ($porStatus['perdido'] ?? 0),
-            ],
-            'propostas' => [
-                'total' => Proposta::count(),
-                'publicadas' => Proposta::where('status', 'publicada')->count(),
-            ],
-            'leads_recentes' => Lead::query()->latest()->limit(5)->get(),
-        ]);
-    }
-
-    /**
-     * Atualiza status e/ou notas de um lead.
+     * Atualiza status de um lead. Mudança de status fica registrada no histórico.
      */
     public function update(Request $request, Lead $lead): JsonResponse
     {
         $dados = $request->validate([
             'status' => ['sometimes', 'string', 'in:' . implode(',', self::STATUS)],
-            'notas' => ['sometimes', 'nullable', 'string', 'max:5000'],
         ]);
+
+        if (isset($dados['status']) && $dados['status'] !== $lead->status) {
+            LeadHistorico::create([
+                'lead_id' => $lead->id,
+                'user_id' => $request->user()?->id,
+                'tipo' => 'mudanca_status',
+                'de' => $lead->status,
+                'para' => $dados['status'],
+            ]);
+        }
 
         $lead->update($dados);
 
         return response()->json(['data' => $lead->load('tags')]);
+    }
+
+    /**
+     * Timeline de mudanças de status e contatos do lead — só leitura.
+     */
+    public function historico(Lead $lead): JsonResponse
+    {
+        return response()->json(['data' => $lead->historico()->with('autor:id,name')->get()]);
     }
 
     /**

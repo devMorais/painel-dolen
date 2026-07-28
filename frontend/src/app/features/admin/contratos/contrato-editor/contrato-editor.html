@@ -1,0 +1,146 @@
+<div class="editor-page">
+  <header class="editor-topo">
+    <div class="titulo-bloco">
+      <a routerLink="/admin/contratos" class="voltar">← Contratos</a>
+      <h1>
+        {{ id ? 'Contrato ' + (contrato()?.numero ?? '') : 'Novo contrato' }}
+        @if (contrato(); as c) {
+          <span class="chip chip-{{ c.status }}">
+            {{ c.status === 'assinado' ? 'Assinado' : c.status === 'recusado' ? 'Recusado' : c.status === 'enviado' ? 'Enviado' : 'Rascunho' }}
+          </span>
+        }
+      </h1>
+      @if (contrato()?.url; as url) {
+        <div class="link-publicado">
+          <a [href]="url" target="_blank" rel="noopener">{{ url }}</a>
+          <button type="button" class="btn mini" (click)="copiarLink()">
+            {{ linkCopiado() ? 'Copiado!' : 'Copiar' }}
+          </button>
+        </div>
+      }
+      @if (contrato()?.status === 'enviado') {
+        <p class="aviso ok">Enviado pra assinatura — a Dolen e o cliente receberam o link por e-mail da Autentique.</p>
+      }
+      @if (contrato()?.assinatura_recusada_motivo; as motivo) {
+        <p class="aviso erro">Assinatura recusada: {{ motivo }}</p>
+      }
+    </div>
+    <div class="acoes-topo">
+      @if (contrato()?.status === 'enviado' || contrato()?.status === 'assinado') {
+        <button type="button" class="btn" [disabled]="publicando()" (click)="despublicar()">Despublicar</button>
+      }
+      @if (contrato()?.status === 'rascunho') {
+        <button type="button" class="btn" [disabled]="enviandoAssinatura() || salvando()" (click)="enviarParaAssinatura()">
+          {{ enviandoAssinatura() ? 'Enviando...' : 'Enviar pra assinatura' }}
+        </button>
+      }
+      @if (contrato()?.status === 'enviado') {
+        <button type="button" class="btn" [disabled]="publicando()" (click)="marcarAssinado()">Marcar assinado</button>
+      }
+      <button type="button" class="btn" [disabled]="salvando()" (click)="salvar()">
+        {{ salvando() ? 'Salvando...' : 'Salvar rascunho' }}
+      </button>
+      <button type="button" class="btn solido" [disabled]="salvando() || publicando()" (click)="publicar()">
+        {{ publicando() ? 'Publicando...' : contrato()?.status !== 'rascunho' ? 'Republicar' : 'Publicar' }}
+      </button>
+    </div>
+  </header>
+
+  @if (mensagem()) {
+    <p class="aviso ok">{{ mensagem() }}</p>
+  }
+  @if (erro()) {
+    <p class="aviso erro">{{ erro() }}</p>
+  }
+
+  @if (carregando()) {
+    <p>Carregando...</p>
+  } @else {
+    <div class="editor-cols">
+      <form [formGroup]="form" class="painel-form">
+        <p class="dica-geral">Dica: use <code>**texto**</code> pra deixar um trecho em <strong>negrito</strong> na página.</p>
+
+        <details class="secao" open>
+          <summary>Identificação</summary>
+          <div class="campos">
+            <label>Cliente <input formControlName="cliente_nome" placeholder="Móveis Soares"></label>
+            <label>Endereço da página (slug)
+              <input formControlName="slug" placeholder="moveis-soares">
+              <span class="hint">www.dolen.com.br/contratos/<strong>{{ form.controls.slug.value || 'slug' }}</strong>/</span>
+            </label>
+            <div class="linha-dupla">
+              <label>Nº do contrato <input formControlName="numero" placeholder="automático se vazio"></label>
+              <label>Data <input type="date" formControlName="data_contrato"></label>
+            </div>
+          </div>
+        </details>
+
+        <details class="secao" open formGroupName="partes">
+          <summary>Partes</summary>
+          <div class="campos">
+            <label>Contratada <input formControlName="contratada_nome"></label>
+            <label>Contratante <input formControlName="contratante_nome"></label>
+            <label>CPF/CNPJ do contratante <input formControlName="contratante_documento" placeholder="opcional"></label>
+            <label>E-mail do contratante
+              <input type="email" formControlName="contratante_email" placeholder="necessário pra enviar assinatura eletrônica">
+            </label>
+          </div>
+        </details>
+
+        <details class="secao" open formGroupName="objeto">
+          <summary>Objeto</summary>
+          <div class="campos">
+            <label>Título <input formControlName="titulo" placeholder="Site institucional — plano Premium"></label>
+            <label>Escopo (um item por linha)
+              <textarea rows="6" [(ngModel)]="objetoDescricaoTexto" [ngModelOptions]="{standalone: true}" placeholder="Até 5 páginas: Início, Catálogo, Sobre, Contato&#10;Painel administrativo próprio"></textarea>
+            </label>
+          </div>
+        </details>
+
+        <details class="secao" open formGroupName="investimento">
+          <summary>Investimento</summary>
+          <div class="campos">
+            <label>Valor <input formControlName="valor" placeholder="R$ 168"></label>
+            <label>Forma de pagamento <input formControlName="forma_pagamento" placeholder="/mês em 12x no cartão"></label>
+            <label>Total 1º ano <input formControlName="total_primeiro_ano" placeholder="1º ano: R$ 2.016 · hospedagem inclusa"></label>
+          </div>
+        </details>
+
+        <details class="secao" open formGroupName="prazo">
+          <summary>Prazo</summary>
+          <div class="campos">
+            <label>Texto <textarea rows="2" formControlName="texto" placeholder="Prazo estimado de até 20 dias úteis..."></textarea></label>
+          </div>
+        </details>
+
+        <details class="secao" open>
+          <summary>Condições gerais</summary>
+          <div class="campos">
+            <label>Itens (um por linha)
+              <textarea rows="6" [(ngModel)]="condicoesItensTexto" [ngModelOptions]="{standalone: true}" placeholder="A propriedade do código-fonte é transferida à CONTRATANTE mediante quitação integral."></textarea>
+            </label>
+          </div>
+        </details>
+
+        <details class="secao" formGroupName="assinatura">
+          <summary>Assinatura</summary>
+          <div class="campos">
+            <label>Local <input formControlName="local" placeholder="Brasília-DF"></label>
+          </div>
+        </details>
+      </form>
+
+      <aside class="painel-preview">
+        <div class="preview-topo">
+          <span>Preview ao vivo</span>
+          <span class="hint">atualiza sozinho enquanto você edita</span>
+        </div>
+        @if (previewHtml(); as html) {
+          <iframe [srcdoc]="html" title="Preview do contrato"></iframe>
+        } @else {
+          <div class="preview-vazio">O preview aparece aqui assim que você começar a preencher.</div>
+        }
+      </aside>
+    </div>
+  }
+</div>

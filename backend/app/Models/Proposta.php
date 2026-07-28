@@ -37,4 +37,20 @@ class Proposta extends Model
 
         return "{$base}/{$this->slug}/";
     }
+
+    /** Formato resumido usado em listagens (PropostasController::index, DashboardController). */
+    public function paraResumo(): array
+    {
+        return [
+            'id' => $this->id,
+            'numero' => $this->numero,
+            'slug' => $this->slug,
+            'cliente_nome' => $this->cliente_nome,
+            'status' => $this->status,
+            'data_proposta' => $this->data_proposta?->toDateString(),
+            'validade' => $this->validade?->toDateString(),
+            'published_at' => $this->published_at?->toIso8601String(),
+            'url' => $this->urlPublica(),
+        ];
+    }
 }

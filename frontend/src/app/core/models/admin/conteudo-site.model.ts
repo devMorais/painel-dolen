@@ -59,6 +59,7 @@ export interface ProdutoConteudo {
   nome: string;
   rotulo_ordem: string | null;
   badge: string | null;
+  imagem_url?: string | null;
   descricao: string | null;
   publico_alvo: string | null;
   preco_label: string | null;

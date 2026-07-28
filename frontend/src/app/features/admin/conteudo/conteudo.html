@@ -111,6 +111,7 @@
               <label class="larga">Descrição
                 <textarea rows="2" [(ngModel)]="item.descricao" maxlength="2000"></textarea>
               </label>
+              <app-image-upload label="Imagem" [(url)]="item.imagem_url" />
             </div>
             <div class="item-acoes">
               <button type="button" (click)="moverItem(dados.diferenciais.itens, i, -1)" [disabled]="i === 0" aria-label="Mover pra cima">↑</button>
@@ -154,6 +155,7 @@
               <label>Preço (texto exibido)
                 <input type="text" [(ngModel)]="produto.preco_label" maxlength="255" />
               </label>
+              <app-image-upload label="Imagem" [(url)]="produto.imagem_url" />
               <label class="larga">Descrição
                 <textarea rows="3" [(ngModel)]="produto.descricao" maxlength="2000"></textarea>
               </label>

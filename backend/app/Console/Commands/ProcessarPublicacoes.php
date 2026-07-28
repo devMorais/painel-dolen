@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Http\Controllers\Api\Admin\PublicacoesController;
 use App\Models\Publicacao;
+use App\Services\FacebookService;
 use App\Services\InstagramService;
 use Illuminate\Console\Command;
 
@@ -13,7 +14,7 @@ class ProcessarPublicacoes extends Command
 
     protected $description = 'Publica as publicações agendadas que já chegaram na hora';
 
-    public function handle(InstagramService $instagram, PublicacoesController $controller): int
+    public function handle(InstagramService $instagram, FacebookService $facebook, PublicacoesController $controller): int
     {
         $pendentes = Publicacao::query()
             ->where('status', 'agendado')
@@ -21,7 +22,7 @@ class ProcessarPublicacoes extends Command
             ->get();
 
         foreach ($pendentes as $pub) {
-            $controller->publicarRegistro($pub, $instagram);
+            $controller->publicarRegistro($pub, $instagram, $facebook);
             $status = $pub->fresh()->status ?? 'removida durante o processamento';
             $this->info("Publicação #{$pub->id}: {$status}");
         }

@@ -1,16 +1,24 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\AuthController;
+use App\Http\Controllers\Api\Admin\ConfiguracoesController;
+use App\Http\Controllers\Api\Admin\ContratosController;
 use App\Http\Controllers\Api\Admin\ConteudoController;
+use App\Http\Controllers\Api\Admin\DashboardController;
+use App\Http\Controllers\Api\Admin\LeadAnotacoesController;
 use App\Http\Controllers\Api\Admin\LeadsController;
+use App\Http\Controllers\Api\Admin\LeadTarefasController;
 use App\Http\Controllers\Api\Admin\PrecosController;
 use App\Http\Controllers\Api\Admin\PropostasController;
 use App\Http\Controllers\Api\Admin\PublicacoesController;
 use App\Http\Controllers\Api\Admin\SecoesController;
 use App\Http\Controllers\Api\Admin\TagsController;
+use App\Http\Controllers\Api\Admin\WhatsappConversasController;
 use App\Http\Controllers\Api\InstagramController;
 use App\Http\Controllers\Api\LandingController;
 use App\Http\Controllers\Api\LeadController;
+use App\Http\Controllers\Api\WebhookAutentiqueController;
+use App\Http\Controllers\Api\WebhookWhatsappController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +29,9 @@ Route::get('/user', function (Request $request) {
 Route::get('/instagram/posts', [InstagramController::class, 'index']);
 Route::get('/landing', [LandingController::class, 'index']);
 Route::post('/leads', [LeadController::class, 'store']);
+Route::post('/webhooks/autentique', [WebhookAutentiqueController::class, 'handle']);
+Route::get('/whatsapp/webhook', [WebhookWhatsappController::class, 'verificar']);
+Route::post('/whatsapp/webhook', [WebhookWhatsappController::class, 'receber']);
 
 Route::prefix('admin')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -37,11 +48,25 @@ Route::prefix('admin')->group(function () {
         Route::get('/precos', [PrecosController::class, 'index']);
         Route::put('/precos', [PrecosController::class, 'update']);
 
-        Route::get('/dashboard', [LeadsController::class, 'dashboard']);
+        Route::get('/configuracoes', [ConfiguracoesController::class, 'show']);
+        Route::put('/configuracoes', [ConfiguracoesController::class, 'update']);
+        Route::post('/configuracoes/upload', [ConfiguracoesController::class, 'upload']);
+
+        Route::get('/dashboard', [DashboardController::class, 'index']);
         Route::get('/leads', [LeadsController::class, 'index']);
         Route::patch('/leads/{lead}', [LeadsController::class, 'update']);
         Route::post('/leads/{lead}/tags', [LeadsController::class, 'syncTags']);
         Route::delete('/leads/{lead}', [LeadsController::class, 'destroy']);
+        Route::get('/leads/{lead}/historico', [LeadsController::class, 'historico']);
+
+        Route::get('/leads/{lead}/anotacoes', [LeadAnotacoesController::class, 'index']);
+        Route::post('/leads/{lead}/anotacoes', [LeadAnotacoesController::class, 'store']);
+        Route::delete('/leads/{lead}/anotacoes/{anotacao}', [LeadAnotacoesController::class, 'destroy']);
+
+        Route::get('/leads/{lead}/tarefas', [LeadTarefasController::class, 'index']);
+        Route::post('/leads/{lead}/tarefas', [LeadTarefasController::class, 'store']);
+        Route::patch('/leads/{lead}/tarefas/{tarefa}', [LeadTarefasController::class, 'update']);
+        Route::delete('/leads/{lead}/tarefas/{tarefa}', [LeadTarefasController::class, 'destroy']);
 
         Route::get('/tags', [TagsController::class, 'index']);
         Route::post('/tags', [TagsController::class, 'store']);
@@ -65,5 +90,22 @@ Route::prefix('admin')->group(function () {
         Route::post('/propostas/{proposta}/publicar', [PropostasController::class, 'publicar']);
         Route::post('/propostas/{proposta}/despublicar', [PropostasController::class, 'despublicar']);
         Route::post('/propostas/{proposta}/duplicar', [PropostasController::class, 'duplicar']);
+
+        Route::get('/contratos', [ContratosController::class, 'index']);
+        Route::post('/contratos', [ContratosController::class, 'store']);
+        Route::post('/contratos/preview', [ContratosController::class, 'preview']);
+        Route::post('/contratos/a-partir-de-proposta/{proposta}', [ContratosController::class, 'apartirDeProposta']);
+        Route::get('/contratos/{contrato}', [ContratosController::class, 'show']);
+        Route::put('/contratos/{contrato}', [ContratosController::class, 'update']);
+        Route::delete('/contratos/{contrato}', [ContratosController::class, 'destroy']);
+        Route::post('/contratos/{contrato}/publicar', [ContratosController::class, 'publicar']);
+        Route::post('/contratos/{contrato}/despublicar', [ContratosController::class, 'despublicar']);
+        Route::post('/contratos/{contrato}/marcar-assinado', [ContratosController::class, 'marcarAssinado']);
+        Route::post('/contratos/{contrato}/enviar-para-assinatura', [ContratosController::class, 'enviarParaAssinatura']);
+        Route::post('/contratos/{contrato}/duplicar', [ContratosController::class, 'duplicar']);
+
+        Route::get('/conversas', [WhatsappConversasController::class, 'index']);
+        Route::get('/conversas/{lead}', [WhatsappConversasController::class, 'show']);
+        Route::post('/conversas/{lead}', [WhatsappConversasController::class, 'store']);
     });
 });

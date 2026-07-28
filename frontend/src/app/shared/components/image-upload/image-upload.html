@@ -1,0 +1,19 @@
+<div class="image-upload">
+  <span class="iu-label">{{ label() }}</span>
+
+  @if (url()) {
+    <div class="iu-preview">
+      <img [src]="url()" [alt]="label()" />
+      <button type="button" class="iu-remover" (click)="remover()" aria-label="Remover imagem">×</button>
+    </div>
+  }
+
+  <label class="iu-botao" [class.disabled]="enviando()">
+    <input type="file" [accept]="aceitar()" [disabled]="enviando()" (change)="selecionar($event)" />
+    {{ enviando() ? 'Enviando…' : (url() ? 'Trocar imagem' : 'Enviar imagem') }}
+  </label>
+
+  @if (erro()) {
+    <p class="iu-erro">{{ erro() }}</p>
+  }
+</div>

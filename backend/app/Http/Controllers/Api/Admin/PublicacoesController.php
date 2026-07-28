@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Publicacao;
 use App\Services\DuplicataService;
+use App\Services\FacebookService;
 use App\Services\InstagramService;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\JsonResponse;
@@ -60,7 +61,7 @@ class PublicacoesController extends Controller
         return response()->json(['data' => $resposta], 201);
     }
 
-    public function store(Request $request, InstagramService $instagram, DuplicataService $duplicata): JsonResponse
+    public function store(Request $request, InstagramService $instagram, FacebookService $facebook, DuplicataService $duplicata): JsonResponse
     {
         $dados = $request->validate([
             'tipo' => ['required', 'in:feed,carrossel,story,reels'],
@@ -70,6 +71,7 @@ class PublicacoesController extends Controller
             'quando' => ['required', 'in:agora,agendar'],
             'agendado_para' => ['required_if:quando,agendar', 'nullable', 'date', 'after:now'],
             'confirmar_duplicata' => ['nullable', 'boolean'],
+            'publicar_no_facebook' => ['nullable', 'boolean'],
         ]);
 
         if ($dados['tipo'] === 'carrossel' && count($dados['midias']) < 2) {
@@ -77,6 +79,9 @@ class PublicacoesController extends Controller
         }
         if (in_array($dados['tipo'], ['feed', 'story', 'reels'], true) && count($dados['midias']) > 1) {
             return response()->json(['message' => 'Esse tipo aceita só 1 mídia.'], 422);
+        }
+        if (($dados['publicar_no_facebook'] ?? false) && $dados['tipo'] === 'story') {
+            return response()->json(['message' => 'Stories não são publicados no Facebook por essa integração.'], 422);
         }
 
         $midias = array_map(fn (UploadedFile $arquivo) => $this->salvarMidia($arquivo), $dados['midias']);
@@ -96,8 +101,7 @@ class PublicacoesController extends Controller
             }
         }
 
-        $pub = Publicacao::create([
-            'rede' => 'instagram',
+        $atributosComuns = [
             'tipo' => $dados['tipo'],
             'legenda' => $dados['legenda'] ?? null,
             'imagem_url' => $midias[0]['url'],
@@ -105,13 +109,25 @@ class PublicacoesController extends Controller
             'hash_visual' => $hashVisual,
             'status' => $dados['quando'] === 'agendar' ? 'agendado' : 'rascunho',
             'agendado_para' => $dados['quando'] === 'agendar' ? $dados['agendado_para'] : null,
-        ]);
+        ];
 
+        $pub = Publicacao::create(['rede' => 'instagram'] + $atributosComuns);
         if ($dados['quando'] === 'agora') {
-            $this->publicarRegistro($pub, $instagram);
+            $this->publicarRegistro($pub, $instagram, $facebook);
         }
 
-        return response()->json(['data' => $pub->fresh()], 201);
+        $pubFacebook = null;
+        if ($dados['publicar_no_facebook'] ?? false) {
+            $pubFacebook = Publicacao::create(['rede' => 'facebook'] + $atributosComuns);
+            if ($dados['quando'] === 'agora') {
+                $this->publicarRegistro($pubFacebook, $instagram, $facebook);
+            }
+        }
+
+        return response()->json([
+            'data' => $pub->fresh(),
+            'data_facebook' => $pubFacebook?->fresh(),
+        ], 201);
     }
 
     /** Converte a URL pública salva de volta pro caminho local (mesma pasta, servida direto). */
@@ -122,30 +138,34 @@ class PublicacoesController extends Controller
         return rtrim(config('publicacoes.upload_path'), '/').'/'.$nome;
     }
 
-    public function publicarAgora(Publicacao $publicacao, InstagramService $instagram): JsonResponse
+    public function publicarAgora(Publicacao $publicacao, InstagramService $instagram, FacebookService $facebook): JsonResponse
     {
-        $this->publicarRegistro($publicacao, $instagram);
+        $this->publicarRegistro($publicacao, $instagram, $facebook);
 
         return response()->json(['data' => $publicacao->fresh()]);
     }
 
     /**
      * Remove a publicação. Se já foi publicada de verdade (tem midia_id), apaga
-     * também do Instagram — sem isso o post duplicado continuaria no ar mesmo
+     * também da rede social — sem isso o post duplicado continuaria no ar mesmo
      * depois de "excluído" no painel.
      */
-    public function destroy(Request $request, Publicacao $publicacao, InstagramService $instagram): JsonResponse
+    public function destroy(Request $request, Publicacao $publicacao, InstagramService $instagram, FacebookService $facebook): JsonResponse
     {
-        // Uso: quando o post já foi apagado manualmente pelo app do Instagram (ex:
-        // ao remover um duplicado), a Meta rejeita a exclusão via API porque o
-        // objeto não existe mais — nesse caso o painel só limpa o registro local.
-        $jaRemovidoDoInstagram = $request->boolean('ja_removido_do_instagram');
+        // Uso: quando o post já foi apagado manualmente pelo app (ex: ao remover
+        // um duplicado), a Meta rejeita a exclusão via API porque o objeto não
+        // existe mais — nesse caso o painel só limpa o registro local.
+        $jaRemovido = $request->boolean('ja_removido_do_instagram');
 
-        if ($publicacao->status === 'publicado' && $publicacao->midia_id && ! $jaRemovidoDoInstagram) {
+        if ($publicacao->status === 'publicado' && $publicacao->midia_id && ! $jaRemovido) {
             try {
-                $instagram->excluirMidia($publicacao->midia_id);
+                $publicacao->rede === 'facebook'
+                    ? $facebook->excluirPost($publicacao->midia_id)
+                    : $instagram->excluirMidia($publicacao->midia_id);
             } catch (RequestException $e) {
-                return response()->json(['message' => 'Não foi possível apagar do Instagram: '.$this->mensagemErro($e)], 422);
+                $rede = $publicacao->rede === 'facebook' ? 'Facebook' : 'Instagram';
+
+                return response()->json(['message' => "Não foi possível apagar do {$rede}: ".$this->mensagemErro($e)], 422);
             }
         }
 
@@ -173,8 +193,8 @@ class PublicacoesController extends Controller
         ];
     }
 
-    /** Executa a publicação de fato (roteando por tipo) e atualiza o status. */
-    public function publicarRegistro(Publicacao $pub, InstagramService $instagram): void
+    /** Executa a publicação de fato (roteando por rede e tipo) e atualiza o status. */
+    public function publicarRegistro(Publicacao $pub, InstagramService $instagram, FacebookService $facebook): void
     {
         try {
             $pub->update(['status' => 'publicando']);
@@ -183,18 +203,9 @@ class PublicacoesController extends Controller
             $primeira = $midias[0] ?? ['url' => $pub->imagem_url, 'tipo' => 'imagem'];
             $ehVideo = ($primeira['tipo'] ?? 'imagem') === 'video';
 
-            // 500ms: cai dentro da cena de capa (preta, com o texto de abertura)
-            // que todo Reels da Dolen renderiza nos primeiros ~1,3s.
-            $thumbOffsetMs = 500;
-
-            $resultado = match ($pub->tipo) {
-                'reels' => $instagram->publicarReels($primeira['url'], $pub->legenda, $thumbOffsetMs),
-                'carrossel' => $instagram->publicarCarrossel($midias, $pub->legenda),
-                'story' => $instagram->publicarStory($primeira['url'], $ehVideo),
-                default => $ehVideo
-                    ? $instagram->publicarReels($primeira['url'], $pub->legenda, $thumbOffsetMs)
-                    : $instagram->publicarPost($primeira['url'], $pub->legenda),
-            };
+            $resultado = $pub->rede === 'facebook'
+                ? $this->publicarNoFacebook($pub, $facebook, $midias, $primeira, $ehVideo)
+                : $this->publicarNoInstagram($pub, $instagram, $midias, $primeira, $ehVideo);
 
             $pub->update([
                 'status' => 'publicado',
@@ -206,6 +217,32 @@ class PublicacoesController extends Controller
         } catch (\Throwable $e) {
             $pub->update(['status' => 'erro', 'erro' => $this->mensagemErro($e)]);
         }
+    }
+
+    private function publicarNoInstagram(Publicacao $pub, InstagramService $instagram, array $midias, array $primeira, bool $ehVideo): array
+    {
+        // 500ms: cai dentro da cena de capa (preta, com o texto de abertura)
+        // que todo Reels da Dolen renderiza nos primeiros ~1,3s.
+        $thumbOffsetMs = 500;
+
+        return match ($pub->tipo) {
+            'reels' => $instagram->publicarReels($primeira['url'], $pub->legenda, $thumbOffsetMs),
+            'carrossel' => $instagram->publicarCarrossel($midias, $pub->legenda),
+            'story' => $instagram->publicarStory($primeira['url'], $ehVideo),
+            default => $ehVideo
+                ? $instagram->publicarReels($primeira['url'], $pub->legenda, $thumbOffsetMs)
+                : $instagram->publicarPost($primeira['url'], $pub->legenda),
+        };
+    }
+
+    private function publicarNoFacebook(Publicacao $pub, FacebookService $facebook, array $midias, array $primeira, bool $ehVideo): array
+    {
+        return match ($pub->tipo) {
+            'carrossel' => $facebook->publicarCarrossel(array_column($midias, 'url'), $pub->legenda),
+            default => $ehVideo
+                ? $facebook->publicarVideo($primeira['url'], $pub->legenda)
+                : $facebook->publicarFoto($primeira['url'], $pub->legenda),
+        };
     }
 
     private function mensagemErro(\Throwable $e): string

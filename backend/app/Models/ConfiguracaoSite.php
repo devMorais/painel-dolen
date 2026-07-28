@@ -21,6 +21,11 @@ class ConfiguracaoSite extends Model
         'instagram_business_account_id',
         'instagram_access_token',
         'instagram_token_expira_em',
+        'whatsapp_phone_number_id',
+        'whatsapp_business_account_id',
+        'whatsapp_access_token',
+        'facebook_page_id',
+        'facebook_page_access_token',
         'meta_title',
         'meta_description',
         'meta_keywords',
@@ -42,11 +47,15 @@ class ConfiguracaoSite extends Model
     protected $casts = [
         'instagram_access_token' => 'encrypted',
         'instagram_token_expira_em' => 'datetime',
+        'whatsapp_access_token' => 'encrypted',
+        'facebook_page_access_token' => 'encrypted',
         'robots_index' => 'boolean',
         'robots_follow' => 'boolean',
     ];
 
     protected $hidden = [
         'instagram_access_token',
+        'whatsapp_access_token',
+        'facebook_page_access_token',
     ];
 }

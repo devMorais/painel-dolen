@@ -1,0 +1,86 @@
+<div class="contratos-page">
+  <header class="topo">
+    <div>
+      <h1>Contratos</h1>
+      <p class="subtitulo">Gere o contrato de 1 página a partir de uma proposta ou do zero, e acompanhe o status.</p>
+    </div>
+    <div class="topo-acoes">
+      <a class="btn" routerLink="/admin/contratos/novo">+ Contrato em branco</a>
+      <div class="seletor-wrap">
+        <button type="button" class="btn btn-solido" (click)="alternarSeletor()">A partir de uma proposta ▾</button>
+        @if (seletorAberto()) {
+          <div class="seletor-menu">
+            @if (propostas().length === 0) {
+              <span class="seletor-vazio">Nenhuma proposta ainda.</span>
+            } @else {
+              @for (p of propostas(); track p.id) {
+                <button type="button" (click)="criarAPartirDeProposta(p.id)">
+                  {{ p.cliente_nome }} <span>Nº {{ p.numero }}</span>
+                </button>
+              }
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </header>
+
+  @if (carregando()) {
+    <p>Carregando...</p>
+  } @else if (contratos().length === 0) {
+    <div class="vazio">
+      <p>Nenhum contrato ainda.</p>
+      <a routerLink="/admin/contratos/novo">Criar o primeiro</a>
+    </div>
+  } @else {
+    <div class="tabela-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nº</th>
+            <th>Cliente</th>
+            <th>Status</th>
+            <th>Data</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (contrato of contratos(); track contrato.id) {
+            <tr>
+              <td class="num">{{ contrato.numero }}</td>
+              <td>
+                <a class="cliente" [routerLink]="['/admin/contratos', contrato.id]">{{ contrato.cliente_nome }}</a>
+                @if (contrato.url) {
+                  <a class="url" [href]="contrato.url" target="_blank" rel="noopener">{{ contrato.url }}</a>
+                }
+              </td>
+              <td>
+                <span class="chip chip-{{ contrato.status }}">{{ rotuloStatus(contrato.status) }}</span>
+              </td>
+              <td>{{ contrato.data_contrato | date: 'dd/MM/yyyy' }}</td>
+              <td class="acoes">
+                <a class="btn" [routerLink]="['/admin/contratos', contrato.id]">Editar</a>
+                <button type="button" class="btn" [disabled]="ocupadaId() === contrato.id" (click)="duplicar(contrato)">
+                  Duplicar
+                </button>
+                @if (contrato.url) {
+                  <button type="button" class="btn" (click)="copiarLink(contrato)">
+                    {{ linkCopiadoId() === contrato.id ? 'Copiado!' : 'Copiar link' }}
+                  </button>
+                }
+                <button
+                  type="button"
+                  class="btn perigo"
+                  [disabled]="ocupadaId() === contrato.id"
+                  (click)="excluir(contrato)"
+                >
+                  Excluir
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

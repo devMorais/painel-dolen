@@ -55,7 +55,7 @@ class ConteudoController extends Controller
 
     /** Campos de texto editáveis dos produtos (estrutura/criação de produto fica pra outra demanda). */
     private const PRODUTO_CAMPOS = [
-        'nome', 'rotulo_ordem', 'badge', 'descricao', 'publico_alvo', 'preco_label',
+        'nome', 'rotulo_ordem', 'badge', 'imagem_url', 'descricao', 'publico_alvo', 'preco_label',
         'cta_primario_label', 'cta_primario_url', 'cta_secundario_label', 'cta_secundario_url',
     ];
 

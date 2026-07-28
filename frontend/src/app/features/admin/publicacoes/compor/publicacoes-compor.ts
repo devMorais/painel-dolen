@@ -35,6 +35,7 @@ export class PublicacoesCompor {
   protected readonly progresso = signal<number | null>(null);
   protected readonly erro = signal<string | null>(null);
   protected readonly duplicataDetectada = signal<DuplicataInfo | null>(null);
+  protected readonly publicarNoFacebook = signal(false);
 
   protected readonly tipos: { valor: PublicacaoTipo; rotulo: string }[] = [
     { valor: 'feed', rotulo: 'Foto' },
@@ -97,12 +98,18 @@ export class PublicacoesCompor {
     return this.quando() === 'agora' || !!this.agendadoPara();
   });
 
+  /** Stories não são publicados no Facebook por essa integração. */
+  protected readonly facebookDisponivel = computed(() => this.tipo() !== 'story');
+
   protected trocarTipo(t: PublicacaoTipo): void {
     if (t === this.tipo()) {
       return;
     }
     this.tipo.set(t);
     this.limparMidias();
+    if (t === 'story') {
+      this.publicarNoFacebook.set(false);
+    }
   }
 
   protected selecionarMidias(event: Event): void {
@@ -166,6 +173,9 @@ export class PublicacoesCompor {
     if (this.quando() === 'agendar') {
       fd.append('agendado_para', this.agendadoPara());
     }
+    if (this.publicarNoFacebook() && this.facebookDisponivel()) {
+      fd.append('publicar_no_facebook', '1');
+    }
     return fd;
   }
 
@@ -209,6 +219,7 @@ export class PublicacoesCompor {
     this.tipo.set('feed');
     this.quando.set('agora');
     this.agendadoPara.set('');
+    this.publicarNoFacebook.set(false);
   }
 
   private msgErro(e: unknown): string {

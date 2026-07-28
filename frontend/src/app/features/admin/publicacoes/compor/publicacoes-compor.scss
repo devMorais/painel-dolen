@@ -45,6 +45,21 @@
   font-weight: 700;
 }
 
+.check-facebook {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--gray-dark);
+  cursor: pointer;
+
+  input[type='checkbox'] {
+    width: 16px;
+    height: 16px;
+  }
+}
+
 .campo textarea,
 .dt {
   font-family: var(--body);

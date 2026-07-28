@@ -1,0 +1,121 @@
+<div class="configuracoes-page">
+  <header class="cabecalho">
+    <div>
+      <h1>Configurações</h1>
+      <p class="subtitulo">Dados gerais, redes, WhatsApp e SEO do site. Ao salvar, a mudança já vale no site.</p>
+    </div>
+    <a class="ver-site" href="/" target="_blank" rel="noopener">Ver o site ↗</a>
+  </header>
+
+  @if (carregando()) {
+    <p class="estado">Carregando configurações...</p>
+  } @else if (erroCarregar()) {
+    <p class="estado erro">Não foi possível carregar as configurações. Recarregue a página.</p>
+  } @else if (dados; as d) {
+    <nav class="abas" aria-label="Grupos de configuração">
+      @for (aba of abas; track aba.valor) {
+        <button
+          type="button"
+          class="aba"
+          [class.ativa]="abaAtiva() === aba.valor"
+          (click)="trocarAba(aba.valor)"
+        >{{ aba.label }}</button>
+      }
+    </nav>
+
+    <section class="painel">
+      <!-- ===================== GERAL ===================== -->
+      @if (abaAtiva() === 'geral') {
+        <div class="form-grid">
+          <label>Nome do site
+            <input type="text" [(ngModel)]="d.nome_site" maxlength="255" />
+          </label>
+          <label>Tagline
+            <input type="text" [(ngModel)]="d.tagline" maxlength="255" />
+          </label>
+          <label class="larga">Texto de copyright (rodapé)
+            <input type="text" [(ngModel)]="d.copyright_texto" maxlength="255" />
+          </label>
+          <label>E-mail de contato (recebe os leads)
+            <input type="email" [(ngModel)]="d.email_contato" maxlength="255" />
+          </label>
+        </div>
+
+        <h2 class="itens-titulo">Logos e favicon</h2>
+        <div class="form-grid">
+          <app-image-upload label="Logo (wordmark)" [(url)]="d.logo_wordmark_url" />
+          <app-image-upload label="Ícone da marca" [(url)]="d.logo_icon_url" />
+          <app-image-upload label="Favicon" aceitar="image/png,image/x-icon,image/vnd.microsoft.icon" [(url)]="d.favicon_url" />
+        </div>
+      }
+
+      <!-- ===================== REDES & WHATSAPP ===================== -->
+      @if (abaAtiva() === 'redes') {
+        <div class="form-grid">
+          <label>WhatsApp (com DDI e DDD, só números)
+            <input type="text" [(ngModel)]="d.whatsapp_numero" maxlength="255" placeholder="5561999999999" />
+          </label>
+          <label>Instagram — URL do perfil
+            <input type="text" [(ngModel)]="d.instagram_url" maxlength="255" />
+          </label>
+        </div>
+      }
+
+      <!-- ===================== SEO ===================== -->
+      @if (abaAtiva() === 'seo') {
+        <div class="form-grid">
+          <label class="larga">Título SEO (aba do navegador / Google)
+            <input type="text" [(ngModel)]="d.meta_title" maxlength="255" />
+          </label>
+          <label class="larga">Descrição SEO
+            <textarea rows="2" [(ngModel)]="d.meta_description" maxlength="500"></textarea>
+          </label>
+          <label class="larga">Palavras-chave (separadas por vírgula)
+            <input type="text" [(ngModel)]="d.meta_keywords" maxlength="255" />
+          </label>
+          <label>URL canônica
+            <input type="text" [(ngModel)]="d.canonical_url" maxlength="255" />
+          </label>
+          <label class="check">
+            <input type="checkbox" [(ngModel)]="d.robots_index" />
+            Permitir indexação (robots: index)
+          </label>
+          <label class="check">
+            <input type="checkbox" [(ngModel)]="d.robots_follow" />
+            Permitir seguir links (robots: follow)
+          </label>
+        </div>
+
+        <h2 class="itens-titulo">Compartilhamento (Open Graph / redes sociais)</h2>
+        <div class="form-grid">
+          <label class="larga">Título ao compartilhar
+            <input type="text" [(ngModel)]="d.og_title" maxlength="255" />
+          </label>
+          <label class="larga">Descrição ao compartilhar
+            <textarea rows="2" [(ngModel)]="d.og_description" maxlength="500"></textarea>
+          </label>
+          <app-image-upload label="Imagem de compartilhamento (og:image)" [(url)]="d.og_image_url" />
+        </div>
+
+        <h2 class="itens-titulo">Dados estruturados (Google)</h2>
+        <div class="form-grid">
+          <label>Nome do negócio
+            <input type="text" [(ngModel)]="d.structured_data_nome_negocio" maxlength="255" />
+          </label>
+          <label>Telefone
+            <input type="text" [(ngModel)]="d.structured_data_telefone" maxlength="255" />
+          </label>
+        </div>
+      }
+
+      <footer class="rodape">
+        @if (mensagem(); as msg) {
+          <span class="msg" [class.ok]="msg.tipo === 'ok'" [class.erro]="msg.tipo === 'erro'">{{ msg.texto }}</span>
+        }
+        <button type="button" class="salvar" (click)="salvar()" [disabled]="salvando()">
+          {{ salvando() ? 'Salvando...' : 'Salvar configurações' }}
+        </button>
+      </footer>
+    </section>
+  }
+</div>

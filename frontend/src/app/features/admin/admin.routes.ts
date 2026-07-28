@@ -3,7 +3,11 @@ import { Routes } from '@angular/router';
 import { authGuard } from '@core/guards/auth.guard';
 import { AdminLayout } from '@layout/admin-layout/admin-layout';
 import { Login } from '@features/admin/auth/login/login';
+import { Configuracoes } from '@features/admin/configuracoes/configuracoes';
+import { ContratoEditor } from '@features/admin/contratos/contrato-editor/contrato-editor';
+import { ContratosList } from '@features/admin/contratos/contratos-list/contratos-list';
 import { Conteudo } from '@features/admin/conteudo/conteudo';
+import { Conversas } from '@features/admin/conversas/conversas';
 import { Dashboard } from '@features/admin/dashboard/dashboard';
 import { Precos } from '@features/admin/precos/precos';
 import { Leads } from '@features/admin/leads/leads';
@@ -25,10 +29,15 @@ export const adminRoutes: Routes = [
       { path: 'publicacoes', component: Publicacoes },
       { path: 'conteudo', component: Conteudo },
       { path: 'precos', component: Precos },
+      { path: 'configuracoes', component: Configuracoes },
       { path: 'secoes', component: SecoesList },
       { path: 'propostas', component: PropostasList },
       { path: 'propostas/nova', component: PropostaEditor },
       { path: 'propostas/:id', component: PropostaEditor },
+      { path: 'contratos', component: ContratosList },
+      { path: 'contratos/novo', component: ContratoEditor },
+      { path: 'contratos/:id', component: ContratoEditor },
+      { path: 'conversas', component: Conversas },
     ],
   },
 ];

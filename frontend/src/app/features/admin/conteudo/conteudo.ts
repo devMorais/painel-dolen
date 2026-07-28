@@ -8,6 +8,7 @@ import {
   ProdutoConteudo,
 } from '@core/models/admin';
 import { ConteudoAdminService } from '@core/services/admin';
+import { ImageUpload } from '@shared/components/image-upload/image-upload';
 
 interface Aba {
   slug: ConteudoSlug;
@@ -16,7 +17,7 @@ interface Aba {
 
 @Component({
   selector: 'app-conteudo',
-  imports: [FormsModule],
+  imports: [FormsModule, ImageUpload],
   templateUrl: './conteudo.html',
   styleUrl: './conteudo.scss',
 })

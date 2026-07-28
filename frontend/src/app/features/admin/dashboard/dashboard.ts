@@ -42,4 +42,20 @@ export class Dashboard {
     const data = new Date(iso);
     return data.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
   }
+
+  protected quandoComHora(iso: string): string {
+    const data = new Date(iso);
+    return data.toLocaleString('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+  }
+
+  private readonly rotulosTipoPub: Record<string, string> = {
+    feed: 'Foto',
+    carrossel: 'Carrossel',
+    story: 'Story',
+    reels: 'Reels',
+  };
+
+  protected rotuloTipoPub(tipo: string): string {
+    return this.rotulosTipoPub[tipo] ?? tipo;
+  }
 }

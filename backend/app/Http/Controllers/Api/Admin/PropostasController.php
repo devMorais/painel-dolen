@@ -18,7 +18,7 @@ class PropostasController extends Controller
         $propostas = Proposta::query()
             ->orderByDesc('created_at')
             ->get()
-            ->map(fn (Proposta $proposta) => $this->resumo($proposta));
+            ->map(fn (Proposta $proposta) => $proposta->paraResumo());
 
         return response()->json($propostas);
     }
@@ -194,24 +194,8 @@ class PropostasController extends Controller
     }
 
     /** @return array<string, mixed> */
-    private function resumo(Proposta $proposta): array
-    {
-        return [
-            'id' => $proposta->id,
-            'numero' => $proposta->numero,
-            'slug' => $proposta->slug,
-            'cliente_nome' => $proposta->cliente_nome,
-            'status' => $proposta->status,
-            'data_proposta' => $proposta->data_proposta?->toDateString(),
-            'validade' => $proposta->validade?->toDateString(),
-            'published_at' => $proposta->published_at?->toIso8601String(),
-            'url' => $proposta->urlPublica(),
-        ];
-    }
-
-    /** @return array<string, mixed> */
     private function detalhe(Proposta $proposta): array
     {
-        return $this->resumo($proposta) + ['conteudo' => $proposta->conteudo];
+        return $proposta->paraResumo() + ['conteudo' => $proposta->conteudo];
     }
 }

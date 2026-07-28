@@ -81,6 +81,17 @@
       }
     </div>
 
+    @if (facebookDisponivel()) {
+      <label class="check-facebook">
+        <input
+          type="checkbox"
+          [checked]="publicarNoFacebook()"
+          (change)="publicarNoFacebook.set($any($event.target).checked)"
+        />
+        Publicar também na Página do Facebook
+      </label>
+    }
+
     @if (erro(); as e) {
       <div class="form-erro">{{ e }}</div>
     }
@@ -92,7 +103,15 @@
     }
 
     <button type="button" class="btn btn-solid pub-enviar" [disabled]="!podeEnviar()" (click)="publicar()">
-      {{ enviando() ? (progresso() !== null && progresso()! < 100 ? 'Enviando… ' + progresso() + '%' : 'Publicando…') : (quando() === 'agora' ? 'Publicar no Instagram' : 'Agendar publicação') }}
+      @if (enviando()) {
+        {{ progresso() !== null && progresso()! < 100 ? 'Enviando… ' + progresso() + '%' : 'Publicando…' }}
+      } @else if (quando() === 'agendar') {
+        Agendar publicação
+      } @else if (publicarNoFacebook() && facebookDisponivel()) {
+        Publicar no Instagram e Facebook
+      } @else {
+        Publicar no Instagram
+      }
     </button>
   </section>
 

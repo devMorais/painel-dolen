@@ -28,7 +28,7 @@
     <div class="card">
       <span class="card-label">Total de leads</span>
       <span class="card-num">{{ s.leads.total }}</span>
-      <span class="card-hint">desde o início</span>
+      <span class="card-hint">{{ s.leads.novos_na_semana }} novo(s) nos últimos 7 dias</span>
     </div>
   </div>
 
@@ -60,6 +60,46 @@
       }
     </section>
 
+    <!-- Próximas publicações -->
+    <section class="bloco bloco-mini">
+      <div class="bloco-head">
+        <h2>Publicações</h2>
+        <a routerLink="/admin/publicacoes" class="ver-todos">Abrir →</a>
+      </div>
+      <div class="mini-stats">
+        <div>
+          <span class="ms-num">{{ s.publicacoes.agendadas }}</span>
+          <span class="ms-label">agendadas</span>
+        </div>
+        <div>
+          <span class="ms-num">{{ s.publicacoes.publicadas }}</span>
+          <span class="ms-label">publicadas</span>
+        </div>
+        @if (s.publicacoes.com_erro > 0) {
+          <div>
+            <span class="ms-num ms-erro">{{ s.publicacoes.com_erro }}</span>
+            <span class="ms-label">com erro</span>
+          </div>
+        }
+      </div>
+
+      @if (s.proximas_publicacoes.length > 0) {
+        <ul class="leads-mini">
+          @for (pub of s.proximas_publicacoes; track pub.id) {
+            <li>
+              <div class="lm-info">
+                <strong>{{ rotuloTipoPub(pub.tipo) }}</strong>
+                <span>{{ pub.legenda || 'Sem legenda' }}</span>
+              </div>
+              <div class="lm-meta">
+                <span class="lm-data">{{ pub.agendado_para ? quandoComHora(pub.agendado_para) : '' }}</span>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
     <!-- Propostas -->
     <section class="bloco bloco-mini">
       <div class="bloco-head">
@@ -68,14 +108,30 @@
       </div>
       <div class="mini-stats">
         <div>
-          <span class="ms-num">{{ s.propostas.total }}</span>
-          <span class="ms-label">criadas</span>
+          <span class="ms-num">{{ s.propostas.rascunho }}</span>
+          <span class="ms-label">rascunho</span>
         </div>
         <div>
           <span class="ms-num">{{ s.propostas.publicadas }}</span>
           <span class="ms-label">publicadas</span>
         </div>
       </div>
+
+      @if (s.propostas_recentes.length > 0) {
+        <ul class="leads-mini">
+          @for (proposta of s.propostas_recentes; track proposta.id) {
+            <li>
+              <div class="lm-info">
+                <strong>{{ proposta.cliente_nome }}</strong>
+                <span>Nº {{ proposta.numero }}</span>
+              </div>
+              <div class="lm-meta">
+                <span class="pill pill-proposta-{{ proposta.status }}">{{ proposta.status === 'publicada' ? 'Publicada' : 'Rascunho' }}</span>
+              </div>
+            </li>
+          }
+        </ul>
+      }
     </section>
   </div>
 } @else {
