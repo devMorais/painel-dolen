@@ -67,11 +67,12 @@ class WhatsappService
 
     /**
      * Finaliza a conexão via Embedded Signup (Coexistência): troca o "code"
-     * retornado pelo JS SDK por um token de usuário do sistema de longa
-     * duração e salva junto com o phone_number_id/waba_id escolhidos no
-     * próprio fluxo (o número continua funcionando no app do celular).
+     * retornado pelo JS SDK por um token de longa duração e descobre o
+     * WABA/phone_number_id via debug_token (granular_scopes) — mais
+     * confiável que depender do postMessage WA_EMBEDDED_SIGNUP, que nem
+     * sempre dispara. O número continua funcionando no app do celular.
      */
-    public function conectarEmbeddedSignup(string $code, string $phoneNumberId, string $wabaId): ConfiguracaoSite
+    public function conectarEmbeddedSignup(string $code): ConfiguracaoSite
     {
         $appId = config('whatsapp.app_id');
         $appSecret = config('whatsapp.app_secret');
@@ -93,6 +94,9 @@ class WhatsappService
             'fb_exchange_token' => $tokenCurto,
         ])->throw()->json('access_token');
 
+        $wabaId = $this->descobrirWabaId($tokenLongo, $appId, $appSecret);
+        $phoneNumberId = $this->descobrirPhoneNumberId($tokenLongo, $wabaId);
+
         Http::withToken($tokenLongo)->post(self::API_BASE."/{$wabaId}/subscribed_apps")->throw();
 
         $config = ConfiguracaoSite::firstOrFail();
@@ -103,6 +107,44 @@ class WhatsappService
         ]);
 
         return $config->fresh();
+    }
+
+    /** Descobre o WABA concedido ao token via debug_token (granular_scopes.target_ids). */
+    private function descobrirWabaId(string $token, string $appId, string $appSecret): string
+    {
+        $resposta = Http::get(self::API_BASE.'/debug_token', [
+            'input_token' => $token,
+            'access_token' => "{$appId}|{$appSecret}",
+        ])->throw()->json('data');
+
+        $escopos = collect($resposta['granular_scopes'] ?? []);
+        $escopoWhatsapp = $escopos->firstWhere('scope', 'whatsapp_business_management')
+            ?? $escopos->firstWhere('scope', 'whatsapp_business_messaging');
+
+        $wabaId = $escopoWhatsapp['target_ids'][0] ?? null;
+
+        if (! $wabaId) {
+            throw new RuntimeException('Não foi possível identificar a conta do WhatsApp Business autorizada.');
+        }
+
+        return $wabaId;
+    }
+
+    /** Primeiro (e normalmente único) número de telefone cadastrado nesse WABA. */
+    private function descobrirPhoneNumberId(string $token, string $wabaId): string
+    {
+        $resposta = Http::withToken($token)
+            ->get(self::API_BASE."/{$wabaId}/phone_numbers")
+            ->throw()
+            ->json('data');
+
+        $phoneNumberId = $resposta[0]['id'] ?? null;
+
+        if (! $phoneNumberId) {
+            throw new RuntimeException('Nenhum número de telefone encontrado nessa conta do WhatsApp Business.');
+        }
+
+        return $phoneNumberId;
     }
 
     /** Envia uma mensagem de texto simples pro telefone do lead. */

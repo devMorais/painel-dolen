@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { ConfiguracoesSite } from '@core/models/admin';
@@ -21,11 +21,6 @@ interface FbLoginResponse {
   authResponse?: { code?: string };
 }
 
-interface EmbeddedSignupData {
-  phone_number_id?: string;
-  waba_id?: string;
-}
-
 @Component({
   selector: 'app-configuracoes',
   imports: [FormsModule, ImageUpload],
@@ -34,7 +29,6 @@ interface EmbeddedSignupData {
 })
 export class Configuracoes {
   private readonly configuracoesService = inject(ConfiguracoesAdminService);
-  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly abas: { valor: Aba; label: string }[] = [
     { valor: 'geral', label: 'Geral' },
@@ -54,8 +48,6 @@ export class Configuracoes {
   /** Objeto mutável ligado ao formulário via ngModel. */
   protected dados: ConfiguracoesSite | null = null;
 
-  private embeddedSignupListener?: (event: MessageEvent) => void;
-
   constructor() {
     this.configuracoesService.carregar().subscribe({
       next: (dados) => {
@@ -66,12 +58,6 @@ export class Configuracoes {
         this.erroCarregar.set(true);
         this.carregando.set(false);
       },
-    });
-
-    this.destroyRef.onDestroy(() => {
-      if (this.embeddedSignupListener) {
-        window.removeEventListener('message', this.embeddedSignupListener);
-      }
     });
   }
 
@@ -92,28 +78,9 @@ export class Configuracoes {
   }
 
   private iniciarEmbeddedSignup(appId: string, configId: string): void {
-    let dadosSignup: EmbeddedSignupData = {};
-
-    this.embeddedSignupListener = (event: MessageEvent) => {
-      if (!event.origin.endsWith('facebook.com')) return;
-      try {
-        const dados = JSON.parse(event.data);
-        if (dados.type === 'WA_EMBEDDED_SIGNUP' && dados.event === 'FINISH') {
-          dadosSignup = { phone_number_id: dados.data?.phone_number_id, waba_id: dados.data?.waba_id };
-        }
-      } catch {
-        // mensagens que não são JSON (ex: do próprio Facebook) são ignoradas
-      }
-    };
-    window.addEventListener('message', this.embeddedSignupListener);
-
     this.carregarSdkFacebook(appId, () => {
       window.FB!.login(
-        (resposta) => {
-          window.removeEventListener('message', this.embeddedSignupListener!);
-          this.embeddedSignupListener = undefined;
-          this.finalizarConexao(resposta, dadosSignup);
-        },
+        (resposta) => this.finalizarConexao(resposta),
         {
           config_id: configId,
           response_type: 'code',
@@ -128,28 +95,27 @@ export class Configuracoes {
     });
   }
 
-  private finalizarConexao(resposta: FbLoginResponse, dadosSignup: EmbeddedSignupData): void {
+  /** O phone_number_id/waba_id são descobertos no backend via debug_token — não dependemos do postMessage WA_EMBEDDED_SIGNUP, que nem sempre dispara. */
+  private finalizarConexao(resposta: FbLoginResponse): void {
     const code = resposta.authResponse?.code;
 
-    if (!code || !dadosSignup.phone_number_id || !dadosSignup.waba_id) {
+    if (!code) {
       this.conectandoWhatsapp.set(false);
-      this.mensagemWhatsapp.set({ tipo: 'erro', texto: 'Conexão cancelada ou incompleta.' });
+      this.mensagemWhatsapp.set({ tipo: 'erro', texto: 'Conexão cancelada.' });
       return;
     }
 
-    this.configuracoesService
-      .conectarWhatsapp({ code, phone_number_id: dadosSignup.phone_number_id, waba_id: dadosSignup.waba_id })
-      .subscribe({
-        next: () => {
-          this.conectandoWhatsapp.set(false);
-          this.mensagemWhatsapp.set({ tipo: 'ok', texto: 'WhatsApp conectado! As mensagens já devem chegar por aqui.' });
-        },
-        error: (err) => {
-          this.conectandoWhatsapp.set(false);
-          const texto = err?.error?.message ?? 'Não foi possível concluir a conexão. Tente de novo.';
-          this.mensagemWhatsapp.set({ tipo: 'erro', texto });
-        },
-      });
+    this.configuracoesService.conectarWhatsapp({ code }).subscribe({
+      next: () => {
+        this.conectandoWhatsapp.set(false);
+        this.mensagemWhatsapp.set({ tipo: 'ok', texto: 'WhatsApp conectado! As mensagens já devem chegar por aqui.' });
+      },
+      error: (err) => {
+        this.conectandoWhatsapp.set(false);
+        const texto = err?.error?.message ?? 'Não foi possível concluir a conexão. Tente de novo.';
+        this.mensagemWhatsapp.set({ tipo: 'erro', texto });
+      },
+    });
   }
 
   private carregarSdkFacebook(appId: string, aoCarregar: () => void): void {

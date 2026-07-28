@@ -39,8 +39,8 @@ export class ConfiguracoesAdminService {
     );
   }
 
-  /** Finaliza a conexão do WhatsApp após o Embedded Signup devolver code + ids. */
-  conectarWhatsapp(payload: { code: string; phone_number_id: string; waba_id: string }): Observable<void> {
+  /** Finaliza a conexão do WhatsApp após o Embedded Signup devolver o code. */
+  conectarWhatsapp(payload: { code: string }): Observable<void> {
     return this.http
       .post<void>(`${environment.apiUrl}/admin/configuracoes/whatsapp/conectar`, payload)
       .pipe(map(() => undefined));

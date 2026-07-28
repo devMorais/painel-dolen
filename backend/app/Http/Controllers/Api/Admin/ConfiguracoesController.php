@@ -108,12 +108,10 @@ class ConfiguracoesController extends Controller
     {
         $dados = $request->validate([
             'code' => ['required', 'string'],
-            'phone_number_id' => ['required', 'string'],
-            'waba_id' => ['required', 'string'],
         ]);
 
         try {
-            $whatsapp->conectarEmbeddedSignup($dados['code'], $dados['phone_number_id'], $dados['waba_id']);
+            $whatsapp->conectarEmbeddedSignup($dados['code']);
         } catch (\Throwable $e) {
             return response()->json(['message' => 'Não foi possível concluir a conexão: '.$e->getMessage()], 422);
         }
