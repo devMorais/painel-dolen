@@ -128,6 +128,22 @@ footer .logo span {
 footer .fnote {
   font-size: 0.82rem;
   color: rgba(255, 255, 255, 0.45);
+  margin-right: auto;
+  margin-left: 20px;
+}
+
+footer .flinks {
+  display: flex;
+  gap: 20px;
+}
+
+footer .flinks a {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+footer .flinks a:hover {
+  color: var(--white);
 }
 
 @media (max-width: 860px) {

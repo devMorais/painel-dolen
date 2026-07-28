@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ConfiguracaoSite;
+use App\Services\WhatsappService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -91,6 +92,33 @@ class ConfiguracoesController extends Controller
         $url = $this->salvarImagem($dados['imagem']);
 
         return response()->json(['url' => $url], 201);
+    }
+
+    /** Dados públicos pro frontend montar o botão de Embedded Signup (App ID e Configuration ID não são segredo). */
+    public function whatsappMeta(): JsonResponse
+    {
+        return response()->json([
+            'app_id' => config('whatsapp.app_id'),
+            'config_id' => config('whatsapp.config_id'),
+        ]);
+    }
+
+    /** Finaliza a conexão do WhatsApp via Embedded Signup (Coexistência) — botão em Configurações. */
+    public function conectarWhatsapp(Request $request, WhatsappService $whatsapp): JsonResponse
+    {
+        $dados = $request->validate([
+            'code' => ['required', 'string'],
+            'phone_number_id' => ['required', 'string'],
+            'waba_id' => ['required', 'string'],
+        ]);
+
+        try {
+            $whatsapp->conectarEmbeddedSignup($dados['code'], $dados['phone_number_id'], $dados['waba_id']);
+        } catch (\Throwable $e) {
+            return response()->json(['message' => 'Não foi possível concluir a conexão: '.$e->getMessage()], 422);
+        }
+
+        return response()->json(['message' => 'WhatsApp conectado com sucesso.']);
     }
 
     private function salvarImagem(UploadedFile $arquivo): string

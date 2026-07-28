@@ -1,0 +1,96 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--white);
+  color: var(--black);
+}
+
+.topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px 22px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--black);
+}
+
+.voltar {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--gray-dark);
+}
+
+.voltar:hover {
+  color: var(--black);
+}
+
+.corpo {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 12px 22px 60px;
+}
+
+.doc {
+  width: 100%;
+  max-width: 720px;
+}
+
+.doc h1 {
+  font-family: var(--display);
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.atualizado {
+  color: var(--gray-mid);
+  font-size: 0.86rem;
+  margin-bottom: 32px;
+}
+
+.doc h2 {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 32px 0 10px;
+}
+
+.doc p,
+.doc li {
+  font-size: 0.96rem;
+  line-height: 1.65;
+  color: var(--gray-dark);
+}
+
+.doc p {
+  margin-bottom: 14px;
+}
+
+.doc ul {
+  margin: 0 0 14px;
+  padding-left: 22px;
+}
+
+.doc li {
+  margin-bottom: 6px;
+}
+
+.doc a {
+  color: var(--black);
+  font-weight: 600;
+  border-bottom: 1.5px solid var(--black);
+}

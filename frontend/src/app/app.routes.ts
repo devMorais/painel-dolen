@@ -12,5 +12,15 @@ export const routes: Routes = [
     loadComponent: () =>
       import('@features/orcamento/orcamento-page/orcamento-page').then((m) => m.OrcamentoPage),
   },
+  {
+    path: 'politica-de-privacidade',
+    loadComponent: () => import('@features/legal/legal-page/legal-page').then((m) => m.LegalPage),
+    data: { tipo: 'privacidade' },
+  },
+  {
+    path: 'termos-de-uso',
+    loadComponent: () => import('@features/legal/legal-page/legal-page').then((m) => m.LegalPage),
+    data: { tipo: 'termos' },
+  },
   { path: '', component: PublicLayout },
 ];

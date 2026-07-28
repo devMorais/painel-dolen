@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { ConfiguracoesSite } from '@core/models/admin';
@@ -6,6 +6,25 @@ import { ConfiguracoesAdminService } from '@core/services/admin';
 import { ImageUpload } from '@shared/components/image-upload/image-upload';
 
 type Aba = 'geral' | 'redes' | 'seo';
+
+declare global {
+  interface Window {
+    FB?: {
+      init(opts: { appId: string; xfbml: boolean; version: string }): void;
+      login(callback: (resposta: FbLoginResponse) => void, opts: Record<string, unknown>): void;
+    };
+    fbAsyncInit?: () => void;
+  }
+}
+
+interface FbLoginResponse {
+  authResponse?: { code?: string };
+}
+
+interface EmbeddedSignupData {
+  phone_number_id?: string;
+  waba_id?: string;
+}
 
 @Component({
   selector: 'app-configuracoes',
@@ -15,6 +34,7 @@ type Aba = 'geral' | 'redes' | 'seo';
 })
 export class Configuracoes {
   private readonly configuracoesService = inject(ConfiguracoesAdminService);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly abas: { valor: Aba; label: string }[] = [
     { valor: 'geral', label: 'Geral' },
@@ -28,8 +48,13 @@ export class Configuracoes {
   protected readonly salvando = signal(false);
   protected readonly mensagem = signal<{ tipo: 'ok' | 'erro'; texto: string } | null>(null);
 
+  protected readonly conectandoWhatsapp = signal(false);
+  protected readonly mensagemWhatsapp = signal<{ tipo: 'ok' | 'erro'; texto: string } | null>(null);
+
   /** Objeto mutável ligado ao formulário via ngModel. */
   protected dados: ConfiguracoesSite | null = null;
+
+  private embeddedSignupListener?: (event: MessageEvent) => void;
 
   constructor() {
     this.configuracoesService.carregar().subscribe({
@@ -42,6 +67,110 @@ export class Configuracoes {
         this.carregando.set(false);
       },
     });
+
+    this.destroyRef.onDestroy(() => {
+      if (this.embeddedSignupListener) {
+        window.removeEventListener('message', this.embeddedSignupListener);
+      }
+    });
+  }
+
+  /** Fluxo de Coexistência: o número continua no app do celular, e a Cloud API também passa a receber as mensagens. */
+  protected conectarWhatsapp(): void {
+    if (this.conectandoWhatsapp()) return;
+
+    this.conectandoWhatsapp.set(true);
+    this.mensagemWhatsapp.set(null);
+
+    this.configuracoesService.whatsappMeta().subscribe({
+      next: ({ app_id, config_id }) => this.iniciarEmbeddedSignup(app_id, config_id),
+      error: () => {
+        this.conectandoWhatsapp.set(false);
+        this.mensagemWhatsapp.set({ tipo: 'erro', texto: 'Não foi possível iniciar a conexão. Tente de novo.' });
+      },
+    });
+  }
+
+  private iniciarEmbeddedSignup(appId: string, configId: string): void {
+    let dadosSignup: EmbeddedSignupData = {};
+
+    this.embeddedSignupListener = (event: MessageEvent) => {
+      if (!event.origin.endsWith('facebook.com')) return;
+      try {
+        const dados = JSON.parse(event.data);
+        if (dados.type === 'WA_EMBEDDED_SIGNUP' && dados.event === 'FINISH') {
+          dadosSignup = { phone_number_id: dados.data?.phone_number_id, waba_id: dados.data?.waba_id };
+        }
+      } catch {
+        // mensagens que não são JSON (ex: do próprio Facebook) são ignoradas
+      }
+    };
+    window.addEventListener('message', this.embeddedSignupListener);
+
+    this.carregarSdkFacebook(appId, () => {
+      window.FB!.login(
+        (resposta) => {
+          window.removeEventListener('message', this.embeddedSignupListener!);
+          this.embeddedSignupListener = undefined;
+          this.finalizarConexao(resposta, dadosSignup);
+        },
+        {
+          config_id: configId,
+          response_type: 'code',
+          override_default_response_type: true,
+          extras: {
+            setup: {},
+            featureType: 'whatsapp_business_app_onboarding',
+            sessionInfoVersion: '3',
+          },
+        },
+      );
+    });
+  }
+
+  private finalizarConexao(resposta: FbLoginResponse, dadosSignup: EmbeddedSignupData): void {
+    const code = resposta.authResponse?.code;
+
+    if (!code || !dadosSignup.phone_number_id || !dadosSignup.waba_id) {
+      this.conectandoWhatsapp.set(false);
+      this.mensagemWhatsapp.set({ tipo: 'erro', texto: 'Conexão cancelada ou incompleta.' });
+      return;
+    }
+
+    this.configuracoesService
+      .conectarWhatsapp({ code, phone_number_id: dadosSignup.phone_number_id, waba_id: dadosSignup.waba_id })
+      .subscribe({
+        next: () => {
+          this.conectandoWhatsapp.set(false);
+          this.mensagemWhatsapp.set({ tipo: 'ok', texto: 'WhatsApp conectado! As mensagens já devem chegar por aqui.' });
+        },
+        error: (err) => {
+          this.conectandoWhatsapp.set(false);
+          const texto = err?.error?.message ?? 'Não foi possível concluir a conexão. Tente de novo.';
+          this.mensagemWhatsapp.set({ tipo: 'erro', texto });
+        },
+      });
+  }
+
+  private carregarSdkFacebook(appId: string, aoCarregar: () => void): void {
+    if (window.FB) {
+      aoCarregar();
+      return;
+    }
+
+    window.fbAsyncInit = () => {
+      window.FB!.init({ appId, xfbml: true, version: 'v21.0' });
+      aoCarregar();
+    };
+
+    if (document.getElementById('facebook-jssdk')) return;
+
+    const script = document.createElement('script');
+    script.id = 'facebook-jssdk';
+    script.src = 'https://connect.facebook.net/pt_BR/sdk.js';
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
   }
 
   protected trocarAba(aba: Aba): void {

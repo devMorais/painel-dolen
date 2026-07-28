@@ -16,4 +16,20 @@ return [
 
     'webhook_verify_token' => env('WHATSAPP_WEBHOOK_VERIFY_TOKEN'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Embedded Signup (Coexistência) — demanda C1/C2, conexão via painel
+    |--------------------------------------------------------------------------
+    |
+    | Usados só para trocar o "code" do fluxo de Embedded Signup por um token
+    | de acesso (App ID + App Secret do app Meta "Dolen Painel"). O
+    | config_id identifica a Configuration de Login do Facebook para
+    | Empresas criada especificamente para esse fluxo.
+    |
+    */
+
+    'app_id' => env('META_APP_ID'),
+    'app_secret' => env('META_APP_SECRET'),
+    'config_id' => env('META_WHATSAPP_CONFIG_ID'),
+
 ];

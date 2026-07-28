@@ -1,0 +1,99 @@
+<div class="topo">
+  <a routerLink="/" class="logo">
+    <img src="/assets/images/dolen-icone-preto-96.png" alt="Dolen" width="22" height="22" />
+    <span>dolen</span>
+  </a>
+  <a routerLink="/" class="voltar">← Voltar ao site</a>
+</div>
+
+<main class="corpo">
+  <article class="doc">
+    <h1>{{ conteudo().titulo }}</h1>
+    <p class="atualizado">Última atualização: {{ conteudo().atualizadoEm }}</p>
+
+    @if (ehPrivacidade()) {
+      <p>
+        Esta Política de Privacidade explica como a <strong>Dolen Tecnologia</strong> ("Dolen", "nós")
+        coleta, usa e protege as informações de quem visita nosso site ou entra em contato pedindo um
+        orçamento.
+      </p>
+
+      <h2>Quais dados coletamos</h2>
+      <p>Coletamos apenas os dados que você mesmo nos fornece, ao:</p>
+      <ul>
+        <li>Preencher o formulário de orçamento (nome, WhatsApp e, opcionalmente, e-mail, Instagram e mensagem);</li>
+        <li>Nos enviar uma mensagem pelo WhatsApp ou Instagram;</li>
+        <li>Assinar um contrato ou proposta comercial conosco.</li>
+      </ul>
+
+      <h2>Para que usamos seus dados</h2>
+      <ul>
+        <li>Responder seu pedido de orçamento e dar continuidade à conversa comercial;</li>
+        <li>Elaborar propostas e contratos quando você contrata um de nossos serviços;</li>
+        <li>Enviar comunicações relacionadas ao andamento do seu projeto.</li>
+      </ul>
+      <p>Não vendemos nem compartilhamos seus dados com terceiros para fins de marketing.</p>
+
+      <h2>Onde seus dados ficam armazenados</h2>
+      <p>
+        Os dados enviados pelo formulário de orçamento e pelas conversas de WhatsApp ficam armazenados em
+        nosso banco de dados, protegido por autenticação, e são acessados apenas pela equipe da Dolen para
+        fins comerciais e de atendimento.
+      </p>
+
+      <h2>Seus direitos</h2>
+      <p>
+        Você pode solicitar a qualquer momento a atualização, correção ou exclusão dos seus dados, entrando
+        em contato pelo e-mail <a href="mailto:contato@dolen.com.br">contato&#64;dolen.com.br</a>.
+      </p>
+
+      <h2>Cookies</h2>
+      <p>
+        Nosso site pode usar cookies estritamente técnicos, necessários para o funcionamento básico da
+        página. Não utilizamos cookies de rastreamento de terceiros para publicidade.
+      </p>
+
+      <h2>Contato</h2>
+      <p>
+        Dúvidas sobre esta política podem ser enviadas para
+        <a href="mailto:contato@dolen.com.br">contato&#64;dolen.com.br</a>.
+      </p>
+    } @else {
+      <p>
+        Estes Termos de Uso regulam o acesso e uso do site da <strong>Dolen Tecnologia</strong> ("Dolen"),
+        disponível em dolen.com.br. Ao usar este site, você concorda com os termos abaixo.
+      </p>
+
+      <h2>Sobre a Dolen</h2>
+      <p>
+        A Dolen desenvolve sites institucionais, lojas virtuais e sistemas sob medida, incluindo painel
+        administrativo próprio para gestão de conteúdo.
+      </p>
+
+      <h2>Uso do site</h2>
+      <p>
+        O conteúdo deste site é informativo e comercial. O formulário de orçamento serve para iniciar uma
+        conversa comercial — o envio de um pedido não cria, por si só, nenhuma obrigação contratual entre
+        as partes. Contratos são formalizados separadamente, por escrito.
+      </p>
+
+      <h2>Propriedade intelectual</h2>
+      <p>
+        Textos, imagens, identidade visual e demais conteúdos deste site pertencem à Dolen ou aos seus
+        respectivos titulares, e não podem ser reproduzidos sem autorização.
+      </p>
+
+      <h2>Alterações</h2>
+      <p>
+        Estes termos podem ser atualizados a qualquer momento, para refletir mudanças no site ou nos
+        serviços oferecidos.
+      </p>
+
+      <h2>Contato</h2>
+      <p>
+        Dúvidas sobre estes termos podem ser enviadas para
+        <a href="mailto:contato@dolen.com.br">contato&#64;dolen.com.br</a>.
+      </p>
+    }
+  </article>
+</main>

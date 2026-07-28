@@ -65,6 +65,46 @@ class WhatsappService
         ]);
     }
 
+    /**
+     * Finaliza a conexão via Embedded Signup (Coexistência): troca o "code"
+     * retornado pelo JS SDK por um token de usuário do sistema de longa
+     * duração e salva junto com o phone_number_id/waba_id escolhidos no
+     * próprio fluxo (o número continua funcionando no app do celular).
+     */
+    public function conectarEmbeddedSignup(string $code, string $phoneNumberId, string $wabaId): ConfiguracaoSite
+    {
+        $appId = config('whatsapp.app_id');
+        $appSecret = config('whatsapp.app_secret');
+
+        if (! $appId || ! $appSecret) {
+            throw new RuntimeException('META_APP_ID/META_APP_SECRET não configurados.');
+        }
+
+        $tokenCurto = Http::get(self::API_BASE.'/oauth/access_token', [
+            'client_id' => $appId,
+            'client_secret' => $appSecret,
+            'code' => $code,
+        ])->throw()->json('access_token');
+
+        $tokenLongo = Http::get(self::API_BASE.'/oauth/access_token', [
+            'grant_type' => 'fb_exchange_token',
+            'client_id' => $appId,
+            'client_secret' => $appSecret,
+            'fb_exchange_token' => $tokenCurto,
+        ])->throw()->json('access_token');
+
+        Http::withToken($tokenLongo)->post(self::API_BASE."/{$wabaId}/subscribed_apps")->throw();
+
+        $config = ConfiguracaoSite::firstOrFail();
+        $config->update([
+            'whatsapp_access_token' => $tokenLongo,
+            'whatsapp_phone_number_id' => $phoneNumberId,
+            'whatsapp_business_account_id' => $wabaId,
+        ]);
+
+        return $config->fresh();
+    }
+
     /** Envia uma mensagem de texto simples pro telefone do lead. */
     public function enviarTexto(Lead $lead, string $texto): WhatsappMensagem
     {

@@ -51,6 +51,8 @@ Route::prefix('admin')->group(function () {
         Route::get('/configuracoes', [ConfiguracoesController::class, 'show']);
         Route::put('/configuracoes', [ConfiguracoesController::class, 'update']);
         Route::post('/configuracoes/upload', [ConfiguracoesController::class, 'upload']);
+        Route::get('/configuracoes/whatsapp/meta', [ConfiguracoesController::class, 'whatsappMeta']);
+        Route::post('/configuracoes/whatsapp/conectar', [ConfiguracoesController::class, 'conectarWhatsapp']);
 
         Route::get('/dashboard', [DashboardController::class, 'index']);
         Route::get('/leads', [LeadsController::class, 'index']);

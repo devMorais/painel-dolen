@@ -176,6 +176,29 @@
   }
 }
 
+.whatsapp-conectar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.btn-conectar-whatsapp {
+  background: #25d366;
+  color: var(--white);
+  border: none;
+  border-radius: 100px;
+  padding: 12px 26px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
 @media (max-width: 640px) {
   .form-grid {
     grid-template-columns: 1fr;

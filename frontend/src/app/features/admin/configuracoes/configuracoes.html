@@ -59,6 +59,20 @@
             <input type="text" [(ngModel)]="d.instagram_url" maxlength="255" />
           </label>
         </div>
+
+        <h2 class="itens-titulo">Conexão com a API do WhatsApp</h2>
+        <p class="subtitulo">
+          Conecta o número do WhatsApp Business (o mesmo que já é usado no celular) pra receber e enviar
+          mensagens por aqui também — a conversa continua funcionando normalmente no app do celular.
+        </p>
+        <div class="whatsapp-conectar">
+          <button type="button" class="btn-conectar-whatsapp" (click)="conectarWhatsapp()" [disabled]="conectandoWhatsapp()">
+            {{ conectandoWhatsapp() ? 'Conectando…' : 'Conectar WhatsApp' }}
+          </button>
+          @if (mensagemWhatsapp(); as msg) {
+            <span class="msg" [class.ok]="msg.tipo === 'ok'" [class.erro]="msg.tipo === 'erro'">{{ msg.texto }}</span>
+          }
+        </div>
       }
 
       <!-- ===================== SEO ===================== -->
