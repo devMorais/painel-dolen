@@ -1,0 +1,218 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face {
+    font-family: 'Space Grotesk';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('file:///C:/Users/UITEC/Herd/dolen-painel/frontend/public/assets/fonts/space-grotesk-latin-ext.woff2') format('woff2');
+}
+:root{--ink:#0b0b0b;--paper:#f5f4f1;--display:'Space Grotesk','Segoe UI',system-ui,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000;}
+body{font-family:var(--display);-webkit-font-smoothing:antialiased;}
+
+.scene{position:absolute;inset:0;width:1080px;height:1920px;display:none;}
+.scene.on{display:block;}
+.bg-dark{background:var(--ink);color:#fff;}
+.bg-light{background:var(--paper);color:var(--ink);}
+
+.safe{position:absolute;left:96px;right:96px;top:250px;bottom:480px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;}
+
+.grain{position:absolute;inset:0;z-index:50;pointer-events:none;mix-blend-mode:overlay;opacity:0.28;}
+
+.big{font-weight:700;letter-spacing:-0.03em;line-height:1.04;font-size:132px;}
+.mid{font-weight:700;letter-spacing:-0.02em;line-height:1.1;font-size:92px;}
+.small{font-weight:600;letter-spacing:-0.01em;line-height:1.3;}
+.kicker{font-size:34px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;opacity:0.48;}
+.strike{text-decoration:line-through;text-decoration-thickness:7px;}
+
+.icon-row{display:flex;flex-direction:column;gap:26px;margin-top:64px;width:100%;}
+.icon-card{border-radius:28px;padding:38px 40px;display:flex;flex-direction:row;align-items:center;gap:32px;width:100%;}
+.bg-light .icon-card{background:rgba(15,15,15,0.06);}
+.bg-dark .icon-card{background:rgba(255,255,255,0.08);}
+.icon-card svg{width:68px;height:68px;flex:none;}
+.icon-card .lbl{font-size:40px;font-weight:600;line-height:1.2;}
+
+.brandmini{position:absolute;top:150px;left:96px;display:flex;align-items:center;gap:12px;}
+.brandmini img{width:32px;height:32px;}
+.brandmini span{font-size:22px;font-weight:700;}
+
+/* elemento animavel: opacity/transform setados via JS puro, sem CSS animation */
+.fx{will-change:transform,opacity;}
+</style></head><body>
+
+<!-- SCENE 0: gancho 0 - 1.25s -->
+<div class="scene bg-dark" data-start="0" data-end="1.25" id="s0">
+  <div class="safe" style="justify-content:center;align-items:center;text-align:center;">
+    <div class="big fx" data-fx="shakeHit" data-delay="0" data-dur="0.55" style="font-size:172px;">SITE<br/>BARATO?</div>
+  </div>
+</div>
+
+<!-- SCENE 1: 1.25 - 5.07s -->
+<div class="scene bg-light" data-start="1.25" data-end="5.07" id="s1">
+  <div class="brandmini"><img src="file:///C:/Users/UITEC/Herd/dolen-painel/frontend/public/assets/images/logo-icon-black.png"/><span>dolen</span></div>
+  <div class="safe">
+    <div class="kicker fx" data-fx="fadeIn" data-delay="0" data-dur="0.4">Dolen &middot; mito ou verdade</div>
+    <div class="big fx" data-fx="slideUp" data-delay="0.15" data-dur="0.6" style="margin-top:20px;">Todo mundo j&aacute; viu<br/>aquele site baratinho,</div>
+    <div class="mid fx" data-fx="slideUp" data-delay="2.29" data-dur="0.6" style="margin-top:24px;opacity:0.65;">feito num template pronto.</div>
+  </div>
+</div>
+
+<!-- SCENE 2: 5.69 - 8.44s -->
+<div class="scene bg-dark" data-start="5.69" data-end="8.44" id="s2">
+  <div class="safe" style="justify-content:center;">
+    <div class="mid fx" data-fx="fadeIn" data-delay="0" data-dur="0.4" style="opacity:0.55;">O problema n&atilde;o &eacute; o</div>
+    <div class="big fx" data-fx="popIn" data-delay="0.96" data-dur="0.5" style="margin-top:56px;"><span class="strike">pre&ccedil;o</span>,</div>
+    <div class="mid fx" data-fx="slideUp" data-delay="1.81" data-dur="0.6" style="margin-top:52px;">&eacute; o que vem depois:</div>
+  </div>
+</div>
+
+<!-- SCENE 3: 9.16 - 14.05s -->
+<div class="scene bg-light" data-start="9.16" data-end="14.05" id="s3">
+  <div class="safe" style="justify-content:center;">
+    <div class="mid fx" data-fx="popIn" data-delay="0" data-dur="0.5">ele &eacute; <b>lento</b>,</div>
+    <div class="icon-row">
+      <div class="icon-card fx" data-fx="stackUp" data-delay="0.05" data-dur="0.5">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        <span class="lbl">Lento pra carregar</span>
+      </div>
+      <div class="icon-card fx" data-fx="stackUp" data-delay="2.2" data-dur="0.5">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="13" height="13" rx="2"/><rect x="8" y="8" width="13" height="13" rx="2"/></svg>
+        <span class="lbl">Igual a mil outros</span>
+      </div>
+      <div class="icon-card fx" data-fx="stackUp" data-delay="4.41" data-dur="0.5">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/><line x1="8" y1="11" x2="14" y2="11" stroke-dasharray="2 2"/></svg>
+        <span class="lbl">Sem o Google</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCENE 4: 14.31 - 15.55s -->
+<div class="scene bg-dark" data-start="14.31" data-end="15.55" id="s4">
+  <div class="safe" style="justify-content:center;align-items:center;text-align:center;">
+    <svg class="fx" data-fx="lockShut" data-delay="0" data-dur="0.55" style="width:180px;height:180px;" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+    <div class="mid fx" data-fx="slideUp" data-delay="0.3" data-dur="0.55" style="margin-top:36px;">voc&ecirc; n&atilde;o consegue<br/>mexer em nada sozinho.</div>
+  </div>
+</div>
+
+<!-- SCENE 5: 16.32 - 18.92s -->
+<div class="scene bg-light" data-start="16.32" data-end="18.92" id="s5">
+  <div class="safe" style="justify-content:center;">
+    <div class="mid fx" data-fx="slideUp" data-delay="0" data-dur="0.5">A&iacute;, pra qualquer mudan&ccedil;a,</div>
+    <div style="display:flex;gap:24px;margin-top:56px;">
+      <div class="fx" data-fx="cashStack" data-delay="1.4" data-dur="0.4" style="width:150px;height:150px;border-radius:30px;background:var(--ink);color:var(--paper);display:flex;align-items:center;justify-content:center;font-size:60px;font-weight:700;">R$</div>
+      <div class="fx" data-fx="cashStack" data-delay="1.65" data-dur="0.4" style="width:150px;height:150px;border-radius:30px;background:var(--ink);color:var(--paper);display:flex;align-items:center;justify-content:center;font-size:60px;font-weight:700;opacity:0.7;">R$</div>
+      <div class="fx" data-fx="cashStack" data-delay="1.85" data-dur="0.4" style="width:150px;height:150px;border-radius:30px;background:var(--ink);color:var(--paper);display:flex;align-items:center;justify-content:center;font-size:60px;font-weight:700;opacity:0.45;">R$</div>
+    </div>
+    <div class="big fx" data-fx="popIn" data-delay="2.1" data-dur="0.5" style="margin-top:56px;">voc&ecirc; paga<br/>de novo.</div>
+  </div>
+</div>
+
+<!-- SCENE 6: 19.69 - 23.83s -->
+<div class="scene bg-dark" data-start="19.69" data-end="23.83" id="s6">
+  <div class="safe" style="justify-content:center;">
+    <div class="mid fx" data-fx="fadeIn" data-delay="0" data-dur="0.4" style="opacity:0.5;">Site bom n&atilde;o &eacute; <span class="strike">gasto</span>,</div>
+    <div class="big fx" data-fx="popIn" data-delay="0.83" data-dur="0.5" style="margin-top:56px;">&eacute; ferramenta<br/>de venda.</div>
+    <div class="fx" data-fx="slideUp" data-delay="2.7" data-dur="0.5" style="display:flex;align-items:center;gap:32px;margin-top:64px;">
+      <svg class="fx" data-fx="spin" data-delay="2.9" data-dur="3.0" style="width:84px;height:84px;flex:none;" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span class="small" style="font-size:52px;opacity:0.85;">trabalha por voc&ecirc;<br/>todo dia.</span>
+    </div>
+  </div>
+</div>
+
+<!-- SCENE 7: 24.54 - 27.33s -->
+<div class="scene bg-light" data-start="24.54" data-end="27.33" id="s7">
+  <div class="safe" style="justify-content:center;align-items:center;text-align:center;">
+    <div class="big fx" data-fx="popIn" data-delay="0" data-dur="0.6" style="font-size:118px;">Quer um site<br/>que trabalha<br/>pra voc&ecirc;?</div>
+  </div>
+</div>
+
+<!-- SCENE 8: 28.06 - 29.94s (fala do CTA, sem sting ainda) -->
+<div class="scene bg-dark" data-start="28.06" data-end="29.94" id="s8">
+  <div class="safe" style="justify-content:center;align-items:center;text-align:center;">
+    <div class="big fx" data-fx="slideUp" data-delay="0" data-dur="0.55">Toca no link<br/>da bio.</div>
+    <svg class="fx" data-fx="fadeIn" data-delay="0.4" data-dur="0.4" style="width:64px;height:64px;margin-top:36px;" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+  </div>
+</div>
+
+<!-- SCENE 9: 29.94 - 32.75s (assinatura da logo, tela preta pura - o sting real e composto por cima no ffmpeg) -->
+<div class="scene bg-dark" data-start="29.94" data-end="32.75" id="s9"></div>
+
+<div class="grain">
+  <svg style="width:100%;height:100%;" xmlns='http://www.w3.org/2000/svg'>
+    <filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter>
+    <rect width='100%' height='100%' filter='url(#g)' opacity='0.35'/>
+  </svg>
+</div>
+
+<script>
+function easeOutCubic(x){ return 1 - Math.pow(1 - x, 3); }
+function easeOutBack(x){ const c1=1.70158,c3=c1+1; return 1 + c3*Math.pow(x-1,3) + c1*Math.pow(x-1,2); }
+
+var FX = {
+  fadeIn: function(p, el){ el.style.opacity = p; },
+  slideUp: function(p, el, baseOpacity){
+    var e = easeOutCubic(p);
+    el.style.opacity = (baseOpacity!=null?baseOpacity:1) * p;
+    el.style.transform = 'translateY(' + (46*(1-e)) + 'px)';
+  },
+  popIn: function(p, el){
+    var e = easeOutBack(p);
+    el.style.opacity = Math.min(p*1.6,1);
+    el.style.transform = 'scale(' + (0.85 + 0.15*e) + ') translateY(' + (24*(1-Math.min(p*2,1))) + 'px)';
+  },
+  shakeHit: function(p, el){
+    var e = easeOutBack(p);
+    el.style.opacity = Math.min(p*2.5,1);
+    el.style.transform = 'scale(' + (1.3 - 0.3*e) + ')';
+  },
+  stackUp: function(p, el){
+    var e = easeOutCubic(p);
+    el.style.opacity = p;
+    el.style.transform = 'translateY(' + (30*(1-e)) + 'px) scale(' + (0.9+0.1*e) + ')';
+  },
+  cashStack: function(p, el){
+    var e = easeOutCubic(p);
+    el.style.opacity = p * (parseFloat(el.dataset.baseOpacity || 1));
+    el.style.transform = 'translateX(' + (30*(1-e)) + 'px)';
+  },
+  lockShut: function(p, el){
+    var e = easeOutCubic(p);
+    el.style.opacity = Math.min(p*2,1);
+    el.style.transform = 'rotate(' + (-18*(1-e)) + 'deg) translateY(' + (-14*(1-e)) + 'px)';
+  },
+  spin: function(p, el){
+    el.style.opacity = 1;
+    el.style.transform = 'rotate(' + (p*360) + 'deg)';
+  }
+};
+
+// guarda opacity base definida via style inline (ex: opacity:0.7 nos icone R$)
+document.querySelectorAll('.fx').forEach(function(el){
+  var inlineOp = el.style.opacity;
+  if (inlineOp !== '') el.dataset.baseOpacity = inlineOp;
+});
+
+window.setReelTime = function(t){
+  document.querySelectorAll('.scene').forEach(function(sc){
+    var start = parseFloat(sc.dataset.start);
+    var end = parseFloat(sc.dataset.end);
+    var active = (t >= start && t < end);
+    sc.classList.toggle('on', active);
+    if (!active) return;
+    var local = t - start;
+    sc.querySelectorAll('.fx').forEach(function(el){
+      var fxName = el.dataset.fx;
+      var delay = parseFloat(el.dataset.delay || 0);
+      var dur = parseFloat(el.dataset.dur || 0.5);
+      var lt = local - delay;
+      if (lt < 0) { el.style.opacity = 0; return; }
+      var p = fxName === 'spin' ? ((lt % dur) / dur) : Math.min(lt / dur, 1);
+      var baseOp = el.dataset.baseOpacity ? parseFloat(el.dataset.baseOpacity) : 1;
+      FX[fxName](p, el, baseOp);
+    });
+  });
+};
+</script>
+</body></html>

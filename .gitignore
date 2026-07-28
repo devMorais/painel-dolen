@@ -15,3 +15,18 @@ Thumbs.db
 artes/reels/_gerador/node_modules/
 artes/reels/_gerador/frames*/
 artes/reels/_gerador/tpl*/
+
+# Reels por sprint (s1-r0X etc.) — só o(s) MP4 final(is) "-COM-MUSICA" versionam;
+# frames/node_modules/áudio bruto são intermediários regeneráveis do pipeline (ver artes/reels/_gerador/README.md)
+artes/reels/s*-r*/node_modules/
+artes/reels/s*-r*/frames/
+artes/reels/s*-r*/music/
+artes/reels/s*-r*/sfx/
+artes/reels/s*-r*/assets/
+artes/reels/s*-r*/test_out/
+artes/reels/s*-r*/*-base.mp4
+artes/reels/s*-r*/video_only.mp4
+artes/reels/s*-r*/whisper_result.json
+artes/reels/s*-r*/package-lock.json
+artes/reels/s*-r*/s*-r*.mp4
+!artes/reels/s*-r*/*-COM-MUSICA.mp4

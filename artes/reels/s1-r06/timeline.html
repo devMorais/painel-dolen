@@ -1,0 +1,263 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face {
+    font-family: 'Space Grotesk';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('file:///C:/Users/UITEC/Herd/dolen-painel/frontend/public/assets/fonts/space-grotesk-latin-ext.woff2') format('woff2');
+}
+:root{--ink:#0b0b0b;--paper:#f5f4f1;--yellow:#ffd447;--erro:#ff7b7b;--display:'Space Grotesk','Segoe UI',system-ui,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000;}
+body{font-family:var(--display);-webkit-font-smoothing:antialiased;}
+
+.scene{position:absolute;inset:0;width:1080px;height:1920px;display:none;}
+.scene.on{display:block;}
+.bg-dark{background:var(--ink);color:#fff;}
+.bg-light{background:var(--paper);color:var(--ink);}
+
+.safe{position:absolute;left:96px;right:96px;top:250px;bottom:480px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;}
+
+.grain{position:absolute;inset:0;z-index:50;pointer-events:none;mix-blend-mode:overlay;opacity:0.26;}
+
+.big{font-weight:700;letter-spacing:-0.03em;line-height:1.04;font-size:100px;}
+.mid{font-weight:700;letter-spacing:-0.02em;line-height:1.1;font-size:76px;}
+.small{font-weight:600;letter-spacing:-0.01em;line-height:1.3;}
+.kicker{font-size:32px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;opacity:0.48;}
+
+.regmark{position:absolute;width:30px;height:30px;z-index:6;opacity:0.30;}
+.bg-light .regmark{color:var(--ink);}
+.bg-dark .regmark{color:#fff;}
+.regmark::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:currentColor;transform:translateX(-50%);}
+.regmark::after{content:"";position:absolute;top:50%;left:0;right:0;height:2px;background:currentColor;transform:translateY(-50%);}
+
+.brand{display:flex;align-items:center;gap:14px;position:absolute;top:64px;left:96px;z-index:20;}
+.brand img{width:40px;height:40px;}
+.brand .wm{font-size:28px;font-weight:700;}
+.bg-light .brand .wm{color:var(--ink);}
+.bg-dark .brand .wm{color:#fff;}
+
+.icon-line{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+
+/* ===== mockup do painel (device central do reel) ===== */
+.panel-stage{position:absolute;left:96px;right:96px;top:50%;transform:translateY(-50%);perspective:1600px;}
+.pmock{width:100%;border-radius:28px;overflow:hidden;transform-style:preserve-3d;min-height:760px;box-shadow:0 50px 100px -30px rgba(0,0,0,0.55);background:#fff;}
+.pmock .pmock-bar{display:flex;align-items:center;gap:10px;padding:26px 32px;background:#efeee9;border-bottom:1px solid rgba(11,11,11,0.08);}
+.pmock .pmock-bar .dot{width:16px;height:16px;border-radius:50%;background:rgba(11,11,11,0.14);}
+.pmock .pmock-bar .pmock-label{margin-left:14px;font-size:22px;font-weight:700;color:var(--ink);opacity:0.5;letter-spacing:0.02em;}
+.pmock .pmock-body{padding:44px 40px;color:var(--ink);}
+
+.field-row{display:flex;align-items:center;gap:22px;padding:26px 0;border-bottom:1px solid rgba(11,11,11,0.08);}
+.field-row:last-child{border-bottom:none;}
+.field-row .ficon{width:64px;height:64px;border-radius:16px;background:rgba(11,11,11,0.06);display:flex;align-items:center;justify-content:center;flex:none;color:var(--ink);}
+.field-row .flabel{font-size:34px;font-weight:700;flex:1;}
+.field-row .fedit{width:52px;height:52px;border-radius:50%;background:var(--yellow);display:flex;align-items:center;justify-content:center;flex:none;color:#0b0b0b;}
+
+/* ===== icones de dor (fase 1) ===== */
+.pain-icon{width:150px;height:150px;position:relative;}
+.pain-icon .lock-badge{position:absolute;right:-14px;bottom:-10px;width:64px;height:64px;border-radius:50%;background:var(--erro);display:flex;align-items:center;justify-content:center;}
+
+.fx{will-change:transform,opacity,filter;}
+</style></head><body>
+
+<!-- SCENE 0: gancho 0 - 0.94s (silencio real antes da fala) -->
+<div class="scene bg-dark" data-start="0" data-end="0.94" id="s0">
+  <div class="safe" style="justify-content:center;align-items:center;text-align:center;width:100%;left:0;right:0;">
+    <div style="display:flex;gap:24px;">
+      <div class="fx" data-fx="popIn" data-delay="0" data-dur="0.22" style="width:90px;height:90px;border-radius:20px;background:#fff;"></div>
+      <div class="fx" data-fx="popIn" data-delay="0.15" data-dur="0.22" style="width:90px;height:90px;border-radius:20px;background:#fff;opacity:0.7;"></div>
+      <div class="fx" data-fx="popIn" data-delay="0.3" data-dur="0.22" style="width:90px;height:90px;border-radius:20px;background:#fff;opacity:0.4;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCENE 1: 0.94 - 3.16s ("Sabe o pior de ter site") -->
+<div class="scene bg-dark" data-start="0.94" data-end="3.16" id="s1">
+  <span class="regmark" style="top:76px;left:70px;"></span><span class="regmark" style="top:76px;right:70px;"></span><span class="regmark" style="bottom:76px;left:70px;"></span><span class="regmark" style="bottom:76px;right:70px;"></span>
+  <div class="brand"><img src="file:///C:/Users/UITEC/Herd/dolen-painel/frontend/public/assets/images/logo-icon-white.png"/><span class="wm">dolen</span></div>
+  <div class="safe">
+    <span class="kicker fx" data-fx="fadeIn" data-delay="0" data-dur="0.3">Dolen &middot; aula r&aacute;pida</span>
+    <div class="big fx" data-fx="popIn" data-delay="0.1" data-dur="0.5" style="margin-top:24px;">Sabe o pior<br/>de ter site?</div>
+  </div>
+</div>
+
+<!-- SCENE 2: 3.16 - 6.98s ("com a maioria das empresas? Pra trocar um preco,") -->
+<div class="scene bg-dark" data-start="3.16" data-end="6.98" id="s2">
+  <div class="safe">
+    <div class="mid fx" data-fx="slideUp" data-delay="0" data-dur="0.5">com a maioria<br/>das empresas,<br/>pra trocar um</div>
+    <div class="fx" data-fx="popIn" data-delay="1.9" data-dur="0.5" style="display:flex;align-items:center;gap:24px;margin-top:24px;">
+      <div class="pain-icon">
+        <svg class="icon-line" viewBox="0 0 64 64" style="width:100%;height:100%;color:#fff;"><rect x="10" y="26" width="44" height="30" rx="6"/><path d="M20 26v-8a12 12 0 0 1 24 0v8"/><circle cx="32" cy="40" r="4" fill="currentColor" stroke="none"/><line x1="32" y1="44" x2="32" y2="49"/></svg>
+        <div class="lock-badge"><svg viewBox="0 0 24 24" style="width:32px;height:32px;" fill="none" stroke="#0b0b0b" stroke-width="2.6" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></div>
+      </div>
+      <span class="big" style="font-size:90px;">preço,</span>
+    </div>
+  </div>
+</div>
+
+<!-- SCENE 3: 6.98 - 9.04s ("uma foto ou um texto?") -->
+<div class="scene bg-dark" data-start="6.98" data-end="9.04" id="s3">
+  <div class="safe" style="justify-content:center;">
+    <div class="mid fx" data-fx="fadeIn" data-delay="0" data-dur="0.3" style="opacity:0.6;">uma</div>
+    <div class="fx" data-fx="popIn" data-delay="0.1" data-dur="0.4" style="display:flex;align-items:center;gap:28px;margin-top:8px;">
+      <div class="pain-icon" style="width:120px;height:120px;">
+        <svg class="icon-line" viewBox="0 0 64 64" style="width:100%;height:100%;color:#fff;"><rect x="6" y="12" width="52" height="40" rx="5"/><circle cx="20" cy="26" r="6"/><path d="M6 44l14-12 12 10 10-8 14 12"/></svg>
+        <div class="lock-badge" style="width:52px;height:52px;right:-10px;bottom:-8px;"><svg viewBox="0 0 24 24" style="width:26px;height:26px;" fill="none" stroke="#0b0b0b" stroke-width="2.6" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></div>
+      </div>
+      <span class="big" style="font-size:90px;">foto</span>
+    </div>
+    <div class="fx" data-fx="popIn" data-delay="0.75" data-dur="0.4" style="display:flex;align-items:center;gap:28px;margin-top:20px;">
+      <div class="pain-icon" style="width:120px;height:120px;">
+        <svg class="icon-line" viewBox="0 0 64 64" style="width:100%;height:100%;color:#fff;"><line x1="12" y1="16" x2="52" y2="16"/><line x1="12" y1="28" x2="52" y2="28"/><line x1="12" y1="40" x2="38" y2="40"/><line x1="12" y1="52" x2="44" y2="52"/></svg>
+        <div class="lock-badge" style="width:52px;height:52px;right:-10px;bottom:-8px;"><svg viewBox="0 0 24 24" style="width:26px;height:26px;" fill="none" stroke="#0b0b0b" stroke-width="2.6" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></div>
+      </div>
+      <span class="big" style="font-size:90px;">ou texto?</span>
+    </div>
+  </div>
+</div>
+
+<!-- SCENE 4: 9.04 - 12.94s ("Voce precisa pagar e esperar o programador.") -->
+<div class="scene bg-dark" data-start="9.04" data-end="12.94" id="s4">
+  <div class="safe">
+    <div class="fx" data-fx="popIn" data-delay="0" data-dur="0.45" style="display:flex;align-items:center;gap:26px;">
+      <svg class="icon-line" viewBox="0 0 64 64" style="width:110px;height:110px;color:var(--erro);flex:none;"><circle cx="30" cy="30" r="22"/><path d="M30 18v12l9 6"/><circle cx="47" cy="47" r="13" fill="var(--ink)" stroke="#fff" stroke-width="1.5"/><path d="M43.5 51.5c0 1.4 1.4 2.2 3 2.2s3-.7 3-2c0-2.6-6-1.3-6-3.9 0-1.3 1.4-2 3-2s3 .8 3 2.2" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/><line x1="47" y1="42.5" x2="47" y2="45.3" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><line x1="47" y1="53.7" x2="47" y2="51.5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </div>
+    <div class="big fx" data-fx="slideUp" data-delay="0.55" data-dur="0.5" style="margin-top:32px;">Pagar e<br/>esperar o<br/>programador.</div>
+  </div>
+</div>
+
+<!-- SCENE 5a: 12.94 - 16.08s ("Todo site que a gente faz vem com um painel proprio.") -->
+<div class="scene bg-light" data-start="12.94" data-end="16.08" id="s5a">
+  <span class="regmark" style="top:76px;left:70px;"></span><span class="regmark" style="top:76px;right:70px;"></span><span class="regmark" style="bottom:76px;left:70px;"></span><span class="regmark" style="bottom:76px;right:70px;"></span>
+  <div class="brand"><img src="file:///C:/Users/UITEC/Herd/dolen-painel/frontend/public/assets/images/logo-icon-black.png"/><span class="wm">dolen</span></div>
+  <div class="panel-stage">
+    <div class="pmock fx" data-fx="cardFlip" data-delay="0" data-dur="0.65">
+      <div class="pmock-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="pmock-label">painel dolen</span></div>
+      <div class="pmock-body">
+        <div style="font-size:44px;font-weight:700;line-height:1.15;">Todo site vem<br/>com painel<br/>pr&oacute;prio.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCENE 5b: 16.08 - 23.66s ("E uma area sua, simples, onde voce edita textos, fotos e precos na hora, sozinho.") -->
+<div class="scene bg-light" data-start="16.08" data-end="23.66" id="s5b">
+  <span class="regmark" style="top:76px;left:70px;"></span><span class="regmark" style="top:76px;right:70px;"></span><span class="regmark" style="bottom:76px;left:70px;"></span><span class="regmark" style="bottom:76px;right:70px;"></span>
+  <div class="brand"><img src="file:///C:/Users/UITEC/Herd/dolen-painel/frontend/public/assets/images/logo-icon-black.png"/><span class="wm">dolen</span></div>
+  <div class="panel-stage">
+    <div class="pmock" style="opacity:1;">
+      <div class="pmock-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="pmock-label">painel dolen</span></div>
+      <div class="pmock-body">
+        <div style="font-size:32px;font-weight:700;opacity:0.55;margin-bottom:8px;">Sua &aacute;rea. Simples.</div>
+        <div class="field-row fx" data-fx="stackUp" data-delay="0.1" data-dur="0.4">
+          <span class="ficon"><svg viewBox="0 0 24 24" style="width:30px;height:30px;" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="14" y2="17"/></svg></span>
+          <span class="flabel">Textos</span>
+          <span class="fedit fx" data-fx="popIn" data-delay="0.35" data-dur="0.35"><svg viewBox="0 0 24 24" style="width:26px;height:26px;" fill="none" stroke="#0b0b0b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
+        </div>
+        <div class="field-row fx" data-fx="stackUp" data-delay="1.9" data-dur="0.4">
+          <span class="ficon"><svg viewBox="0 0 24 24" style="width:30px;height:30px;" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-4 4-3-3-6 6"/></svg></span>
+          <span class="flabel">Fotos</span>
+          <span class="fedit fx" data-fx="popIn" data-delay="2.15" data-dur="0.35"><svg viewBox="0 0 24 24" style="width:26px;height:26px;" fill="none" stroke="#0b0b0b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
+        </div>
+        <div class="field-row fx" data-fx="stackUp" data-delay="3.9" data-dur="0.4">
+          <span class="ficon"><svg viewBox="0 0 24 24" style="width:30px;height:30px;" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9.5c0-1.5 1.3-2.5 3-2.5s3 1 3 2.3c0 3-6 1.7-6 4.7 0 1.5 1.3 2.5 3 2.5s3-1 3-2.5"/><line x1="12" y1="5.5" x2="12" y2="18.5"/></svg></span>
+          <span class="flabel">Pre&ccedil;os</span>
+          <span class="fedit fx" data-fx="popIn" data-delay="4.15" data-dur="0.35"><svg viewBox="0 0 24 24" style="width:26px;height:26px;" fill="none" stroke="#0b0b0b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
+        </div>
+        <div class="fx" data-fx="fadeIn" data-delay="6.2" data-dur="0.4" style="margin-top:22px;display:inline-block;font-size:26px;font-weight:700;color:var(--ink);background:var(--yellow);padding:10px 20px;border-radius:100px;">na hora, sozinho.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCENE 6: 23.66 - 27.08s ("Quando quiser, seu site no seu controle.") -->
+<div class="scene bg-dark" data-start="23.66" data-end="27.08" id="s6">
+  <div class="safe">
+    <div class="mid fx" data-fx="slideUp" data-delay="0" data-dur="0.5">Quando quiser.</div>
+    <div class="big fx" data-fx="popIn" data-delay="1.1" data-dur="0.5" style="margin-top:14px;">Seu site,<br/>no seu<br/>controle.</div>
+  </div>
+</div>
+
+<!-- SCENE 7: 27.08 - 28.70s ("Quer esse controle?") -->
+<div class="scene bg-dark" data-start="27.08" data-end="28.70" id="s7">
+  <div class="safe" style="justify-content:center;">
+    <div class="big fx" data-fx="popIn" data-delay="0" data-dur="0.45" style="font-size:86px;">Quer esse<br/>controle?</div>
+  </div>
+</div>
+
+<!-- SCENE 8: 28.70 - 30.65s CTA ("Toca no link da bio.") -->
+<div class="scene bg-light" data-start="28.70" data-end="30.65" id="s8">
+  <span class="regmark" style="top:76px;left:70px;"></span><span class="regmark" style="top:76px;right:70px;"></span><span class="regmark" style="bottom:76px;left:70px;"></span><span class="regmark" style="bottom:76px;right:70px;"></span>
+  <div class="brand"><img src="file:///C:/Users/UITEC/Herd/dolen-painel/frontend/public/assets/images/logo-icon-black.png"/><span class="wm">dolen</span></div>
+  <div class="safe">
+    <div class="big fx" data-fx="popIn" data-delay="0" data-dur="0.45" style="font-size:82px;">Toca no<br/>link da bio.</div>
+    <div class="fx" data-fx="stackUp" data-delay="0.85" data-dur="0.4" style="display:inline-flex;align-items:center;gap:16px;margin-top:36px;background:var(--ink);color:var(--paper);border-radius:100px;padding:20px 34px;">
+      <svg viewBox="0 0 24 24" style="width:30px;height:30px;" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+      <span style="font-size:34px;font-weight:700;">Link na bio</span>
+    </div>
+  </div>
+</div>
+
+<div class="grain">
+  <svg style="width:100%;height:100%;" xmlns='http://www.w3.org/2000/svg'>
+    <filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter>
+    <rect width='100%' height='100%' filter='url(#g)' opacity='0.35'/>
+  </svg>
+</div>
+
+<script>
+function easeOutCubic(x){ return 1 - Math.pow(1 - x, 3); }
+function easeOutBack(x){ const c1=1.70158,c3=c1+1; return 1 + c3*Math.pow(x-1,3) + c1*Math.pow(x-1,2); }
+
+var FX = {
+  fadeIn: function(p, el){ el.style.opacity = p; },
+  slideUp: function(p, el, baseOpacity){
+    var e = easeOutCubic(p);
+    el.style.opacity = (baseOpacity!=null?baseOpacity:1) * p;
+    el.style.transform = 'translateY(' + (46*(1-e)) + 'px)';
+  },
+  popIn: function(p, el){
+    var e = easeOutBack(p);
+    el.style.opacity = Math.min(p*1.6,1);
+    el.style.transform = 'scale(' + (0.85 + 0.15*e) + ') translateY(' + (24*(1-Math.min(p*2,1))) + 'px)';
+  },
+  stackUp: function(p, el){
+    var e = easeOutCubic(p);
+    el.style.opacity = p;
+    el.style.transform = 'translateY(' + (30*(1-e)) + 'px) scale(' + (0.9+0.1*e) + ')';
+  },
+  cardFlip: function(p, el){
+    var e = easeOutBack(p);
+    el.style.opacity = Math.min(p*2,1);
+    var rotY = 90 * (1-e);
+    el.style.transform = 'perspective(1600px) rotateY(' + rotY + 'deg) scale(' + (0.92+0.08*Math.min(e,1)) + ')';
+  }
+};
+
+document.querySelectorAll('.fx').forEach(function(el){
+  var inlineOp = el.style.opacity;
+  if (inlineOp !== '') el.dataset.baseOpacity = inlineOp;
+});
+
+window.setReelTime = function(t){
+  document.querySelectorAll('.scene').forEach(function(sc){
+    var start = parseFloat(sc.dataset.start);
+    var end = parseFloat(sc.dataset.end);
+    var active = (t >= start && t < end);
+    sc.classList.toggle('on', active);
+    if (!active) return;
+    var local = t - start;
+    sc.querySelectorAll('.fx').forEach(function(el){
+      var fxName = el.dataset.fx;
+      var delay = parseFloat(el.dataset.delay || 0);
+      var dur = parseFloat(el.dataset.dur || 0.5);
+      var lt = local - delay;
+      if (lt < 0) { el.style.opacity = 0; return; }
+      var p = Math.min(lt / dur, 1);
+      var baseOp = el.dataset.baseOpacity ? parseFloat(el.dataset.baseOpacity) : 1;
+      FX[fxName](p, el, baseOp);
+    });
+  });
+};
+</script>
+</body></html>
