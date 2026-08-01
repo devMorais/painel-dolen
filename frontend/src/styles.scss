@@ -29,9 +29,15 @@
   --whatsapp: #25d366;
   --whatsapp-escuro: #1da851;
   /* Bandas alternadas das seções da landing (o layout decide qual tom cada seção recebe).
-     O tom "suave" é mais claro que --gray-light pra as bordas de card continuarem visíveis. */
-  --band-light: var(--white);
-  --band-soft: #f4f4f4;
+     O tom "suave" é mais claro que --gray-light pra as bordas de card continuarem visíveis.
+     Mesh gradient (2026-08-01, intensidade revisada): manchas radiais monocromáticas em vez de
+     cor chapada — cada seção da landing sobrepõe camadas extras próprias (ver sobre.scss,
+     diferenciais.scss etc.) por cima desta base, sempre terminando com a MESMA cor sólida no
+     fim pra manter --band como fallback. */
+  --band-light: radial-gradient(ellipse 65% 55% at 10% 10%, rgba(10, 10, 10, 0.09), transparent 62%),
+    radial-gradient(ellipse 55% 50% at 90% 85%, rgba(10, 10, 10, 0.08), transparent 62%), #ffffff;
+  --band-soft: radial-gradient(ellipse 60% 55% at 88% 8%, rgba(10, 10, 10, 0.11), transparent 58%),
+    radial-gradient(ellipse 55% 50% at 6% 92%, rgba(10, 10, 10, 0.1), transparent 58%), #f4f4f4;
   --display: 'Space Grotesk', sans-serif;
   --body: 'Inter', sans-serif;
   --maxw: 1120px;

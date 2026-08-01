@@ -1,8 +1,15 @@
 @if (configuracoes(); as c) {
+  <div class="links-bg-slide links-bg-slide-1" aria-hidden="true"></div>
+  <div class="links-bg-slide links-bg-slide-2" aria-hidden="true"></div>
+  <div class="links-bg-slide links-bg-slide-3" aria-hidden="true"></div>
+  <div class="links-bg-overlay" aria-hidden="true"></div>
+
   <main class="links-main">
     <div class="links-card">
       <header class="links-head">
-        <img src="/assets/images/dolen-icone-preto-96.png" alt="" width="48" height="48" />
+        <span class="links-head-logo">
+          <span class="links-logo-icon" role="img" aria-label="Dolen"></span>
+        </span>
         <span class="links-nome">{{ c.nome_site }}</span>
         <p class="links-tagline">{{ c.tagline }}</p>
       </header>
@@ -26,6 +33,17 @@
             </svg>
           </span>
           <span class="link-label">Ver planos e preços</span>
+          <span class="link-seta" aria-hidden="true">›</span>
+        </a>
+
+        <a routerLink="/" fragment="studio" class="link-row">
+          <span class="link-icone" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="3" y="5" width="18" height="14" rx="2.5" />
+              <path d="M10 9.5v5l4.5-2.5-4.5-2.5Z" fill="currentColor" stroke="none" />
+            </svg>
+          </span>
+          <span class="link-label">Conheça o Dolen Studio</span>
           <span class="link-seta" aria-hidden="true">›</span>
         </a>
 

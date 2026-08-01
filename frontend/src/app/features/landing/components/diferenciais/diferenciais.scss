@@ -1,5 +1,8 @@
 .diferenciais {
-  background: var(--band, var(--white));
+  background:
+    radial-gradient(ellipse 55% 60% at 8% 12%, rgba(10, 10, 10, 0.1), transparent 58%),
+    radial-gradient(ellipse 65% 45% at 95% 88%, rgba(10, 10, 10, 0.08), transparent 55%),
+    var(--band, var(--white));
 }
 
 .dif-grid {

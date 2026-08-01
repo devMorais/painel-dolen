@@ -1,9 +1,76 @@
 :host {
+  position: relative;
   display: flex;
   min-height: 100vh;
   min-height: 100dvh;
-  background: var(--band-soft, #f4f4f4);
-  color: var(--black);
+  color: var(--white);
+  background: #0a0a0a;
+  isolation: isolate;
+}
+
+/* Slide de 3 fotos em crossfade contínuo (18s de ciclo, 6s por foto).
+   background-attachment: fixed é instável no Safari iOS (maioria do tráfego vem
+   do Instagram em celular), então aqui sempre "scroll" — mais seguro por padrão. */
+.links-bg-slide {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background-size: cover;
+  background-repeat: no-repeat;
+  filter: grayscale(1) contrast(1.08) brightness(0.85);
+  opacity: 0;
+  animation: links-bg-crossfade 18s infinite;
+}
+
+.links-bg-slide-1 {
+  background-image: url('/assets/images/links-bg.jpg');
+  background-position: center 38%;
+  animation-delay: 0s;
+}
+
+.links-bg-slide-2 {
+  background-image: url('/assets/images/links-bg-2.jpg');
+  background-position: center 55%;
+  animation-delay: -6s;
+}
+
+.links-bg-slide-3 {
+  background-image: url('/assets/images/links-bg-3.jpg');
+  background-position: center 40%;
+  animation-delay: -12s;
+}
+
+/* Ciclo de 18s, 3 fotos, cada uma "dona" de 6s: 1s de fade-in, 4s visível, 1s de fade-out. */
+@keyframes links-bg-crossfade {
+  0% { opacity: 0; }
+  5.5% { opacity: 1; }
+  27.5% { opacity: 1; }
+  33% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* Reduzir o crop lateral em telas estreitas (celular, maioria do tráfego). */
+@media (max-width: 640px) {
+  .links-bg-slide-1 { background-position: 65% center; }
+  .links-bg-slide-2 { background-position: 50% center; }
+  .links-bg-slide-3 { background-position: 55% center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .links-bg-slide {
+    animation: none;
+  }
+
+  .links-bg-slide-1 {
+    opacity: 1;
+  }
+}
+
+.links-bg-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(10, 10, 10, 0.6) 0%, rgba(10, 10, 10, 0.78) 45%, rgba(10, 10, 10, 0.94) 100%);
 }
 
 .links-main {
@@ -32,23 +99,37 @@
   margin-bottom: 4px;
 }
 
-.links-head img {
+.links-head-logo {
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  border: 1px solid var(--gray-light);
-  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(10, 10, 10, 0.55);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.links-logo-icon {
+  width: 30px;
+  height: 30px;
   background: var(--white);
+  -webkit-mask: url('/assets/images/dolen-icone-preto-96.png') center / contain no-repeat;
+  mask: url('/assets/images/dolen-icone-preto-96.png') center / contain no-repeat;
 }
 
 .links-nome {
   font-family: var(--display);
   font-weight: 700;
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   letter-spacing: -0.01em;
+  color: var(--white);
 }
 
 .links-tagline {
   font-size: 0.9rem;
-  color: var(--gray-dark);
+  color: rgba(255, 255, 255, 0.72);
   max-width: 32ch;
 }
 
@@ -64,16 +145,18 @@
   align-items: center;
   gap: 14px;
   width: 100%;
-  border: 1.5px solid var(--gray-light);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 14px;
   padding: 14px 16px;
-  background: var(--white);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
   color: var(--black);
-  transition: border-color 0.15s ease, transform 0.12s ease;
+  transition: border-color 0.15s ease, transform 0.12s ease, background 0.15s ease;
 }
 
 .link-row:hover {
-  border-color: var(--black);
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 1);
   transform: translateX(2px);
 }
 
@@ -137,13 +220,14 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  border: 1px solid var(--gray-light);
-  color: var(--gray-dark);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
 }
 
 .links-social a:hover {
-  border-color: var(--black);
-  color: var(--black);
+  border-color: var(--white);
+  color: var(--white);
 }
 
 .links-social svg {
@@ -154,23 +238,76 @@
 .btn-acessar {
   margin-top: 4px;
   padding: 11px 26px;
-  border: 1.5px solid var(--black);
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
   border-radius: 100px;
   font-family: var(--display);
   font-weight: 600;
   font-size: 0.9rem;
-  color: var(--black);
+  color: var(--white);
   background: transparent;
 }
 
 .btn-acessar:hover {
-  background: var(--black);
-  color: var(--white);
+  background: var(--white);
+  color: var(--black);
+  border-color: var(--white);
 }
 
 .links-rodape {
   font-size: 0.78rem;
-  color: var(--gray-mid);
+  color: rgba(255, 255, 255, 0.5);
   text-align: center;
   margin-top: 6px;
+}
+
+/* Telas estreitas (celular, a maioria do tráfego vindo do Instagram). */
+@media (max-width: 480px) {
+  .links-main {
+    padding: 32px 18px;
+  }
+
+  .links-card {
+    gap: 16px;
+  }
+
+  .links-head-logo {
+    width: 56px;
+    height: 56px;
+  }
+
+  .links-nome {
+    font-size: 1.15rem;
+  }
+
+  .link-row {
+    padding: 13px 14px;
+  }
+}
+
+/* Celulares compactos (iPhone SE e similares) — cabe sem rolar. */
+@media (max-height: 700px) {
+  .links-main {
+    padding: 20px 18px;
+  }
+
+  .links-card {
+    gap: 14px;
+  }
+
+  .links-head {
+    margin-bottom: 0;
+    gap: 6px;
+  }
+
+  .links-lista {
+    gap: 8px;
+  }
+
+  .link-row {
+    padding: 11px 14px;
+  }
+
+  .links-social {
+    margin-top: 0;
+  }
 }

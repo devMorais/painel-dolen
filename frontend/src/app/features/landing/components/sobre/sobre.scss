@@ -1,5 +1,8 @@
 .sobre {
-  background: var(--band, var(--white));
+  background:
+    radial-gradient(ellipse 60% 50% at 92% 10%, rgba(10, 10, 10, 0.09), transparent 55%),
+    radial-gradient(ellipse 50% 45% at 5% 95%, rgba(10, 10, 10, 0.08), transparent 55%),
+    var(--band, var(--white));
 }
 
 .sobre-grid {

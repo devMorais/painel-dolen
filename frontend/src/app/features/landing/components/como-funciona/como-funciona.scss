@@ -1,5 +1,8 @@
 .como {
-  background: var(--band, var(--white));
+  background:
+    radial-gradient(ellipse 65% 50% at 12% 85%, rgba(10, 10, 10, 0.1), transparent 55%),
+    radial-gradient(ellipse 50% 55% at 88% 15%, rgba(10, 10, 10, 0.08), transparent 58%),
+    var(--band, var(--white));
 }
 
 .steps {

@@ -1,5 +1,8 @@
 .cta-final {
-  background: var(--black);
+  background:
+    radial-gradient(ellipse 60% 55% at 15% 15%, rgba(255, 255, 255, 0.1), transparent 55%),
+    radial-gradient(ellipse 55% 50% at 90% 90%, rgba(255, 255, 255, 0.09), transparent 55%),
+    var(--black);
   color: var(--white);
   text-align: center;
 }

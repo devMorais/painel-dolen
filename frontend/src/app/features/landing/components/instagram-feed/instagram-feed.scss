@@ -1,6 +1,9 @@
 .ig-feed {
   padding: 80px 0;
-  background: var(--band, var(--white));
+  background:
+    radial-gradient(ellipse 60% 55% at 88% 8%, rgba(10, 10, 10, 0.09), transparent 55%),
+    radial-gradient(ellipse 50% 50% at 8% 92%, rgba(10, 10, 10, 0.09), transparent 55%),
+    var(--band, var(--white));
 }
 
 .wrap {

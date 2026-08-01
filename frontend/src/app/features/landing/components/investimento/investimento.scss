@@ -1,5 +1,8 @@
 .precos {
-  background: var(--band, var(--white));
+  background:
+    radial-gradient(ellipse 55% 50% at 10% 18%, rgba(10, 10, 10, 0.09), transparent 55%),
+    radial-gradient(ellipse 65% 55% at 92% 82%, rgba(10, 10, 10, 0.1), transparent 58%),
+    var(--band, var(--white));
 }
 
 .price-grid {
