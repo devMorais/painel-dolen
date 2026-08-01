@@ -25,6 +25,9 @@
   --gray-light: #e5e5e5;
   --gray-mid: #8a8a8a;
   --erro: #ff7b7b;
+  /* Exceção pontual à identidade monocromática: só em botões/ícones que levam ao WhatsApp. */
+  --whatsapp: #25d366;
+  --whatsapp-escuro: #1da851;
   /* Bandas alternadas das seções da landing (o layout decide qual tom cada seção recebe).
      O tom "suave" é mais claro que --gray-light pra as bordas de card continuarem visíveis. */
   --band-light: var(--white);

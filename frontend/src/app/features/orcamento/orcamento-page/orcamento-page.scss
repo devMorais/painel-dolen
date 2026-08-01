@@ -188,6 +188,50 @@
   white-space: nowrap;
 }
 
+.orc-studio {
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  border: 1.5px dashed var(--gray-light);
+  border-radius: 12px;
+}
+
+.orc-studio-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--black);
+  margin-bottom: 10px;
+}
+
+.orc-studio-opcoes {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.orc-studio-btn {
+  font-family: var(--body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 8px 13px;
+  border-radius: 100px;
+  border: 1.5px solid var(--gray-light);
+  background: var(--white);
+  color: var(--gray-dark);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.orc-studio-btn:hover {
+  border-color: var(--gray-mid);
+}
+
+.orc-studio-btn.ativo {
+  background: var(--black);
+  border-color: var(--black);
+  color: var(--white);
+}
+
 .orc-form {
   display: flex;
   flex-direction: column;
@@ -314,14 +358,14 @@
 
 .orc-wpp-link {
   font-weight: 600;
-  color: var(--gray-dark);
-  border-bottom: 1.5px solid var(--gray-light);
+  color: var(--whatsapp-escuro);
+  border-bottom: 1.5px solid var(--whatsapp);
   padding-bottom: 1px;
 }
 
 .orc-wpp-link:hover {
-  color: var(--black);
-  border-bottom-color: var(--black);
+  color: var(--whatsapp-escuro);
+  border-bottom-color: var(--whatsapp-escuro);
 }
 
 /* ---- Responsivo ---- */

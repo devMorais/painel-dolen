@@ -12,11 +12,13 @@ use App\Http\Controllers\Api\Admin\PrecosController;
 use App\Http\Controllers\Api\Admin\PropostasController;
 use App\Http\Controllers\Api\Admin\PublicacoesController;
 use App\Http\Controllers\Api\Admin\SecoesController;
+use App\Http\Controllers\Api\Admin\StudioMateriaisController;
 use App\Http\Controllers\Api\Admin\TagsController;
 use App\Http\Controllers\Api\Admin\WhatsappConversasController;
 use App\Http\Controllers\Api\InstagramController;
 use App\Http\Controllers\Api\LandingController;
 use App\Http\Controllers\Api\LeadController;
+use App\Http\Controllers\Api\StudioMaterialPublicoController;
 use App\Http\Controllers\Api\WebhookAutentiqueController;
 use App\Http\Controllers\Api\WebhookWhatsappController;
 use Illuminate\Http\Request;
@@ -32,6 +34,11 @@ Route::post('/leads', [LeadController::class, 'store']);
 Route::post('/webhooks/autentique', [WebhookAutentiqueController::class, 'handle']);
 Route::get('/whatsapp/webhook', [WebhookWhatsappController::class, 'verificar']);
 Route::post('/whatsapp/webhook', [WebhookWhatsappController::class, 'receber']);
+
+// Link público de envio de material do Dolen Studio (sem login — slug é o segredo do link).
+Route::get('/studio-materiais/{slug}', [StudioMaterialPublicoController::class, 'show']);
+Route::post('/studio-materiais/{slug}/arquivo', [StudioMaterialPublicoController::class, 'enviarArquivo']);
+Route::post('/studio-materiais/{slug}/texto', [StudioMaterialPublicoController::class, 'enviarTexto']);
 
 Route::prefix('admin')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -109,5 +116,13 @@ Route::prefix('admin')->group(function () {
         Route::get('/conversas', [WhatsappConversasController::class, 'index']);
         Route::get('/conversas/{lead}', [WhatsappConversasController::class, 'show']);
         Route::post('/conversas/{lead}', [WhatsappConversasController::class, 'store']);
+
+        Route::get('/studio-materiais', [StudioMateriaisController::class, 'index']);
+        Route::post('/studio-materiais', [StudioMateriaisController::class, 'store']);
+        Route::get('/studio-materiais/{material}', [StudioMateriaisController::class, 'show']);
+        Route::put('/studio-materiais/{material}', [StudioMateriaisController::class, 'update']);
+        Route::delete('/studio-materiais/{material}', [StudioMateriaisController::class, 'destroy']);
+        Route::delete('/studio-materiais/{material}/envios/{envio}', [StudioMateriaisController::class, 'destroyEnvio']);
+        Route::get('/studio-materiais/{material}/envios/{envio}/baixar', [StudioMateriaisController::class, 'baixarArquivo']);
     });
 });

@@ -16,6 +16,9 @@ use App\Models\SecaoInstagram;
 use App\Models\SecaoPrecos;
 use App\Models\SecaoProdutos;
 use App\Models\SecaoSobre;
+use App\Models\SecaoStudio;
+use App\Models\StudioFaq;
+use App\Models\StudioItem;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
 
@@ -33,6 +36,7 @@ class LandingController extends Controller
         $secaoProdutos = SecaoProdutos::first();
         $secaoComoFunciona = SecaoComoFunciona::first();
         $secaoInstagram = SecaoInstagram::first();
+        $secaoStudio = SecaoStudio::first();
 
         return response()->json([
             'configuracoes' => $config ? Arr::only($config->toArray(), [
@@ -56,6 +60,13 @@ class LandingController extends Controller
             'como_funciona' => array_merge(
                 $secaoComoFunciona ? Arr::only($secaoComoFunciona->toArray(), ['eyebrow', 'titulo', 'subtexto', 'visivel']) : [],
                 ['itens' => Passo::orderBy('ordem')->get()],
+            ),
+            'studio' => array_merge(
+                $secaoStudio ? Arr::only($secaoStudio->toArray(), ['eyebrow', 'titulo', 'subtexto', 'cta_label', 'cta_url', 'visivel']) : [],
+                [
+                    'itens' => StudioItem::orderBy('ordem')->get(),
+                    'faq' => StudioFaq::orderBy('ordem')->get(),
+                ],
             ),
             'precos' => array_merge(
                 $secaoPrecos ? Arr::only($secaoPrecos->toArray(), [

@@ -1,0 +1,47 @@
+@if (conteudo(); as secao) {
+  <section class="studio" id="studio">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="section-eyebrow">{{ secao.eyebrow }}</div>
+        <h2>{{ secao.titulo }}</h2>
+        @if (secao.subtexto) {
+          <p>{{ secao.subtexto }}</p>
+        }
+      </div>
+
+      <div class="studio-grid">
+        @for (item of secao.itens; track item.id) {
+          <div class="studio-item">
+            <div class="num">{{ numero(item.ordem) }}</div>
+            <h4>{{ item.titulo }}</h4>
+            <p>{{ item.descricao }}</p>
+          </div>
+        }
+      </div>
+
+      @if (secao.cta_label && secao.cta_url) {
+        <div class="studio-cta">
+          <a [routerLink]="linkBase(secao.cta_url)" [fragment]="linkFragmento(secao.cta_url)" class="btn btn-solid">
+            {{ secao.cta_label }}
+          </a>
+        </div>
+      }
+
+      @if (secao.faq.length > 0) {
+        <div class="studio-faq">
+          @for (pergunta of secao.faq; track pergunta.id) {
+            <div class="faq-item" [class.aberta]="faqAberta() === pergunta.id">
+              <button type="button" class="faq-pergunta" (click)="alternarFaq(pergunta.id)" [attr.aria-expanded]="faqAberta() === pergunta.id">
+                <span>{{ pergunta.pergunta }}</span>
+                <span class="faq-sinal" aria-hidden="true">{{ faqAberta() === pergunta.id ? '−' : '+' }}</span>
+              </button>
+              @if (faqAberta() === pergunta.id) {
+                <p class="faq-resposta">{{ pergunta.resposta }}</p>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </section>
+}

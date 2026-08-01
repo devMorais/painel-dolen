@@ -14,6 +14,9 @@ use App\Models\SecaoInstagram;
 use App\Models\SecaoPrecos;
 use App\Models\SecaoProdutos;
 use App\Models\SecaoSobre;
+use App\Models\SecaoStudio;
+use App\Models\StudioFaq;
+use App\Models\StudioItem;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -40,6 +43,7 @@ class ConteudoController extends Controller
         'diferenciais' => [SecaoDiferenciais::class, ['eyebrow', 'titulo', 'subtexto']],
         'produtos' => [SecaoProdutos::class, ['eyebrow', 'titulo', 'subtexto']],
         'como-funciona' => [SecaoComoFunciona::class, ['eyebrow', 'titulo', 'subtexto']],
+        'studio' => [SecaoStudio::class, ['eyebrow', 'titulo', 'subtexto', 'cta_label', 'cta_url']],
         'instagram' => [SecaoInstagram::class, ['eyebrow', 'titulo']],
         'precos' => [SecaoPrecos::class, [
             'eyebrow', 'titulo', 'subtexto', 'nota_manutencao',
@@ -71,6 +75,8 @@ class ConteudoController extends Controller
         $payload['diferenciais']['itens'] = Diferencial::orderBy('ordem')->get();
         $payload['como-funciona']['itens'] = Passo::orderBy('ordem')->get();
         $payload['produtos']['itens'] = Produto::orderBy('ordem')->get();
+        $payload['studio']['itens'] = StudioItem::orderBy('ordem')->get();
+        $payload['studio']['faq'] = StudioFaq::orderBy('ordem')->get();
 
         return response()->json($payload);
     }
@@ -101,6 +107,14 @@ class ConteudoController extends Controller
 
             if ($slug === 'como-funciona' && $request->has('itens')) {
                 $this->sincronizarItens(Passo::class, $dados['itens'] ?? [], ['titulo', 'descricao']);
+            }
+
+            if ($slug === 'studio' && $request->has('itens')) {
+                $this->sincronizarItens(StudioItem::class, $dados['itens'] ?? [], ['titulo', 'descricao']);
+            }
+
+            if ($slug === 'studio' && $request->has('faq')) {
+                $this->sincronizarItens(StudioFaq::class, $dados['faq'] ?? [], ['pergunta', 'resposta']);
             }
 
             if ($slug === 'produtos' && $request->has('itens')) {
@@ -137,7 +151,7 @@ class ConteudoController extends Controller
             $regras['secao.paragrafos.*'] = ['string', 'max:2000'];
         }
 
-        if (in_array($slug, ['diferenciais', 'como-funciona'], true)) {
+        if (in_array($slug, ['diferenciais', 'como-funciona', 'studio'], true)) {
             $regras['itens'] = ['sometimes', 'array', 'max:12'];
             $regras['itens.*.id'] = ['nullable', 'integer'];
             $regras['itens.*.titulo'] = ['required', 'string', 'max:255'];
@@ -145,6 +159,13 @@ class ConteudoController extends Controller
             if ($slug === 'diferenciais') {
                 $regras['itens.*.imagem_url'] = ['nullable', 'string', 'max:255'];
             }
+        }
+
+        if ($slug === 'studio') {
+            $regras['faq'] = ['sometimes', 'array', 'max:12'];
+            $regras['faq.*.id'] = ['nullable', 'integer'];
+            $regras['faq.*.pergunta'] = ['required', 'string', 'max:255'];
+            $regras['faq.*.resposta'] = ['required', 'string', 'max:2000'];
         }
 
         if ($slug === 'produtos') {
@@ -199,6 +220,10 @@ class ConteudoController extends Controller
         }
         if ($slug === 'como-funciona') {
             $payload['itens'] = Passo::orderBy('ordem')->get();
+        }
+        if ($slug === 'studio') {
+            $payload['itens'] = StudioItem::orderBy('ordem')->get();
+            $payload['faq'] = StudioFaq::orderBy('ordem')->get();
         }
         if ($slug === 'produtos') {
             $payload['itens'] = Produto::orderBy('ordem')->get();

@@ -7,4 +7,5 @@ export * from './precos-admin.service';
 export * from './propostas-admin.service';
 export * from './publicacoes-admin.service';
 export * from './secoes-admin.service';
+export * from './studio-materiais-admin.service';
 export * from './whatsapp-admin.service';

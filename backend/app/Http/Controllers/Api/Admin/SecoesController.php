@@ -11,6 +11,7 @@ use App\Models\SecaoInstagram;
 use App\Models\SecaoPrecos;
 use App\Models\SecaoProdutos;
 use App\Models\SecaoSobre;
+use App\Models\SecaoStudio;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -24,6 +25,7 @@ class SecoesController extends Controller
         'produtos' => [SecaoProdutos::class, 'Produtos e serviços'],
         'instagram' => [SecaoInstagram::class, 'Feed do Instagram'],
         'como-funciona' => [SecaoComoFunciona::class, 'Como funciona'],
+        'studio' => [SecaoStudio::class, 'Dolen Studio'],
         'precos' => [SecaoPrecos::class, 'Investimento (preços)'],
         'cta' => [SecaoCta::class, 'Contato (CTA final)'],
     ];

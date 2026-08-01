@@ -96,34 +96,42 @@
   border-top: 1px solid var(--gray-light);
 }
 
+.pmaint-isento {
+  color: var(--black);
+  font-weight: 600;
+}
+
 .pbtn {
   margin-top: 4px;
   width: 100%;
 }
 
-
-.founder-note {
-  margin-top: 28px;
-  padding: 20px 22px;
-  border-radius: 14px;
-  background: var(--black);
-  color: var(--white);
-  font-size: 0.92rem;
+.studio-toggle {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 6px;
+  padding: 4px 0;
 }
 
-.founder-note span {
-  flex: 1;
-  min-width: 260px;
+.studio-toggle button {
+  text-align: left;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--gray-light);
+  background: transparent;
+  color: var(--gray-dark);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
 
-.btn-founder {
-  background: var(--white);
-  color: var(--black);
-  border-color: var(--white);
-  white-space: nowrap;
+.studio-toggle button:hover {
+  border-color: var(--gray-mid);
+}
+
+.studio-toggle button.ativo {
+  background: var(--black);
+  border-color: var(--black);
+  color: var(--white);
 }

@@ -16,6 +16,9 @@ use App\Models\SecaoInstagram;
 use App\Models\SecaoPrecos;
 use App\Models\SecaoProdutos;
 use App\Models\SecaoSobre;
+use App\Models\SecaoStudio;
+use App\Models\StudioFaq;
+use App\Models\StudioItem;
 use Illuminate\Database\Seeder;
 
 class LandingPageSeeder extends Seeder
@@ -168,27 +171,65 @@ class LandingPageSeeder extends Seeder
             ['ordem' => 4, 'titulo' => 'Entrega e manutenção', 'descricao' => 'Você recebe pronto. A partir do 2º ano, a manutenção anual de R$ 1.500 mantém hospedagem, domínio e funcionamento sempre em dia.'],
         ])->each(fn (array $item) => Passo::create($item));
 
+        // Seção "Conheça o Dolen Studio" (2026-08-01): explica o diferencial ANTES de aparecer
+        // como seletor dentro do card de preço — hoje era só isso e ninguém achava.
+        SecaoStudio::updateOrCreate(['id' => 1], [
+            'eyebrow' => 'Diferencial Dolen',
+            'titulo' => 'Site pronto não basta se ninguém vê.',
+            'subtexto' => 'O Dolen Studio cuida do seu Instagram com o mesmo padrão visual do seu site — publicações, edições e agendamento, sem você precisar contratar outra empresa.',
+            'cta_label' => 'Ver planos com Studio',
+            'cta_url' => '/#precos',
+            'visivel' => true,
+        ]);
+
+        StudioItem::query()->delete();
+        collect([
+            ['ordem' => 1, 'titulo' => 'Posts e carrosséis prontos', 'descricao' => 'Artes com a identidade do seu negócio, sem ficar pedindo pro designer.'],
+            ['ordem' => 2, 'titulo' => 'Reels editados', 'descricao' => 'Vídeo profissional, sem você precisar aprender a editar. Incluído no plano Completo.'],
+            ['ordem' => 3, 'titulo' => 'Agendamento automático', 'descricao' => 'Publica sozinho, no horário certo, sem você lembrar de postar.'],
+            ['ordem' => 4, 'titulo' => 'Tudo com quem já fez o seu site', 'descricao' => 'Mesma marca, mesmo padrão, sem confusão de contratar freelancer novo.'],
+        ])->each(fn (array $item) => StudioItem::create($item));
+
+        StudioFaq::query()->delete();
+        collect([
+            ['ordem' => 1, 'pergunta' => 'O que é o Dolen Studio?', 'resposta' => 'Um complemento mensal para clientes de site Dolen: publicações, artes e vídeos para o Instagram, prontos e agendados automaticamente.'],
+            ['ordem' => 2, 'pergunta' => 'Preciso já ter site com a Dolen pra contratar?', 'resposta' => 'Sim, hoje o Studio é exclusivo para quem já é cliente de site — é assim que conseguimos manter o preço baixo e a qualidade alta.'],
+            ['ordem' => 3, 'pergunta' => 'Qual a diferença entre Essencial e Completo?', 'resposta' => 'Essencial: 8 posts e carrosséis por mês. Completo: tudo do Essencial + 4 Reels editados por mês.'],
+            ['ordem' => 4, 'pergunta' => 'Como funciona a entrega?', 'resposta' => 'Você manda o material bruto (vídeos, fotos e informações do mês) por um link simples que a gente te passa. A partir daí, cuidamos de tudo: edição, arte e publicação agendada no seu Instagram.'],
+            ['ordem' => 5, 'pergunta' => 'Com o Studio, ainda pago a manutenção anual do site?', 'resposta' => 'Não. Enquanto o Dolen Studio estiver ativo (Essencial ou Completo), a manutenção anual de R$ 1.500 não é cobrada separadamente — já está inclusa na mensalidade do Studio.'],
+        ])->each(fn (array $item) => StudioFaq::create($item));
+
         PlanoPreco::query()->delete();
         GrupoPreco::query()->delete();
 
-        // Modelo comercial 2026-07-13 (base: proposta Móveis Soares):
-        // `preco` = total do 1º ano JÁ com desconto de fundador (-20%); o front divide por 12.
-        // `preco_de_mensal` = mensal de tabela (riscado no site).
+        // Modelo comercial 2026-08-01: preço cheio, sem desconto de fundador.
+        // `preco` = total do 1º ano (preço mensal x12); o front divide por 12.
+        // `preco_de_mensal` = mensal "de tabela" riscado — null aqui, sem riscado.
+        // `preco_com_studio_*` = mensal COMBINADO (site + nível de Dolen Studio), valor único,
+        // sempre menor que a soma avulsa (site + Studio separados) — incentivo de upsell.
         $planos = GrupoPreco::create(['ordem' => 1, 'nome' => 'Planos']);
         collect([
-            ['ordem' => 1, 'nome' => 'Landing Page', 'descricao' => 'Uma página de alta conversão, feita pra transformar visita em contato. Ideal pra divulgar um serviço, produto ou campanha.', 'preco' => 1008, 'preco_de_mensal' => 105, 'destaque' => false],
-            ['ordem' => 2, 'nome' => 'Site institucional · Premium', 'descricao' => 'Site completo com painel próprio: páginas, blog, SEO local e caixa de mensagens. Você edita tudo sozinho.', 'preco' => 2016, 'preco_de_mensal' => 210, 'destaque' => true],
-            ['ordem' => 3, 'nome' => 'Loja virtual · Pro', 'descricao' => 'Tudo do Premium + carrinho, pagamento por PIX e cartão no próprio site e configuração de frete.', 'preco' => 3264, 'preco_de_mensal' => 340, 'destaque' => false],
+            ['ordem' => 1, 'nome' => 'Landing Page', 'descricao' => 'Uma página de alta conversão, feita pra transformar visita em contato. Ideal pra divulgar um serviço, produto ou campanha.', 'preco' => 1260, 'preco_de_mensal' => null, 'preco_com_studio_essencial' => 447, 'preco_com_studio_completo' => 797, 'destaque' => false],
+            ['ordem' => 2, 'nome' => 'Site institucional · Premium', 'descricao' => 'Site completo com painel próprio: páginas, blog, SEO local e caixa de mensagens. Você edita tudo sozinho.', 'preco' => 2520, 'preco_de_mensal' => null, 'preco_com_studio_essencial' => 497, 'preco_com_studio_completo' => 847, 'destaque' => true],
+            ['ordem' => 3, 'nome' => 'Loja virtual · Pro', 'descricao' => 'Tudo do Premium + carrinho, pagamento por PIX e cartão no próprio site e configuração de frete.', 'preco' => 4080, 'preco_de_mensal' => null, 'preco_com_studio_essencial' => 597, 'preco_com_studio_completo' => 947, 'destaque' => false],
         ])->each(fn (array $item) => $planos->planos()->create($item));
+
+        // Dolen Studio (2026-08-01): catálogo de referência dos níveis avulsos (nome/descrição/preço-base).
+        // Não aparece mais como cards próprios na landing — cada plano de site tem os preços combinados acima.
+        $studio = GrupoPreco::create(['ordem' => 2, 'nome' => 'Dolen Studio']);
+        collect([
+            ['ordem' => 1, 'nome' => 'Studio Essencial', 'descricao' => '8 posts e carrosséis por mês, com identidade visual própria, agendamento e publicação automática no Instagram.', 'preco' => 397 * 12, 'preco_de_mensal' => null, 'destaque' => false],
+            ['ordem' => 2, 'nome' => 'Studio Completo', 'descricao' => 'Tudo do Essencial + 4 Reels editados por mês. Agendamento e publicação automática incluídos.', 'preco' => 797 * 12, 'preco_de_mensal' => null, 'destaque' => false],
+        ])->each(fn (array $item) => $studio->planos()->create($item));
 
         SecaoPrecos::updateOrCreate(['id' => 1], [
             'eyebrow' => 'Planos',
             'titulo' => 'Escolha o tamanho do seu projeto.',
             'subtexto' => 'Hospedagem e domínio grátis no 1º ano. Tudo em até 12x no cartão. Valores sujeitos a alteração.',
             'nota_manutencao' => 'A partir do 2º ano: manutenção de R$ 1.500/ano (equivale a R$ 125/mês)',
-            'nota_fundador_texto' => 'Somos uma empresa nova — e assumimos isso. Os 3 primeiros clientes ganham 20% de desconto (já aplicado nos valores acima) em troca de depoimento e autorização de portfólio.',
-            'nota_fundador_cta_label' => 'Quero ser cliente fundador',
-            'nota_fundador_cta_url' => '/orcamento',
+            'nota_fundador_texto' => null,
+            'nota_fundador_cta_label' => null,
+            'nota_fundador_cta_url' => null,
             'visivel' => true,
         ]);
 

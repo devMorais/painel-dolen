@@ -68,16 +68,28 @@
                 <label class="larga">Descrição
                   <textarea rows="2" [(ngModel)]="plano.descricao" maxlength="2000"></textarea>
                 </label>
-                <label>Total do 1º ano (R$) — já com desconto
+                <label>Total do 1º ano (R$) — preço cheio
                   <input type="number" [(ngModel)]="plano.preco" min="0" step="1" />
                 </label>
                 <label>Mensal de tabela (R$) — aparece riscado; vazio esconde
                   <input type="number" [(ngModel)]="plano.preco_de_mensal" min="0" step="1" />
                 </label>
+                <label>Combinado c/ Studio Essencial (R$/mês) — vazio esconde a opção
+                  <input type="number" [(ngModel)]="plano.preco_com_studio_essencial" min="0" step="1" />
+                </label>
+                <label>Combinado c/ Studio Completo (R$/mês) — vazio esconde a opção
+                  <input type="number" [(ngModel)]="plano.preco_com_studio_completo" min="0" step="1" />
+                </label>
               </div>
               <p class="previa">
                 No site: @if (inteiro(plano.preco_de_mensal) !== '—') {<s>de {{ inteiro(plano.preco_de_mensal) }}/mês</s> → }
                 <strong>{{ parcela(plano.preco) }}/mês</strong> · 12x no cartão · 1º ano {{ inteiro(plano.preco) }}
+                @if (mensalDireto(plano.preco_com_studio_essencial) !== '—') {
+                  <br />+ Studio Essencial: <strong>{{ mensalDireto(plano.preco_com_studio_essencial) }}/mês</strong>
+                }
+                @if (mensalDireto(plano.preco_com_studio_completo) !== '—') {
+                  <br />+ Studio Completo: <strong>{{ mensalDireto(plano.preco_com_studio_completo) }}/mês</strong>
+                }
               </p>
             </div>
             <div class="plano-acoes">

@@ -42,7 +42,25 @@
       @if (opcaoAtual(); as opcao) {
         <div class="orc-resumo">
           <span class="orc-resumo-nome">{{ opcao.nome }}</span>
-          <span class="orc-resumo-preco">{{ opcao.preco }}</span>
+          <span class="orc-resumo-preco">{{ precoResumo() }}</span>
+        </div>
+      }
+
+      @if (studioDisponivel()) {
+        <div class="orc-studio">
+          <span class="orc-studio-label">Quer somar o Dolen Studio? Publicações e edições prontas todo mês.</span>
+          <div class="orc-studio-opcoes">
+            @for (nivel of niveisStudio; track nivel.valor) {
+              <button
+                type="button"
+                class="orc-studio-btn"
+                [class.ativo]="nivelStudio() === nivel.valor"
+                (click)="escolherStudio(nivel.valor)"
+              >
+                {{ nivel.label }}
+              </button>
+            }
+          </div>
         </div>
       }
 

@@ -15,6 +15,7 @@ import { Publicacoes } from '@features/admin/publicacoes/publicacoes';
 import { PropostaEditor } from '@features/admin/propostas/proposta-editor/proposta-editor';
 import { PropostasList } from '@features/admin/propostas/propostas-list/propostas-list';
 import { SecoesList } from '@features/admin/secoes/secoes-list/secoes-list';
+import { StudioMateriais } from '@features/admin/studio-materiais/studio-materiais';
 
 export const adminRoutes: Routes = [
   { path: 'login', component: Login },
@@ -38,6 +39,7 @@ export const adminRoutes: Routes = [
       { path: 'contratos/novo', component: ContratoEditor },
       { path: 'contratos/:id', component: ContratoEditor },
       { path: 'conversas', component: Conversas },
+      { path: 'studio-materiais', component: StudioMateriais },
     ],
   },
 ];

@@ -18,6 +18,9 @@
         @if (visibilidade()?.comoFunciona ?? true) {
           <a href="#como-funciona">Como funciona</a>
         }
+        @if (visibilidade()?.studio ?? true) {
+          <a href="#studio">Dolen Studio</a>
+        }
         @if (visibilidade()?.precos ?? true) {
           <a href="#precos">Preços</a>
         }
@@ -59,6 +62,9 @@
         @if (visibilidade()?.comoFunciona ?? true) {
           <a href="#como-funciona" (click)="fecharMenu()">Como funciona</a>
         }
+        @if (visibilidade()?.studio ?? true) {
+          <a href="#studio" (click)="fecharMenu()">Dolen Studio</a>
+        }
         @if (visibilidade()?.precos ?? true) {
           <a href="#precos" (click)="fecharMenu()">Preços</a>
         }
@@ -92,6 +98,11 @@
   @if (visibilidade()?.comoFunciona ?? true) {
     <div class="band" [class.band-soft]="bandaSuave('comoFunciona')">
       <app-como-funciona />
+    </div>
+  }
+  @if (visibilidade()?.studio ?? true) {
+    <div class="band" [class.band-soft]="bandaSuave('studio')">
+      <app-dolen-studio />
     </div>
   }
   @if (visibilidade()?.precos ?? true) {

@@ -45,6 +45,17 @@ p {
   border-color: rgba(255, 255, 255, 0.85);
 }
 
+.btn-whatsapp {
+  background: var(--whatsapp);
+  border-color: var(--whatsapp);
+  color: var(--white);
+}
+
+.btn-whatsapp:hover {
+  background: var(--whatsapp-escuro);
+  border-color: var(--whatsapp-escuro);
+}
+
 .contact-row {
   display: flex;
   gap: 14px;

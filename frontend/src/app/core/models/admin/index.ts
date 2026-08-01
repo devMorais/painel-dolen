@@ -7,4 +7,5 @@ export * from './precos-admin.model';
 export * from './proposta.model';
 export * from './publicacao.model';
 export * from './secao-admin.model';
+export * from './studio-material.model';
 export * from './whatsapp.model';

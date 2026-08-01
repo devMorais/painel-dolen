@@ -1,0 +1,57 @@
+<main class="env-main">
+  <div class="env-card">
+    @if (carregando()) {
+      <p class="env-estado">Carregando…</p>
+    } @else if (naoEncontrado()) {
+      <div class="env-erro-bloco">
+        <h1>Link não encontrado</h1>
+        <p>Esse link de envio não existe ou foi removido. Confira com quem te passou o link.</p>
+      </div>
+    } @else if (material(); as m) {
+      <header class="env-head">
+        <span class="env-tag">Dolen Studio</span>
+        <h1>Envie seu material, {{ m.cliente_nome }}</h1>
+        @if (m.instrucoes) {
+          <p class="env-instrucoes">{{ m.instrucoes }}</p>
+        }
+      </header>
+
+      <section class="env-secao">
+        <h2>Vídeos e fotos</h2>
+        <label class="env-drop">
+          <input type="file" multiple accept="video/mp4,video/quicktime,image/jpeg,image/png,image/webp" (change)="selecionarArquivos($event)" />
+          <span>Toque para escolher arquivos</span>
+        </label>
+
+        @if (arquivosEmEnvio().length > 0) {
+          <ul class="env-lista-arquivos">
+            @for (item of arquivosEmEnvio(); track item.nome) {
+              <li>
+                <span class="env-arquivo-nome">{{ item.nome }}</span>
+                @if (item.erro) {
+                  <span class="env-arquivo-status erro">Falhou — tenta de novo</span>
+                } @else if (item.concluido) {
+                  <span class="env-arquivo-status ok">Enviado ✓</span>
+                } @else {
+                  <span class="env-arquivo-status">{{ item.progresso }}%</span>
+                }
+              </li>
+            }
+          </ul>
+        }
+      </section>
+
+      <section class="env-secao">
+        <h2>Textos e observações</h2>
+        <p class="env-sub">Alguma frase, promoção ou informação que devemos usar nas publicações?</p>
+        <textarea rows="3" [value]="texto()" (input)="texto.set($any($event.target).value)" placeholder="Escreva aqui..."></textarea>
+        <button type="button" class="btn btn-solid" [disabled]="enviandoTexto()" (click)="enviarTexto()">
+          {{ enviandoTexto() ? 'Enviando…' : 'Enviar texto' }}
+        </button>
+        @if (textoEnviado()) {
+          <p class="env-confirmacao">Texto enviado ✓</p>
+        }
+      </section>
+    }
+  </div>
+</main>
