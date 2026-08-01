@@ -10,6 +10,7 @@ export interface Publicacao {
   id: number;
   rede: string;
   tipo: PublicacaoTipo;
+  is_teste: boolean;
   legenda: string | null;
   imagem_url: string;
   midias: Midia[] | null;

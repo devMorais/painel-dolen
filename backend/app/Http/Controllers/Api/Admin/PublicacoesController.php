@@ -72,6 +72,10 @@ class PublicacoesController extends Controller
             'agendado_para' => ['required_if:quando,agendar', 'nullable', 'date', 'after:now'],
             'confirmar_duplicata' => ['nullable', 'boolean'],
             'publicar_no_facebook' => ['nullable', 'boolean'],
+            // Reels nasce como teste por padrão (Trial Reel — visível só a quem não
+            // segue a conta; só passa a aparecer aos seguidores quando alguém gradua
+            // manualmente pelo app). Só se aplica a tipo=reels; ignorado nos demais.
+            'publicar_como_teste' => ['nullable', 'boolean'],
         ]);
 
         if ($dados['tipo'] === 'carrossel' && count($dados['midias']) < 2) {
@@ -103,6 +107,8 @@ class PublicacoesController extends Controller
 
         $atributosComuns = [
             'tipo' => $dados['tipo'],
+            // Reels sempre nasce como teste, a menos que explicitamente desmarcado.
+            'is_teste' => $dados['tipo'] === 'reels' ? ($dados['publicar_como_teste'] ?? true) : false,
             'legenda' => $dados['legenda'] ?? null,
             'imagem_url' => $midias[0]['url'],
             'midias' => $midias,
@@ -226,11 +232,11 @@ class PublicacoesController extends Controller
         $thumbOffsetMs = 500;
 
         return match ($pub->tipo) {
-            'reels' => $instagram->publicarReels($primeira['url'], $pub->legenda, $thumbOffsetMs),
+            'reels' => $instagram->publicarReels($primeira['url'], $pub->legenda, $thumbOffsetMs, $pub->is_teste),
             'carrossel' => $instagram->publicarCarrossel($midias, $pub->legenda),
             'story' => $instagram->publicarStory($primeira['url'], $ehVideo),
             default => $ehVideo
-                ? $instagram->publicarReels($primeira['url'], $pub->legenda, $thumbOffsetMs)
+                ? $instagram->publicarReels($primeira['url'], $pub->legenda, $thumbOffsetMs, $pub->is_teste)
                 : $instagram->publicarPost($primeira['url'], $pub->legenda),
         };
     }

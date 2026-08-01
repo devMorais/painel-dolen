@@ -194,8 +194,11 @@ class InstagramService
      * Publica um Reels (vídeo no feed).
      * $thumbOffsetMs escolhe a capa a partir de um frame do próprio vídeo
      * (em milissegundos); null deixa a Meta escolher automaticamente.
+     * $trial publica como Trial Reel: fica visível só pra quem não segue a
+     * conta, e só passa a aparecer pros seguidores se alguém "graduar" o
+     * vídeo manualmente pelo app do Instagram (graduation_strategy MANUAL).
      */
-    public function publicarReels(string $videoUrl, ?string $legenda = null, ?int $thumbOffsetMs = null): array
+    public function publicarReels(string $videoUrl, ?string $legenda = null, ?int $thumbOffsetMs = null, bool $trial = false): array
     {
         $token = $this->configuracaoObrigatoria()->instagram_access_token;
         $container = $this->criarContainer(
@@ -204,6 +207,7 @@ class InstagramService
                 'video_url' => $videoUrl,
                 'caption' => $legenda,
                 'thumb_offset' => $thumbOffsetMs,
+                'trial_params' => $trial ? json_encode(['graduation_strategy' => 'MANUAL']) : null,
             ],
             $token,
             true,

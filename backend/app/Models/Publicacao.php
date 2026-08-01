@@ -11,6 +11,7 @@ class Publicacao extends Model
     protected $fillable = [
         'rede',
         'tipo',
+        'is_teste',
         'legenda',
         'imagem_url',
         'midias',
@@ -25,6 +26,7 @@ class Publicacao extends Model
 
     protected $casts = [
         'midias' => 'array',
+        'is_teste' => 'boolean',
         'agendado_para' => 'datetime',
         'publicado_em' => 'datetime',
     ];
