@@ -1,0 +1,51 @@
+@if (conteudo(); as c) {
+  <section class="exemplos">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="section-eyebrow">{{ c.eyebrow }}</div>
+        <h2>{{ c.titulo }}</h2>
+        @if (c.subtexto) {
+          <p>{{ c.subtexto }}</p>
+        }
+      </div>
+
+      @if (c.categorias.length > 1) {
+        <div class="exemplos-tabs" role="tablist" aria-label="Categorias de exemplos">
+          @for (categoria of c.categorias; track categoria.id) {
+            <button
+              type="button"
+              role="tab"
+              [class.ativo]="categoriaAtual()?.id === categoria.id"
+              (click)="selecionarCategoria(categoria.id)"
+            >
+              {{ categoria.nome }}
+            </button>
+          }
+        </div>
+      }
+
+      @if (categoriaAtual(); as categoria) {
+        <div class="exemplos-grid">
+          @for (exemplo of categoria.exemplos; track exemplo.id) {
+            <a [href]="exemplo.url" target="_blank" rel="noopener" class="exemplo-card">
+              @if (exemplo.imagem_url) {
+                <div class="exemplo-thumb">
+                  <img [src]="exemplo.imagem_url" [alt]="exemplo.nome" loading="lazy" />
+                </div>
+              } @else {
+                <div class="exemplo-thumb exemplo-thumb-fallback">
+                  <span>{{ exemplo.nome.charAt(0) }}</span>
+                </div>
+              }
+              <div class="exemplo-info">
+                <div class="exemplo-nome">{{ exemplo.nome }}</div>
+                <div class="exemplo-nicho">{{ exemplo.nicho }}</div>
+              </div>
+              <span class="exemplo-seta" aria-hidden="true">↗</span>
+            </a>
+          }
+        </div>
+      }
+    </div>
+  </section>
+}

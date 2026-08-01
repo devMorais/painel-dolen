@@ -9,6 +9,7 @@ use App\Models\Produto;
 use App\Models\SecaoComoFunciona;
 use App\Models\SecaoCta;
 use App\Models\SecaoDiferenciais;
+use App\Models\SecaoExemplos;
 use App\Models\SecaoHero;
 use App\Models\SecaoInstagram;
 use App\Models\SecaoPrecos;
@@ -44,6 +45,7 @@ class ConteudoController extends Controller
         'produtos' => [SecaoProdutos::class, ['eyebrow', 'titulo', 'subtexto']],
         'como-funciona' => [SecaoComoFunciona::class, ['eyebrow', 'titulo', 'subtexto']],
         'studio' => [SecaoStudio::class, ['eyebrow', 'titulo', 'subtexto', 'cta_label', 'cta_url']],
+        'exemplos' => [SecaoExemplos::class, ['eyebrow', 'titulo', 'subtexto']],
         'instagram' => [SecaoInstagram::class, ['eyebrow', 'titulo']],
         'precos' => [SecaoPrecos::class, [
             'eyebrow', 'titulo', 'subtexto', 'nota_manutencao',

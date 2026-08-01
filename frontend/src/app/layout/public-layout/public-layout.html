@@ -110,6 +110,11 @@
       <app-investimento />
     </div>
   }
+  @if (visibilidade()?.exemplos ?? true) {
+    <div class="band" [class.band-soft]="bandaSuave('exemplos')">
+      <app-exemplos />
+    </div>
+  }
   @if (visibilidade()?.instagram ?? true) {
     <div class="band" [class.band-soft]="bandaSuave('instagram')">
       <app-instagram-feed />

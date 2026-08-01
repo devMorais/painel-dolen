@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\ConfiguracaoSite;
 use App\Models\Diferencial;
+use App\Models\Exemplo;
+use App\Models\ExemploCategoria;
 use App\Models\GrupoPreco;
 use App\Models\Passo;
 use App\Models\PlanoPreco;
@@ -11,6 +13,7 @@ use App\Models\Produto;
 use App\Models\SecaoComoFunciona;
 use App\Models\SecaoCta;
 use App\Models\SecaoDiferenciais;
+use App\Models\SecaoExemplos;
 use App\Models\SecaoHero;
 use App\Models\SecaoInstagram;
 use App\Models\SecaoPrecos;
@@ -198,6 +201,28 @@ class LandingPageSeeder extends Seeder
             ['ordem' => 4, 'pergunta' => 'Como funciona a entrega?', 'resposta' => 'Você manda o material bruto (vídeos, fotos e informações do mês) por um link simples que a gente te passa. A partir daí, cuidamos de tudo: edição, arte e publicação agendada no seu Instagram.'],
             ['ordem' => 5, 'pergunta' => 'Com o Studio, ainda pago a manutenção anual do site?', 'resposta' => 'Não. Enquanto o Dolen Studio estiver ativo (Essencial ou Completo), a manutenção anual de R$ 1.500 não é cobrada separadamente — já está inclusa na mensalidade do Studio.'],
         ])->each(fn (array $item) => StudioFaq::create($item));
+
+        // Seção "Exemplos" (2026-08-01): mostra sites reais em cada categoria, como prova
+        // social, perto do Instagram. Cada exemplo aponta pra uma página estática publicada
+        // em dolen.com.br/exemplos/{slug} (fora do Angular — ver DEPLOY.private.md).
+        SecaoExemplos::updateOrCreate(['id' => 1], [
+            'eyebrow' => 'Portfólio',
+            'titulo' => 'Veja o que a gente entrega de verdade.',
+            'subtexto' => 'Exemplos reais por categoria — o mesmo padrão de qualidade que o seu site vai ter.',
+            'visivel' => true,
+        ]);
+
+        Exemplo::query()->delete();
+        ExemploCategoria::query()->delete();
+
+        $landingPages = ExemploCategoria::create(['ordem' => 1, 'nome' => 'Landing Pages', 'slug' => 'landing-pages', 'icone' => 'bi-file-earmark-text']);
+        collect([
+            ['ordem' => 1, 'nome' => 'Vitalis Saúde', 'nicho' => 'Clínica médica', 'url' => 'https://www.dolen.com.br/exemplos/vitalis-saude/'],
+            ['ordem' => 2, 'nome' => 'Ferreira & Associados', 'nicho' => 'Advocacia', 'url' => 'https://www.dolen.com.br/exemplos/ferreira-associados/'],
+            ['ordem' => 3, 'nome' => 'Loja Bonita', 'nicho' => 'Moda e acessórios', 'url' => 'https://www.dolen.com.br/exemplos/loja-bonita/'],
+            ['ordem' => 4, 'nome' => 'Traço Arquitetura', 'nicho' => 'Arquitetura e engenharia', 'url' => 'https://www.dolen.com.br/exemplos/traco-arquitetura/'],
+            ['ordem' => 5, 'nome' => 'Cortex Consultoria', 'nicho' => 'Consultoria empresarial', 'url' => 'https://www.dolen.com.br/exemplos/cortex-consultoria/'],
+        ])->each(fn (array $item) => $landingPages->exemplos()->create($item));
 
         PlanoPreco::query()->delete();
         GrupoPreco::query()->delete();

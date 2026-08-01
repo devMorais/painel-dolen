@@ -6,6 +6,7 @@ export interface SecoesVisiveis {
   instagram: boolean;
   comoFunciona: boolean;
   studio: boolean;
+  exemplos: boolean;
   precos: boolean;
   cta: boolean;
 }

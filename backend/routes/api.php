@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Admin\ConfiguracoesController;
 use App\Http\Controllers\Api\Admin\ContratosController;
 use App\Http\Controllers\Api\Admin\ConteudoController;
 use App\Http\Controllers\Api\Admin\DashboardController;
+use App\Http\Controllers\Api\Admin\ExemploCategoriasController;
 use App\Http\Controllers\Api\Admin\LeadAnotacoesController;
 use App\Http\Controllers\Api\Admin\LeadsController;
 use App\Http\Controllers\Api\Admin\LeadTarefasController;
@@ -54,6 +55,9 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/precos', [PrecosController::class, 'index']);
         Route::put('/precos', [PrecosController::class, 'update']);
+
+        Route::get('/exemplo-categorias', [ExemploCategoriasController::class, 'index']);
+        Route::put('/exemplo-categorias', [ExemploCategoriasController::class, 'update']);
 
         Route::get('/configuracoes', [ConfiguracoesController::class, 'show']);
         Route::put('/configuracoes', [ConfiguracoesController::class, 'update']);

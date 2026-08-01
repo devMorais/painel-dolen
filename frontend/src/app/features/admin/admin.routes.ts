@@ -9,6 +9,7 @@ import { ContratosList } from '@features/admin/contratos/contratos-list/contrato
 import { Conteudo } from '@features/admin/conteudo/conteudo';
 import { Conversas } from '@features/admin/conversas/conversas';
 import { Dashboard } from '@features/admin/dashboard/dashboard';
+import { ExemplosAdmin } from '@features/admin/exemplos/exemplos';
 import { Precos } from '@features/admin/precos/precos';
 import { Leads } from '@features/admin/leads/leads';
 import { Publicacoes } from '@features/admin/publicacoes/publicacoes';
@@ -30,6 +31,7 @@ export const adminRoutes: Routes = [
       { path: 'publicacoes', component: Publicacoes },
       { path: 'conteudo', component: Conteudo },
       { path: 'precos', component: Precos },
+      { path: 'exemplos', component: ExemplosAdmin },
       { path: 'configuracoes', component: Configuracoes },
       { path: 'secoes', component: SecoesList },
       { path: 'propostas', component: PropostasList },

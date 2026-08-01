@@ -2,6 +2,7 @@ export * from './auth.service';
 export * from './configuracoes-admin.service';
 export * from './contratos-admin.service';
 export * from './conteudo-admin.service';
+export * from './exemplo-categorias-admin.service';
 export * from './leads-admin.service';
 export * from './precos-admin.service';
 export * from './propostas-admin.service';

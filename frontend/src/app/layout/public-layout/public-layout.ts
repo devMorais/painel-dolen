@@ -13,13 +13,14 @@ import { Produtos } from '@features/landing/components/produtos/produtos';
 import { InstagramFeed } from '@features/landing/components/instagram-feed/instagram-feed';
 import { ComoFunciona } from '@features/landing/components/como-funciona/como-funciona';
 import { DolenStudio } from '@features/landing/components/dolen-studio/dolen-studio';
+import { Exemplos } from '@features/landing/components/exemplos/exemplos';
 import { Investimento } from '@features/landing/components/investimento/investimento';
 import { CtaFinal } from '@features/landing/components/cta-final/cta-final';
 import { MobileCtaBar } from '@shared/components/mobile-cta-bar/mobile-cta-bar';
 
 @Component({
   selector: 'app-public-layout',
-  imports: [Hero, Sobre, Diferenciais, Produtos, InstagramFeed, ComoFunciona, DolenStudio, Investimento, CtaFinal, MobileCtaBar, RouterLink],
+  imports: [Hero, Sobre, Diferenciais, Produtos, InstagramFeed, ComoFunciona, DolenStudio, Exemplos, Investimento, CtaFinal, MobileCtaBar, RouterLink],
   templateUrl: './public-layout.html',
   styleUrl: './public-layout.scss',
 })
@@ -39,7 +40,7 @@ export class PublicLayout {
    * Seções "do meio" (entre o hero preto e o CTA preto) que participam da
    * alternância de cor de fundo, na ordem em que aparecem na página.
    */
-  private readonly ordemBandas = ['sobre', 'diferenciais', 'produtos', 'comoFunciona', 'studio', 'precos', 'instagram'] as const;
+  private readonly ordemBandas = ['sobre', 'diferenciais', 'produtos', 'comoFunciona', 'studio', 'precos', 'exemplos', 'instagram'] as const;
 
   /**
    * Conjunto das seções que devem receber o tom "suave" (cinza claro).

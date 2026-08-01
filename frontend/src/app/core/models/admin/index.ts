@@ -2,6 +2,7 @@ export * from './admin-user.model';
 export * from './configuracoes-site.model';
 export * from './contrato.model';
 export * from './conteudo-site.model';
+export * from './exemplo-categoria-admin.model';
 export * from './lead-admin.model';
 export * from './precos-admin.model';
 export * from './proposta.model';

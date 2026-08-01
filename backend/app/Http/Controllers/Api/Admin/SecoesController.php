@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\SecaoComoFunciona;
 use App\Models\SecaoCta;
 use App\Models\SecaoDiferenciais;
+use App\Models\SecaoExemplos;
 use App\Models\SecaoHero;
 use App\Models\SecaoInstagram;
 use App\Models\SecaoPrecos;
@@ -26,6 +27,7 @@ class SecoesController extends Controller
         'instagram' => [SecaoInstagram::class, 'Feed do Instagram'],
         'como-funciona' => [SecaoComoFunciona::class, 'Como funciona'],
         'studio' => [SecaoStudio::class, 'Dolen Studio'],
+        'exemplos' => [SecaoExemplos::class, 'Exemplos (categorias)'],
         'precos' => [SecaoPrecos::class, 'Investimento (preços)'],
         'cta' => [SecaoCta::class, 'Contato (CTA final)'],
     ];

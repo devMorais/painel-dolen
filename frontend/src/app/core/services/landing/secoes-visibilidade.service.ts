@@ -19,6 +19,7 @@ export class SecoesVisibilidadeService {
         instagram: c.instagram?.visivel ?? true,
         comoFunciona: c.como_funciona?.visivel ?? true,
         studio: c.studio?.visivel ?? true,
+        exemplos: c.exemplos?.visivel ?? true,
         precos: c.precos?.visivel ?? true,
         cta: c.cta?.visivel ?? true,
       })),

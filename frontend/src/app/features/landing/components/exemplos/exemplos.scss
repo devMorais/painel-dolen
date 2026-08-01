@@ -1,0 +1,119 @@
+.exemplos {
+  background:
+    radial-gradient(ellipse 60% 55% at 90% 15%, rgba(10, 10, 10, 0.09), transparent 58%),
+    radial-gradient(ellipse 55% 50% at 8% 88%, rgba(10, 10, 10, 0.09), transparent 55%),
+    var(--band, var(--white));
+}
+
+.exemplos-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+.exemplos-tabs button {
+  font-family: var(--display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: 100px;
+  border: 1.5px solid var(--gray-light);
+  background: var(--white);
+  color: var(--gray-dark);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.exemplos-tabs button:hover {
+  border-color: var(--gray-mid);
+}
+
+.exemplos-tabs button.ativo {
+  background: var(--black);
+  border-color: var(--black);
+  color: var(--white);
+}
+
+.exemplos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 860px) {
+  .exemplos-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.exemplo-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--gray-light);
+  border-radius: 16px;
+  background: var(--white);
+  transition: border-color 0.15s ease, transform 0.12s ease;
+}
+
+.exemplo-card:hover {
+  border-color: var(--black);
+  transform: translateY(-2px);
+}
+
+.exemplo-thumb {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--gray-light);
+}
+
+.exemplo-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.exemplo-thumb-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--black);
+}
+
+.exemplo-thumb-fallback span {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--white);
+}
+
+.exemplo-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.exemplo-nome {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 0.98rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.exemplo-nicho {
+  font-size: 0.82rem;
+  color: var(--gray-mid);
+}
+
+.exemplo-seta {
+  font-size: 1.1rem;
+  color: var(--gray-mid);
+  flex-shrink: 0;
+}
