@@ -17,6 +17,11 @@ export const routes: Routes = [
     loadComponent: () => import('@features/links/links-page/links-page').then((m) => m.LinksPage),
   },
   {
+    path: 'links/:slug',
+    loadComponent: () =>
+      import('@features/links/categoria-page/categoria-page').then((m) => m.CategoriaPage),
+  },
+  {
     path: 'enviar/:slug',
     loadComponent: () =>
       import('@features/studio-material/enviar-page/enviar-page').then((m) => m.EnviarPage),
