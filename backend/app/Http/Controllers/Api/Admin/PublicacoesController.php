@@ -72,9 +72,12 @@ class PublicacoesController extends Controller
             'agendado_para' => ['required_if:quando,agendar', 'nullable', 'date', 'after:now'],
             'confirmar_duplicata' => ['nullable', 'boolean'],
             'publicar_no_facebook' => ['nullable', 'boolean'],
-            // Reels nasce como teste por padrão (Trial Reel — visível só a quem não
-            // segue a conta; só passa a aparecer aos seguidores quando alguém gradua
-            // manualmente pelo app). Só se aplica a tipo=reels; ignorado nos demais.
+            // Trial Reel (visível só a quem não segue a conta) exige a conta ter
+            // pelo menos 1.000 seguidores — a Meta não libera a opção abaixo disso,
+            // nem no app nem na API. A @dolen.ia ainda não atingiu esse mínimo
+            // (confirmado em 2026-08-02: opção nem aparece no app oficial), então
+            // fica desligado por padrão até a conta crescer. Só se aplica a
+            // tipo=reels; ignorado nos demais.
             'publicar_como_teste' => ['nullable', 'boolean'],
         ]);
 
@@ -107,8 +110,9 @@ class PublicacoesController extends Controller
 
         $atributosComuns = [
             'tipo' => $dados['tipo'],
-            // Reels sempre nasce como teste, a menos que explicitamente desmarcado.
-            'is_teste' => $dados['tipo'] === 'reels' ? ($dados['publicar_como_teste'] ?? true) : false,
+            // Desligado por padrão (ver nota acima sobre elegibilidade de 1.000
+            // seguidores) — só ativa se explicitamente marcado na requisição.
+            'is_teste' => $dados['tipo'] === 'reels' ? ($dados['publicar_como_teste'] ?? false) : false,
             'legenda' => $dados['legenda'] ?? null,
             'imagem_url' => $midias[0]['url'],
             'midias' => $midias,
