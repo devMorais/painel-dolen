@@ -15,6 +15,8 @@ html,body{width:100%;height:100%;overflow:hidden;}
 ICON_TRABALHOS = '<rect x="10" y="20" width="80" height="60" rx="7"/><path d="M10 35h80"/><circle cx="21" cy="27.5" r="2.1" fill="currentColor" stroke="none"/><circle cx="29" cy="27.5" r="2.1" fill="currentColor" stroke="none"/>'
 # ícone: camadas (Serviços)
 ICON_SERVICOS = '<path d="M50 14 14 32l36 18 36-18z"/><path d="M14 50l36 18 36-18"/><path d="M14 68l36 18 36-18"/>'
+# ícone: claquete (Bastidor) — clapperboard aberta, com listras diagonais no topo
+ICON_BASTIDOR = '<path d="M14 38 20 15 88 26 82 38Z"/><rect x="14" y="38" width="68" height="46" rx="5"/><path d="M30 20l6 14M46 22.5l6 14M62 25l6 14"/>'
 
 
 def badge(bg, fg, icon_path, dash_border, dash_icon):
@@ -35,6 +37,7 @@ def badge(bg, fg, icon_path, dash_border, dash_icon):
 jobs = [
     ("cover_1_trabalhos_v2", "bg-black", "#ffffff", ICON_TRABALHOS, "3 14", "1.55"),
     ("cover_2_servicos_v2", "bg-white", "#0a0a0a", ICON_SERVICOS, "3 14", "1.55"),
+    ("cover_3_bastidor", "bg-white", "#0a0a0a", ICON_BASTIDOR, "3 14", "1.55"),
 ]
 
 for name, bg, fg, icon, dash_b, dash_i in jobs:
