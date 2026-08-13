@@ -55,6 +55,20 @@
   backdrop-filter: blur(3px);
 }
 
+.pub-teste {
+  position: absolute;
+  top: 40px;
+  right: 10px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 3px 9px;
+  border-radius: 100px;
+  background: var(--white);
+  color: var(--black);
+  border: 1px solid var(--black);
+}
+
 .pub-info {
   padding: 14px;
   display: flex;

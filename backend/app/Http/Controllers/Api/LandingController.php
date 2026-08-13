@@ -5,17 +5,22 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\ConfiguracaoSite;
 use App\Models\Diferencial;
+use App\Models\ExemploCategoria;
 use App\Models\GrupoPreco;
 use App\Models\Passo;
 use App\Models\Produto;
 use App\Models\SecaoComoFunciona;
 use App\Models\SecaoCta;
 use App\Models\SecaoDiferenciais;
+use App\Models\SecaoExemplos;
 use App\Models\SecaoHero;
 use App\Models\SecaoInstagram;
 use App\Models\SecaoPrecos;
 use App\Models\SecaoProdutos;
 use App\Models\SecaoSobre;
+use App\Models\SecaoStudio;
+use App\Models\StudioFaq;
+use App\Models\StudioItem;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
 
@@ -33,6 +38,8 @@ class LandingController extends Controller
         $secaoProdutos = SecaoProdutos::first();
         $secaoComoFunciona = SecaoComoFunciona::first();
         $secaoInstagram = SecaoInstagram::first();
+        $secaoStudio = SecaoStudio::first();
+        $secaoExemplos = SecaoExemplos::first();
 
         return response()->json([
             'configuracoes' => $config ? Arr::only($config->toArray(), [
@@ -56,6 +63,17 @@ class LandingController extends Controller
             'como_funciona' => array_merge(
                 $secaoComoFunciona ? Arr::only($secaoComoFunciona->toArray(), ['eyebrow', 'titulo', 'subtexto', 'visivel']) : [],
                 ['itens' => Passo::orderBy('ordem')->get()],
+            ),
+            'studio' => array_merge(
+                $secaoStudio ? Arr::only($secaoStudio->toArray(), ['eyebrow', 'titulo', 'subtexto', 'cta_label', 'cta_url', 'visivel']) : [],
+                [
+                    'itens' => StudioItem::orderBy('ordem')->get(),
+                    'faq' => StudioFaq::orderBy('ordem')->get(),
+                ],
+            ),
+            'exemplos' => array_merge(
+                $secaoExemplos ? Arr::only($secaoExemplos->toArray(), ['eyebrow', 'titulo', 'subtexto', 'visivel']) : [],
+                ['categorias' => ExemploCategoria::with('exemplos')->orderBy('ordem')->get()],
             ),
             'precos' => array_merge(
                 $secaoPrecos ? Arr::only($secaoPrecos->toArray(), [

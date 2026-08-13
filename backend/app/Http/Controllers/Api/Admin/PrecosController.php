@@ -12,8 +12,10 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * CRUD de preços da landing (demanda A2): grupos, planos e textos da seção.
- * Modelo comercial: `preco` = total do 1º ano JÁ com desconto de fundador
- * (o front divide por 12); `preco_de_mensal` = mensal de tabela (riscado).
+ * Modelo comercial (2026-08-01): `preco` = total do 1º ano, preço cheio, sem desconto
+ * (o front divide por 12); `preco_de_mensal` = mensal de tabela riscado (hoje não usado).
+ * `preco_com_studio_essencial`/`preco_com_studio_completo` = valor MENSAL direto (não anual)
+ * quando o plano de site é combinado com um nível do Dolen Studio.
  */
 class PrecosController extends Controller
 {
@@ -22,7 +24,10 @@ class PrecosController extends Controller
         'nota_fundador_texto', 'nota_fundador_cta_label', 'nota_fundador_cta_url',
     ];
 
-    private const PLANO_CAMPOS = ['nome', 'descricao', 'preco', 'preco_de_mensal', 'destaque'];
+    private const PLANO_CAMPOS = [
+        'nome', 'descricao', 'preco', 'preco_de_mensal',
+        'preco_com_studio_essencial', 'preco_com_studio_completo', 'destaque',
+    ];
 
     public function index(): JsonResponse
     {
@@ -53,6 +58,8 @@ class PrecosController extends Controller
             'grupos.*.planos.*.descricao' => ['required', 'string', 'max:2000'],
             'grupos.*.planos.*.preco' => ['required', 'numeric', 'min:0', 'max:9999999'],
             'grupos.*.planos.*.preco_de_mensal' => ['nullable', 'numeric', 'min:0', 'max:9999999'],
+            'grupos.*.planos.*.preco_com_studio_essencial' => ['nullable', 'numeric', 'min:0', 'max:9999999'],
+            'grupos.*.planos.*.preco_com_studio_completo' => ['nullable', 'numeric', 'min:0', 'max:9999999'],
             'grupos.*.planos.*.destaque' => ['sometimes', 'boolean'],
         ]);
 

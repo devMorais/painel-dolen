@@ -1,5 +1,8 @@
 .catalogo {
-  background: var(--band, var(--white));
+  background:
+    radial-gradient(ellipse 60% 55% at 90% 20%, rgba(10, 10, 10, 0.09), transparent 58%),
+    radial-gradient(ellipse 55% 50% at 10% 85%, rgba(10, 10, 10, 0.09), transparent 55%),
+    var(--band, var(--white));
 }
 
 .cat-grid {

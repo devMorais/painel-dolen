@@ -1,0 +1,135 @@
+<div class="materiais-page">
+  <header class="topo">
+    <div>
+      <h1>Material do cliente — Dolen Studio</h1>
+      <p class="subtitulo">Crie um link único por cliente pra ele mandar vídeos, fotos e textos sem precisar de senha.</p>
+    </div>
+    <button type="button" class="btn btn-solido" (click)="alternarForm()">
+      {{ formAberto() ? 'Cancelar' : '+ Novo link' }}
+    </button>
+  </header>
+
+  @if (formAberto()) {
+    <div class="form-novo">
+      <div class="form-grid">
+        <label>Nome do cliente
+          <input
+            type="text"
+            [value]="novoClienteNome()"
+            (input)="novoClienteNome.set($any($event.target).value)"
+            (blur)="sugerirSlug()"
+            placeholder="Ex.: Móveis Soares"
+          />
+        </label>
+        <label>Link (slug)
+          <input
+            type="text"
+            [value]="novoSlug()"
+            (input)="novoSlug.set($any($event.target).value)"
+            placeholder="moveis-soares"
+          />
+        </label>
+        <label class="larga">Instruções pro cliente (opcional)
+          <textarea
+            rows="2"
+            [value]="novoInstrucoes()"
+            (input)="novoInstrucoes.set($any($event.target).value)"
+            placeholder="Ex.: manda os vídeos das entregas do mês e uma frase sobre a promoção atual"
+          ></textarea>
+        </label>
+      </div>
+      @if (erroNovo(); as erro) {
+        <p class="erro">{{ erro }}</p>
+      }
+      <button type="button" class="btn btn-solido" [disabled]="salvandoNovo()" (click)="criar()">
+        {{ salvandoNovo() ? 'Criando...' : 'Criar link' }}
+      </button>
+    </div>
+  }
+
+  @if (carregando()) {
+    <p>Carregando...</p>
+  } @else if (materiais().length === 0) {
+    <div class="vazio">
+      <p>Nenhum link criado ainda.</p>
+    </div>
+  } @else {
+    <div class="tabela-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Link</th>
+            <th>Envios</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (material of materiais(); track material.id) {
+            <tr>
+              <td>
+                <button type="button" class="cliente-btn" (click)="alternarDetalhe(material)">
+                  {{ material.cliente_nome }}
+                </button>
+              </td>
+              <td>
+                <a class="url" [href]="material.url" target="_blank" rel="noopener">{{ material.url }}</a>
+              </td>
+              <td>{{ material.envios_count }}</td>
+              <td class="acoes">
+                <button type="button" class="btn" (click)="copiarLink(material)">
+                  {{ linkCopiadoId() === material.id ? 'Copiado!' : 'Copiar link' }}
+                </button>
+                <button type="button" class="btn" (click)="alternarDetalhe(material)">
+                  {{ detalheAbertoId() === material.id ? 'Fechar' : 'Ver envios' }}
+                </button>
+                <button
+                  type="button"
+                  class="btn perigo"
+                  [disabled]="ocupadaId() === material.id"
+                  (click)="excluir(material)"
+                >
+                  Excluir
+                </button>
+              </td>
+            </tr>
+            @if (detalheAbertoId() === material.id) {
+              <tr class="linha-detalhe">
+                <td colspan="4">
+                  @if (carregandoDetalhe()) {
+                    <p>Carregando envios...</p>
+                  } @else if (detalhe(); as d) {
+                    @if (material.instrucoes) {
+                      <p class="instrucoes"><strong>Instruções:</strong> {{ material.instrucoes }}</p>
+                    }
+                    @if (d.envios.length === 0) {
+                      <p class="envios-vazio">Ainda não recebemos nada desse cliente.</p>
+                    } @else {
+                      <ul class="envios-lista">
+                        @for (envio of d.envios; track envio.id) {
+                          <li>
+                            @if (envio.tipo === 'arquivo') {
+                              <span class="envio-nome">{{ envio.arquivo_nome_original }}</span>
+                              <button type="button" class="btn" (click)="baixarArquivo(material.id, envio.id, envio.arquivo_nome_original ?? 'arquivo')">
+                                Baixar
+                              </button>
+                            } @else {
+                              <span class="envio-texto">{{ envio.texto }}</span>
+                            }
+                            <button type="button" class="btn perigo" (click)="excluirEnvio(material.id, envio.id)">
+                              Remover
+                            </button>
+                          </li>
+                        }
+                      </ul>
+                    }
+                  }
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

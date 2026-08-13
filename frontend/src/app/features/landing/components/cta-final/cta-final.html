@@ -8,7 +8,7 @@
         <a routerLink="/orcamento" class="btn btn-cta-solid btn-enviar">Pedir orçamento grátis</a>
 
         @if (configuracoes()?.whatsapp_numero; as whatsapp) {
-          <a [href]="linkWhatsApp(whatsapp)" target="_blank" rel="noopener" class="btn btn-ghost-dark">
+          <a [href]="linkWhatsApp(whatsapp)" target="_blank" rel="noopener" class="btn btn-whatsapp">
             Chamar no WhatsApp
           </a>
         }

@@ -5,9 +5,9 @@ export interface PrecosSection {
   titulo: string;
   subtexto: string;
   nota_manutencao: string | null;
-  nota_fundador_texto: string;
-  nota_fundador_cta_label: string;
-  nota_fundador_cta_url: string;
+  nota_fundador_texto: string | null;
+  nota_fundador_cta_label: string | null;
+  nota_fundador_cta_url: string | null;
   grupos: GrupoPreco[];
   visivel: boolean;
 }

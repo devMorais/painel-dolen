@@ -1,0 +1,48 @@
+<header class="cat-top">
+  <a routerLink="/links" class="cat-logo">
+    <img src="/assets/images/dolen-icone-preto-96.png" alt="Dolen" width="28" height="28" />
+    <span>{{ configuracoes()?.nome_site ?? 'dolen' }}</span>
+  </a>
+  <a routerLink="/links" class="cat-voltar">← Voltar</a>
+</header>
+
+<main class="cat-main">
+  @if (carregando()) {
+    <p class="cat-estado">Carregando…</p>
+  } @else if (naoEncontrada()) {
+    <div class="cat-vazio">
+      <h1>Categoria não encontrada</h1>
+      <p>Essa categoria não existe ou foi removida.</p>
+      <a routerLink="/links" class="btn btn-solid">Voltar</a>
+    </div>
+  } @else if (categoria(); as c) {
+    <div class="cat-head">
+      <span class="cat-tag">Exemplos</span>
+      <h1>{{ c.nome }}</h1>
+      <p>Sites reais, no mesmo padrão que o seu pode ter.</p>
+    </div>
+
+    <div class="cat-lista">
+      @for (exemplo of c.exemplos; track exemplo.id) {
+        <a [href]="exemplo.url" target="_blank" rel="noopener" class="cat-card">
+          @if (exemplo.imagem_url) {
+            <div class="cat-thumb">
+              <img [src]="exemplo.imagem_url" [alt]="exemplo.nome" loading="lazy" />
+            </div>
+          } @else {
+            <div class="cat-thumb cat-thumb-fallback">
+              <span>{{ exemplo.nome.charAt(0) }}</span>
+            </div>
+          }
+          <div class="cat-info">
+            <div class="cat-nome">{{ exemplo.nome }}</div>
+            <div class="cat-nicho">{{ exemplo.nicho }}</div>
+          </div>
+          <span class="cat-seta" aria-hidden="true">↗</span>
+        </a>
+      }
+    </div>
+
+    <a routerLink="/orcamento" class="btn btn-solid cat-cta">Quero um site assim</a>
+  }
+</main>

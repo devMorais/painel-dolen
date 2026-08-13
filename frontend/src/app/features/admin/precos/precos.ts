@@ -71,6 +71,11 @@ export class Precos {
     return 'R$ ' + Math.round(num).toLocaleString('pt-BR');
   }
 
+  /** Campos preco_com_studio_* já são mensais diretos — não dividir por 12. */
+  protected mensalDireto(valor: string | number | null): string {
+    return this.inteiro(valor);
+  }
+
   // ----- grupos -----
 
   protected adicionarGrupo(): void {
@@ -90,6 +95,8 @@ export class Precos {
       descricao: '',
       preco: 0,
       preco_de_mensal: null,
+      preco_com_studio_essencial: null,
+      preco_com_studio_completo: null,
       destaque: false,
     });
   }

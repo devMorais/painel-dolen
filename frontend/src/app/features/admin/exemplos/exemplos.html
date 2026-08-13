@@ -1,0 +1,71 @@
+<div class="exemplos-page">
+  <header class="cabecalho">
+    <div>
+      <h1>Exemplos (Portfólio)</h1>
+      <p class="subtitulo">Categorias e sites de exemplo exibidos na seção "Exemplos" da landing. O título e o texto da seção ficam em Conteúdo → Exemplos.</p>
+    </div>
+    <a class="ver-site" href="/#exemplos" target="_blank" rel="noopener">Ver no site ↗</a>
+  </header>
+
+  @if (carregando()) {
+    <p class="estado">Carregando...</p>
+  } @else if (erroCarregar()) {
+    <p class="estado erro">Não foi possível carregar. Recarregue a página.</p>
+  } @else {
+    @for (categoria of categorias; track trackCategoria($index, categoria); let ci = $index) {
+      <section class="bloco">
+        <div class="categoria-head">
+          <label class="categoria-nome">Categoria
+            <input type="text" [(ngModel)]="categoria.nome" maxlength="255" (blur)="sugerirSlug(categoria)" />
+          </label>
+          <label class="categoria-slug">Slug (URL interna)
+            <input type="text" [(ngModel)]="categoria.slug" maxlength="120" placeholder="landing-pages" />
+          </label>
+          <label class="categoria-icone">Ícone (opcional, classe Bootstrap Icons)
+            <input type="text" [(ngModel)]="categoria.icone" maxlength="255" placeholder="bi-file-earmark-text" />
+          </label>
+          <button type="button" class="remover-categoria" (click)="removerCategoria(ci)">Remover categoria</button>
+        </div>
+
+        @for (exemplo of categoria.exemplos; track trackExemplo($index, exemplo); let i = $index) {
+          <div class="exemplo-card">
+            <div class="exemplo-campos">
+              <div class="form-grid">
+                <label>Nome do cliente/exemplo
+                  <input type="text" [(ngModel)]="exemplo.nome" maxlength="255" placeholder="Vitalis Saúde" />
+                </label>
+                <label>Nicho
+                  <input type="text" [(ngModel)]="exemplo.nicho" maxlength="255" placeholder="Clínica médica" />
+                </label>
+                <label class="larga">URL pública
+                  <input type="text" [(ngModel)]="exemplo.url" maxlength="500" placeholder="https://www.dolen.com.br/exemplos/vitalis-saude/" />
+                </label>
+                <label class="larga">Imagem de capa (opcional)
+                  <input type="text" [(ngModel)]="exemplo.imagem_url" maxlength="500" placeholder="URL da miniatura — vazio usa a inicial do nome" />
+                </label>
+              </div>
+            </div>
+            <div class="exemplo-acoes">
+              <button type="button" (click)="moverExemplo(categoria, i, -1)" [disabled]="i === 0" aria-label="Mover pra cima">↑</button>
+              <button type="button" (click)="moverExemplo(categoria, i, 1)" [disabled]="i === categoria.exemplos.length - 1" aria-label="Mover pra baixo">↓</button>
+              <button type="button" class="remover" (click)="removerExemplo(categoria, i)" aria-label="Remover exemplo">×</button>
+            </div>
+          </div>
+        }
+
+        <button type="button" class="adicionar" (click)="adicionarExemplo(categoria)">+ Adicionar exemplo</button>
+      </section>
+    }
+
+    <button type="button" class="adicionar categoria" (click)="adicionarCategoria()">+ Adicionar categoria</button>
+
+    <footer class="rodape">
+      @if (mensagem(); as msg) {
+        <span class="msg" [class.ok]="msg.tipo === 'ok'" [class.erro]="msg.tipo === 'erro'">{{ msg.texto }}</span>
+      }
+      <button type="button" class="salvar" (click)="salvar()" [disabled]="salvando()">
+        {{ salvando() ? 'Salvando...' : 'Salvar exemplos' }}
+      </button>
+    </footer>
+  }
+</div>
