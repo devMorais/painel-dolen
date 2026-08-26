@@ -158,6 +158,12 @@
                 <span class="hint">Cadastre o telefone do cliente pra enviar o link por WhatsApp.</span>
               }
             }
+            @if (id && contrato()?.status_pagamento !== 'pago') {
+              <button type="button" class="btn" [disabled]="marcandoPago()" (click)="marcarPago()">
+                {{ marcandoPago() ? 'Marcando...' : 'Marcar como pago manualmente' }}
+              </button>
+              <span class="hint">Use pra PIX direto, transferência ou outro combinado fora da InfinitePay.</span>
+            }
           </div>
         </details>
 

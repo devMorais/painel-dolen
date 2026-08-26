@@ -117,6 +117,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/contratos/{contrato}/publicar', [ContratosController::class, 'publicar']);
         Route::post('/contratos/{contrato}/despublicar', [ContratosController::class, 'despublicar']);
         Route::post('/contratos/{contrato}/marcar-assinado', [ContratosController::class, 'marcarAssinado']);
+        Route::post('/contratos/{contrato}/marcar-pago', [ContratosController::class, 'marcarPago']);
         Route::post('/contratos/{contrato}/enviar-para-assinatura', [ContratosController::class, 'enviarParaAssinatura']);
         Route::post('/contratos/{contrato}/duplicar', [ContratosController::class, 'duplicar']);
         Route::post('/contratos/{contrato}/gerar-cobranca', [ContratosController::class, 'gerarCobranca']);

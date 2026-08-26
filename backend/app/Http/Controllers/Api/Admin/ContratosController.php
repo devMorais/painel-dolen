@@ -177,6 +177,23 @@ class ContratosController extends Controller
     }
 
     /**
+     * Marca o contrato como pago manualmente (fallback pra quando o cliente paga por
+     * PIX direto, transferência ou outro combinado informal, fora da InfinitePay).
+     * metodo_pagamento fica como "MANUAL" -- nunca confundir com uma confirmação real
+     * (PIX/CARTAO) vinda do webhook (PAG-04).
+     */
+    public function marcarPago(Contrato $contrato): JsonResponse
+    {
+        $contrato->update([
+            'status_pagamento' => 'pago',
+            'pago_em' => now(),
+            'metodo_pagamento' => 'MANUAL',
+        ]);
+
+        return response()->json($this->detalhe($contrato->refresh()));
+    }
+
+    /**
      * Envia o contrato pra assinatura eletrônica via Autentique: gera o PDF-like
      * (HTML renderizado) do documento, envia com Dolen + cliente como signatários,
      * e guarda o id devolvido pra casar com o webhook de confirmação depois.

@@ -39,6 +39,7 @@ export class ContratoEditor {
   protected readonly enviandoAssinatura = signal(false);
   protected readonly gerandoCobranca = signal(false);
   protected readonly linkCobrancaCopiado = signal(false);
+  protected readonly marcandoPago = signal(false);
 
   /** Arrays de string editados como "um item por linha" (mesmo padrão do editor de Conteúdo). */
   protected objetoDescricaoTexto = '';
@@ -270,6 +271,30 @@ export class ContratoEditor {
       error: () => {
         this.publicando.set(false);
         this.erro.set('Erro ao marcar o contrato como assinado.');
+      },
+    });
+  }
+
+  /** Fallback pra PIX direto/transferência/combinado fora da InfinitePay — sem verificação automática por trás. */
+  protected marcarPago(): void {
+    if (!this.id) {
+      return;
+    }
+
+    if (!window.confirm('Marcar este contrato como pago manualmente? Use só quando o cliente pagou por fora da InfinitePay (PIX direto, transferência etc.) — o método fica registrado como MANUAL.')) {
+      return;
+    }
+
+    this.marcandoPago.set(true);
+    this.contratosService.marcarPago(this.id).subscribe({
+      next: (contrato) => {
+        this.marcandoPago.set(false);
+        this.contrato.set(contrato);
+        this.mensagem.set('Contrato marcado como pago (manual).');
+      },
+      error: () => {
+        this.marcandoPago.set(false);
+        this.erro.set('Erro ao marcar o contrato como pago.');
       },
     });
   }
