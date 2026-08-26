@@ -60,7 +60,10 @@ export class Dashboard {
   }
 
   protected rotuloPagamento(statusPagamento: string): string {
-    return { aguardando: 'Aguardando', pago: 'Pago', falhou: 'Falhou' }[statusPagamento] ?? statusPagamento;
+    return (
+      { nao_iniciado: 'Não iniciado', aguardando: 'Aguardando', pago: 'Pago', falhou: 'Falhou' }[statusPagamento] ??
+      statusPagamento
+    );
   }
 
   protected formatarValor(valor: number): string {

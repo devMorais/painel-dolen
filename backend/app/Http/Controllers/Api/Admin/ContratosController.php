@@ -13,7 +13,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use RuntimeException;
 
@@ -47,7 +46,7 @@ class ContratosController extends Controller
 
         $contrato = Contrato::create($dados + ['status' => 'rascunho']);
 
-        return response()->json($this->detalhe($contrato), 201);
+        return response()->json($this->detalhe($contrato->load('lead:id,nome')), 201);
     }
 
     /**
@@ -100,7 +99,7 @@ class ContratosController extends Controller
             ],
         ]);
 
-        return response()->json($this->detalhe($contrato), 201);
+        return response()->json($this->detalhe($contrato->load('lead:id,nome')), 201);
     }
 
     public function update(Request $request, Contrato $contrato): JsonResponse
@@ -109,7 +108,7 @@ class ContratosController extends Controller
 
         $contrato->update($dados);
 
-        return response()->json($this->detalhe($contrato->refresh()));
+        return response()->json($this->detalhe($contrato->refresh()->load('lead:id,nome')));
     }
 
     public function destroy(Contrato $contrato): JsonResponse
@@ -173,7 +172,7 @@ class ContratosController extends Controller
     {
         $contrato->update(['status' => 'assinado', 'assinado_em' => now()]);
 
-        return response()->json($this->detalhe($contrato->refresh()));
+        return response()->json($this->detalhe($contrato->refresh()->load('lead:id,nome')));
     }
 
     /**
@@ -184,13 +183,17 @@ class ContratosController extends Controller
      */
     public function marcarPago(Contrato $contrato): JsonResponse
     {
+        if ($contrato->status_pagamento === 'pago') {
+            return response()->json(['message' => 'Este contrato já está marcado como pago.'], 422);
+        }
+
         $contrato->update([
             'status_pagamento' => 'pago',
             'pago_em' => now(),
             'metodo_pagamento' => 'MANUAL',
         ]);
 
-        return response()->json($this->detalhe($contrato->refresh()));
+        return response()->json($this->detalhe($contrato->refresh()->load('lead:id,nome')));
     }
 
     /**
@@ -232,21 +235,30 @@ class ContratosController extends Controller
             'enviado_para_assinatura_em' => now(),
         ]);
 
-        return response()->json($this->detalhe($contrato->refresh()));
+        return response()->json($this->detalhe($contrato->refresh()->load('lead:id,nome')));
     }
 
     /**
      * Gera (ou regenera) o link de cobrança na InfinitePay pro valor definido em
      * valor_cobranca. Chamar de novo atualiza o link do mesmo contrato em vez de
      * criar um registro novo — o histórico de tentativas fica só no payment_logs.
+     *
+     * order_nsu é estável (baseado só no id do contrato, sem sufixo aleatório):
+     * regenerar o link precisa continuar identificando o MESMO pedido, senão um
+     * cliente que paga pelo link antigo depois de um "gerar novo" fica orfão --
+     * o webhook (PAG-04) procura o contrato pelo order_nsu e não acharia mais.
      */
     public function gerarCobranca(Contrato $contrato): JsonResponse
     {
+        if ($contrato->status_pagamento === 'pago') {
+            return response()->json(['message' => 'Este contrato já está pago.'], 422);
+        }
+
         if (! $contrato->valor_cobranca || $contrato->valor_cobranca <= 0) {
             return response()->json(['message' => 'Preencha o valor da cobrança antes de gerar o link.'], 422);
         }
 
-        $orderNsu = 'contrato-'.$contrato->id.'-'.Str::random(6);
+        $orderNsu = 'contrato-'.$contrato->id;
 
         try {
             $infinitePay = new InfinitePayService($contrato->id);
@@ -261,7 +273,10 @@ class ContratosController extends Controller
                 'descricao' => "Contrato {$contrato->numero} — {$contrato->cliente_nome}",
             ]],
             orderNsu: $orderNsu,
-            dadosCliente: ['nome' => $contrato->conteudo['partes']['contratante_nome'] ?? $contrato->cliente_nome],
+            dadosCliente: [
+                'nome' => $contrato->conteudo['partes']['contratante_nome'] ?? $contrato->cliente_nome,
+                'telefone' => $contrato->conteudo['partes']['contratante_telefone'] ?? null,
+            ],
         );
 
         if ($resultado['erro']) {
@@ -275,7 +290,7 @@ class ContratosController extends Controller
             'status_pagamento' => 'aguardando',
         ]);
 
-        return response()->json($this->detalhe($contrato->refresh()));
+        return response()->json($this->detalhe($contrato->refresh()->load('lead:id,nome')));
     }
 
     public function duplicar(Contrato $contrato): JsonResponse
@@ -300,7 +315,7 @@ class ContratosController extends Controller
         $copia->data_contrato = now()->toDateString();
         $copia->save();
 
-        return response()->json($this->detalhe($copia), 201);
+        return response()->json($this->detalhe($copia->load('lead:id,nome')), 201);
     }
 
     /** @return array<string, mixed> */

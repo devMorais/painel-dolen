@@ -62,7 +62,18 @@ class WebhookInfinitePayController extends Controller
             $request->input('invoice_slug') ?? $contrato->infinitepay_slug,
         );
 
-        if ($resultado['erro'] || ! $resultado['paid']) {
+        if ($resultado['erro']) {
+            // Erro de rede/config ao consultar a InfinitePay -- não sabemos de
+            // verdade o que aconteceu, então não tocamos no status_pagamento
+            // (evita marcar "falhou" um pagamento que só não deu pra confirmar agora).
+            return response()->json(['success' => false, 'message' => 'Pagamento não confirmado.'], 402);
+        }
+
+        if (! $resultado['paid']) {
+            // A InfinitePay respondeu com sucesso e confirmou que NÃO está pago --
+            // aqui sim é uma recusa de verdade, não só "ainda não pagou".
+            $contrato->update(['status_pagamento' => 'falhou']);
+
             return response()->json(['success' => false, 'message' => 'Pagamento não confirmado.'], 402);
         }
 

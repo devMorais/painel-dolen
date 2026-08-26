@@ -73,7 +73,7 @@ export class ContratoEditor {
   constructor() {
     this.leadsService.listar().subscribe({
       next: (leads) => this.leads.set(leads),
-      error: () => {},
+      error: () => this.erro.set('Não foi possível carregar a lista de leads pra vincular.'),
     });
 
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -292,9 +292,9 @@ export class ContratoEditor {
         this.contrato.set(contrato);
         this.mensagem.set('Contrato marcado como pago (manual).');
       },
-      error: () => {
+      error: (resposta) => {
         this.marcandoPago.set(false);
-        this.erro.set('Erro ao marcar o contrato como pago.');
+        this.erro.set(resposta?.error?.message ?? 'Erro ao marcar o contrato como pago.');
       },
     });
   }

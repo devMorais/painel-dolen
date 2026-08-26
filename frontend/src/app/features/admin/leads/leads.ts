@@ -238,10 +238,18 @@ export class Leads {
     this.carregandoContratos.set(true);
     this.leadsService.listarContratosDoLead(lead.id).subscribe({
       next: (contratos) => {
-        this.contratosDoLead.set(contratos);
-        this.carregandoContratos.set(false);
+        // guarda contra resposta atrasada de um lead que ja nao e mais o aberto
+        // (admin abriu outro lead antes desta requisicao voltar)
+        if (this.selecionado()?.id === lead.id) {
+          this.contratosDoLead.set(contratos);
+          this.carregandoContratos.set(false);
+        }
       },
-      error: () => this.carregandoContratos.set(false),
+      error: () => {
+        if (this.selecionado()?.id === lead.id) {
+          this.carregandoContratos.set(false);
+        }
+      },
     });
   }
 
