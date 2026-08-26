@@ -23,6 +23,13 @@ class Contrato extends Model
         'enviado_para_assinatura_em',
         'assinado_em',
         'assinatura_recusada_motivo',
+        'valor_cobranca',
+        'infinitepay_link',
+        'infinitepay_order_nsu',
+        'infinitepay_slug',
+        'status_pagamento',
+        'pago_em',
+        'metodo_pagamento',
     ];
 
     protected $casts = [
@@ -31,6 +38,8 @@ class Contrato extends Model
         'published_at' => 'datetime',
         'enviado_para_assinatura_em' => 'datetime',
         'assinado_em' => 'datetime',
+        'valor_cobranca' => 'decimal:2',
+        'pago_em' => 'datetime',
     ];
 
     public function proposta(): BelongsTo
@@ -65,6 +74,13 @@ class Contrato extends Model
             'enviado_para_assinatura_em' => $this->enviado_para_assinatura_em?->toIso8601String(),
             'assinado_em' => $this->assinado_em?->toIso8601String(),
             'assinatura_recusada_motivo' => $this->assinatura_recusada_motivo,
+            'valor_cobranca' => $this->valor_cobranca,
+            'infinitepay_link' => $this->infinitepay_link,
+            'infinitepay_order_nsu' => $this->infinitepay_order_nsu,
+            'infinitepay_slug' => $this->infinitepay_slug,
+            'status_pagamento' => $this->status_pagamento,
+            'pago_em' => $this->pago_em?->toIso8601String(),
+            'metodo_pagamento' => $this->metodo_pagamento,
         ];
     }
 }
