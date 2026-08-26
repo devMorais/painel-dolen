@@ -13,6 +13,7 @@ class Contrato extends Model
         'numero',
         'slug',
         'proposta_id',
+        'lead_id',
         'cliente_nome',
         'status',
         'data_contrato',
@@ -23,6 +24,13 @@ class Contrato extends Model
         'enviado_para_assinatura_em',
         'assinado_em',
         'assinatura_recusada_motivo',
+        'valor_cobranca',
+        'infinitepay_link',
+        'infinitepay_order_nsu',
+        'infinitepay_slug',
+        'status_pagamento',
+        'pago_em',
+        'metodo_pagamento',
     ];
 
     protected $casts = [
@@ -31,11 +39,18 @@ class Contrato extends Model
         'published_at' => 'datetime',
         'enviado_para_assinatura_em' => 'datetime',
         'assinado_em' => 'datetime',
+        'valor_cobranca' => 'decimal:2',
+        'pago_em' => 'datetime',
     ];
 
     public function proposta(): BelongsTo
     {
         return $this->belongsTo(Proposta::class);
+    }
+
+    public function lead(): BelongsTo
+    {
+        return $this->belongsTo(Lead::class);
     }
 
     public function urlPublica(): ?string
@@ -57,6 +72,8 @@ class Contrato extends Model
             'numero' => $this->numero,
             'slug' => $this->slug,
             'proposta_id' => $this->proposta_id,
+            'lead_id' => $this->lead_id,
+            'lead_nome' => $this->relationLoaded('lead') ? $this->lead?->nome : null,
             'cliente_nome' => $this->cliente_nome,
             'status' => $this->status,
             'data_contrato' => $this->data_contrato?->toDateString(),
@@ -65,6 +82,13 @@ class Contrato extends Model
             'enviado_para_assinatura_em' => $this->enviado_para_assinatura_em?->toIso8601String(),
             'assinado_em' => $this->assinado_em?->toIso8601String(),
             'assinatura_recusada_motivo' => $this->assinatura_recusada_motivo,
+            'valor_cobranca' => $this->valor_cobranca,
+            'infinitepay_link' => $this->infinitepay_link,
+            'infinitepay_order_nsu' => $this->infinitepay_order_nsu,
+            'infinitepay_slug' => $this->infinitepay_slug,
+            'status_pagamento' => $this->status_pagamento,
+            'pago_em' => $this->pago_em?->toIso8601String(),
+            'metodo_pagamento' => $this->metodo_pagamento,
         ];
     }
 }

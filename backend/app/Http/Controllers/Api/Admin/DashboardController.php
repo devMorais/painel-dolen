@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Contrato;
 use App\Models\Lead;
 use App\Models\Proposta;
 use App\Models\Publicacao;
@@ -28,6 +29,11 @@ class DashboardController extends Controller
             ->selectRaw('status, count(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status');
+
+        $contratosPorPagamento = Contrato::query()
+            ->selectRaw('status_pagamento, count(*) as total')
+            ->groupBy('status_pagamento')
+            ->pluck('total', 'status_pagamento');
 
         return response()->json([
             'leads' => [
@@ -60,6 +66,18 @@ class DashboardController extends Controller
                 ->limit(5)
                 ->get()
                 ->map(fn (Proposta $proposta) => $proposta->paraResumo()),
+            'contratos' => [
+                'aguardando' => (int) ($contratosPorPagamento['aguardando'] ?? 0),
+                'pago' => (int) ($contratosPorPagamento['pago'] ?? 0),
+                'valor_aguardando' => (float) Contrato::where('status_pagamento', 'aguardando')->sum('valor_cobranca'),
+            ],
+            'contratos_aguardando_recentes' => Contrato::query()
+                ->with('lead:id,nome')
+                ->where('status_pagamento', 'aguardando')
+                ->latest()
+                ->limit(5)
+                ->get()
+                ->map(fn (Contrato $contrato) => $contrato->paraResumo()),
         ]);
     }
 }

@@ -6,19 +6,23 @@ use App\Http\Controllers\Controller;
 use App\Models\Contrato;
 use App\Models\Proposta;
 use App\Services\AutentiqueService;
+use App\Services\Payment\InfinitePayService;
 use Carbon\Carbon;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use RuntimeException;
 
 class ContratosController extends Controller
 {
     public function index(): JsonResponse
     {
         $contratos = Contrato::query()
+            ->with('lead:id,nome')
             ->orderByDesc('created_at')
             ->get()
             ->map(fn (Contrato $contrato) => $contrato->paraResumo());
@@ -28,6 +32,8 @@ class ContratosController extends Controller
 
     public function show(Contrato $contrato): JsonResponse
     {
+        $contrato->load('lead:id,nome');
+
         return response()->json($this->detalhe($contrato));
     }
 
@@ -66,6 +72,7 @@ class ContratosController extends Controller
                     'contratante_nome' => $proposta->cliente_nome,
                     'contratante_documento' => '',
                     'contratante_email' => '',
+                    'contratante_telefone' => '',
                 ],
                 'objeto' => [
                     'titulo' => $opcaoEscolhida['titulo'] ?? 'Desenvolvimento de site',
@@ -170,6 +177,23 @@ class ContratosController extends Controller
     }
 
     /**
+     * Marca o contrato como pago manualmente (fallback pra quando o cliente paga por
+     * PIX direto, transferência ou outro combinado informal, fora da InfinitePay).
+     * metodo_pagamento fica como "MANUAL" -- nunca confundir com uma confirmação real
+     * (PIX/CARTAO) vinda do webhook (PAG-04).
+     */
+    public function marcarPago(Contrato $contrato): JsonResponse
+    {
+        $contrato->update([
+            'status_pagamento' => 'pago',
+            'pago_em' => now(),
+            'metodo_pagamento' => 'MANUAL',
+        ]);
+
+        return response()->json($this->detalhe($contrato->refresh()));
+    }
+
+    /**
      * Envia o contrato pra assinatura eletrônica via Autentique: gera o PDF-like
      * (HTML renderizado) do documento, envia com Dolen + cliente como signatários,
      * e guarda o id devolvido pra casar com o webhook de confirmação depois.
@@ -211,12 +235,68 @@ class ContratosController extends Controller
         return response()->json($this->detalhe($contrato->refresh()));
     }
 
+    /**
+     * Gera (ou regenera) o link de cobrança na InfinitePay pro valor definido em
+     * valor_cobranca. Chamar de novo atualiza o link do mesmo contrato em vez de
+     * criar um registro novo — o histórico de tentativas fica só no payment_logs.
+     */
+    public function gerarCobranca(Contrato $contrato): JsonResponse
+    {
+        if (! $contrato->valor_cobranca || $contrato->valor_cobranca <= 0) {
+            return response()->json(['message' => 'Preencha o valor da cobrança antes de gerar o link.'], 422);
+        }
+
+        $orderNsu = 'contrato-'.$contrato->id.'-'.Str::random(6);
+
+        try {
+            $infinitePay = new InfinitePayService($contrato->id);
+        } catch (RuntimeException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
+
+        $resultado = $infinitePay->gerarLinkPagamento(
+            itens: [[
+                'quantidade' => 1,
+                'valor' => (float) $contrato->valor_cobranca,
+                'descricao' => "Contrato {$contrato->numero} — {$contrato->cliente_nome}",
+            ]],
+            orderNsu: $orderNsu,
+            dadosCliente: ['nome' => $contrato->conteudo['partes']['contratante_nome'] ?? $contrato->cliente_nome],
+        );
+
+        if ($resultado['erro']) {
+            return response()->json(['message' => $resultado['mensagem'] ?? 'Erro ao gerar o link de cobrança.'], 422);
+        }
+
+        $contrato->update([
+            'infinitepay_link' => $resultado['link'],
+            'infinitepay_order_nsu' => $orderNsu,
+            'infinitepay_slug' => $resultado['slug'],
+            'status_pagamento' => 'aguardando',
+        ]);
+
+        return response()->json($this->detalhe($contrato->refresh()));
+    }
+
     public function duplicar(Contrato $contrato): JsonResponse
     {
-        $copia = $contrato->replicate(['status', 'published_slug', 'published_at']);
+        // Campos de cobrança/publicação nunca são copiados -- a cópia é um contrato
+        // novo, não deve herdar o link/status de pagamento do original.
+        $copia = $contrato->replicate([
+            'status',
+            'published_slug',
+            'published_at',
+            'infinitepay_link',
+            'infinitepay_order_nsu',
+            'infinitepay_slug',
+            'status_pagamento',
+            'pago_em',
+            'metodo_pagamento',
+        ]);
         $copia->numero = $this->proximoNumero();
         $copia->slug = $this->slugDisponivel($contrato->slug);
         $copia->status = 'rascunho';
+        $copia->status_pagamento = 'nao_iniciado';
         $copia->data_contrato = now()->toDateString();
         $copia->save();
 
@@ -236,9 +316,11 @@ class ContratosController extends Controller
             'numero' => ['nullable', 'string', 'max:30'],
             'slug' => $slug,
             'proposta_id' => ['nullable', 'integer', 'exists:propostas,id'],
+            'lead_id' => ['nullable', 'integer', 'exists:leads,id'],
             'cliente_nome' => ['required', 'string', 'max:160'],
             'data_contrato' => ['required', 'date'],
             'conteudo' => ['required', 'array'],
+            'valor_cobranca' => ['nullable', 'numeric', 'min:0'],
         ];
     }
 

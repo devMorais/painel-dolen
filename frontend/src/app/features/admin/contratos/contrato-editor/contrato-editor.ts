@@ -5,8 +5,9 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EMPTY, catchError, debounceTime, switchMap } from 'rxjs';
 
-import { Contrato, ContratoPayload, ConteudoContrato } from '@core/models/admin';
-import { ContratosAdminService } from '@core/services/admin';
+import { Contrato, ContratoPayload, ConteudoContrato, LeadAdmin } from '@core/models/admin';
+import { ContratosAdminService, LeadsAdminService } from '@core/services/admin';
+import { linkWhatsApp } from '@shared/utils/whatsapp.util';
 
 const SLUG_REGEX = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
@@ -19,11 +20,13 @@ const SLUG_REGEX = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 export class ContratoEditor {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly contratosService = inject(ContratosAdminService);
+  private readonly leadsService = inject(LeadsAdminService);
   private readonly sanitizer = inject(DomSanitizer);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
   protected id: number | null = null;
+  protected readonly leads = signal<LeadAdmin[]>([]);
 
   protected readonly contrato = signal<Contrato | null>(null);
   protected readonly carregando = signal(false);
@@ -34,6 +37,9 @@ export class ContratoEditor {
   protected readonly previewHtml = signal<SafeHtml | null>(null);
   protected readonly linkCopiado = signal(false);
   protected readonly enviandoAssinatura = signal(false);
+  protected readonly gerandoCobranca = signal(false);
+  protected readonly linkCobrancaCopiado = signal(false);
+  protected readonly marcandoPago = signal(false);
 
   /** Arrays de string editados como "um item por linha" (mesmo padrão do editor de Conteúdo). */
   protected objetoDescricaoTexto = '';
@@ -43,13 +49,16 @@ export class ContratoEditor {
     numero: [''],
     slug: ['', [Validators.required, Validators.pattern(SLUG_REGEX)]],
     proposta_id: this.fb.control<number | null>(null),
+    lead_id: this.fb.control<number | null>(null),
     cliente_nome: ['', Validators.required],
     data_contrato: ['', Validators.required],
+    valor_cobranca: this.fb.control<number | null>(null),
     partes: this.fb.group({
       contratada_nome: ['Dolen Tecnologia'],
       contratante_nome: [''],
       contratante_documento: [''],
       contratante_email: [''],
+      contratante_telefone: [''],
     }),
     objeto: this.fb.group({ titulo: [''] }),
     investimento: this.fb.group({
@@ -62,6 +71,11 @@ export class ContratoEditor {
   });
 
   constructor() {
+    this.leadsService.listar().subscribe({
+      next: (leads) => this.leads.set(leads),
+      error: () => {},
+    });
+
     const idParam = this.route.snapshot.paramMap.get('id');
     this.id = idParam ? Number(idParam) : null;
 
@@ -97,8 +111,10 @@ export class ContratoEditor {
           numero: contrato.numero,
           slug: contrato.slug,
           proposta_id: contrato.proposta_id,
+          lead_id: contrato.lead_id,
           cliente_nome: contrato.cliente_nome,
           data_contrato: contrato.data_contrato,
+          valor_cobranca: contrato.valor_cobranca ? Number(contrato.valor_cobranca) : null,
           partes: contrato.conteudo.partes,
           objeto: { titulo: contrato.conteudo.objeto?.titulo ?? '' },
           investimento: contrato.conteudo.investimento,
@@ -132,8 +148,10 @@ export class ContratoEditor {
       numero: valor.numero,
       slug: valor.slug,
       proposta_id: valor.proposta_id,
+      lead_id: valor.lead_id,
       cliente_nome: valor.cliente_nome,
       data_contrato: valor.data_contrato,
+      valor_cobranca: valor.valor_cobranca,
       conteudo: {
         partes: valor.partes,
         objeto: { titulo: valor.objeto.titulo, descricao: this.linhas(this.objetoDescricaoTexto) },
@@ -257,6 +275,30 @@ export class ContratoEditor {
     });
   }
 
+  /** Fallback pra PIX direto/transferência/combinado fora da InfinitePay — sem verificação automática por trás. */
+  protected marcarPago(): void {
+    if (!this.id) {
+      return;
+    }
+
+    if (!window.confirm('Marcar este contrato como pago manualmente? Use só quando o cliente pagou por fora da InfinitePay (PIX direto, transferência etc.) — o método fica registrado como MANUAL.')) {
+      return;
+    }
+
+    this.marcandoPago.set(true);
+    this.contratosService.marcarPago(this.id).subscribe({
+      next: (contrato) => {
+        this.marcandoPago.set(false);
+        this.contrato.set(contrato);
+        this.mensagem.set('Contrato marcado como pago (manual).');
+      },
+      error: () => {
+        this.marcandoPago.set(false);
+        this.erro.set('Erro ao marcar o contrato como pago.');
+      },
+    });
+  }
+
   /** Envia o contrato pra assinatura eletrônica via Autentique (Dolen + cliente). */
   protected enviarParaAssinatura(): void {
     if (!this.form.controls.partes.controls.contratante_email.value) {
@@ -295,6 +337,75 @@ export class ContratoEditor {
       this.linkCopiado.set(true);
       setTimeout(() => this.linkCopiado.set(false), 2000);
     });
+  }
+
+  /**
+   * Exige um contrato já salvo (com id): salvar() navega de /contratos/novo pra
+   * /contratos/:id na 1ª gravação — rotas diferentes recriam o componente, e a
+   * resposta da geração do link chegaria numa instância que ninguém mais vê.
+   * Evita a corrida em vez de tentar sincronizar o resultado através da navegação.
+   */
+  protected podeGerarCobranca(): boolean {
+    const valor = this.form.controls.valor_cobranca.value;
+    return !!this.id && !!valor && valor > 0;
+  }
+
+  /** Salva o contrato (garante que o valor_cobranca esteja persistido) e gera/regenera o link na InfinitePay. */
+  protected gerarCobranca(): void {
+    if (!this.id) {
+      this.erro.set('Salve o contrato antes de gerar o link de cobrança.');
+      return;
+    }
+
+    if (!this.podeGerarCobranca()) {
+      this.erro.set('Preencha o valor da cobrança antes de gerar o link.');
+      return;
+    }
+
+    this.mensagem.set('');
+    this.erro.set('');
+
+    this.salvar((salvo) => {
+      this.gerandoCobranca.set(true);
+      this.contratosService.gerarCobranca(salvo.id).subscribe({
+        next: (contrato) => {
+          this.gerandoCobranca.set(false);
+          this.contrato.set(contrato);
+          this.mensagem.set('Link de cobrança gerado!');
+        },
+        error: (resposta) => {
+          this.gerandoCobranca.set(false);
+          this.erro.set(resposta?.error?.message ?? 'Erro ao gerar o link de cobrança.');
+        },
+      });
+    });
+  }
+
+  protected copiarLinkCobranca(): void {
+    const link = this.contrato()?.infinitepay_link;
+
+    if (!link) {
+      return;
+    }
+
+    navigator.clipboard.writeText(link).then(() => {
+      this.linkCobrancaCopiado.set(true);
+      setTimeout(() => this.linkCobrancaCopiado.set(false), 2000);
+    });
+  }
+
+  /** Link wa.me com a cobrança pré-preenchida — null se faltar telefone ou o link ainda não foi gerado. */
+  protected linkWhatsappCobranca(): string | null {
+    const link = this.contrato()?.infinitepay_link;
+    const telefone = this.form.controls.partes.controls.contratante_telefone.value;
+
+    if (!link || !telefone) {
+      return null;
+    }
+
+    const nome = this.form.controls.partes.controls.contratante_nome.value || this.form.controls.cliente_nome.value;
+
+    return linkWhatsApp(telefone, `Olá ${nome}! Segue o link pra confirmar o pagamento e darmos início ao seu projeto: ${link}`);
   }
 
   private slugify(texto: string): string {

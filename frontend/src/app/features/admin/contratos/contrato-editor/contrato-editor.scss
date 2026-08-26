@@ -178,6 +178,9 @@ h1 {
 }
 
 .secao summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-family: var(--display);
   font-weight: 600;
   font-size: 0.95rem;
@@ -185,6 +188,21 @@ h1 {
   cursor: pointer;
   user-select: none;
   background: #fafafa;
+}
+
+.chip-pagamento-aguardando {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.chip-pagamento-pago {
+  background: #e3f2e6;
+  color: #1e6b34;
+}
+
+.chip-pagamento-falhou {
+  background: #fee2e2;
+  color: #b91c1c;
 }
 
 .secao[open] summary {
@@ -214,7 +232,8 @@ label.check {
 }
 
 input:not([type='checkbox']),
-textarea {
+textarea,
+select {
   font: inherit;
   font-weight: 400;
   font-size: 0.9rem;

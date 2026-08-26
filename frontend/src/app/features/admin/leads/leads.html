@@ -263,6 +263,28 @@
             </dl>
           </div>
 
+          <!-- Contratos vinculados (PAG-06) -->
+          <div class="bloco">
+            <span class="bloco-label">Contratos</span>
+            @if (carregandoContratos()) {
+              <p class="aba-loading">Carregando…</p>
+            } @else if (contratosDoLead().length === 0) {
+              <p class="aba-vazia">Nenhum contrato vinculado a este lead ainda.</p>
+            } @else {
+              <ul class="tarefas-lista">
+                @for (contrato of contratosDoLead(); track contrato.id) {
+                  <li>
+                    <div class="tarefa-info">
+                      <span class="tarefa-titulo">Contrato {{ contrato.numero }}</span>
+                      <span class="tarefa-data">{{ contrato.valor_cobranca ? formatarValor(contrato.valor_cobranca) : 'sem valor definido' }}</span>
+                    </div>
+                    <span class="badge-pagamento badge-pagamento-{{ contrato.status_pagamento }}">{{ rotuloPagamento(contrato.status_pagamento) }}</span>
+                  </li>
+                }
+              </ul>
+            }
+          </div>
+
           <!-- Mensagem -->
           @if (lead.mensagem) {
             <div class="bloco">

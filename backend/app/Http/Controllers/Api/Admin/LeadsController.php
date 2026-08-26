@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Contrato;
 use App\Models\Lead;
 use App\Models\LeadHistorico;
 use Illuminate\Http\JsonResponse;
@@ -82,6 +83,20 @@ class LeadsController extends Controller
         $lead->tags()->sync($dados['tag_ids']);
 
         return response()->json(['data' => $lead->load('tags')]);
+    }
+
+    /**
+     * Contratos vinculados a este lead (demanda PAG-06) — usado na ficha do
+     * lead pra mostrar o status de pagamento de cara.
+     */
+    public function contratos(Lead $lead): JsonResponse
+    {
+        $contratos = Contrato::where('lead_id', $lead->id)
+            ->orderByDesc('created_at')
+            ->get()
+            ->map(fn (Contrato $contrato) => $contrato->paraResumo());
+
+        return response()->json(['data' => $contratos]);
     }
 
     public function destroy(Lead $lead): JsonResponse

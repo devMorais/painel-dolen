@@ -131,6 +131,21 @@
   color: #15803d;
 }
 
+.pill-pagamento-aguardando {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.pill-pagamento-pago {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.pill-pagamento-falhou {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
 .bloco {
   background: var(--white);
   border: 1px solid var(--gray-light);
@@ -242,6 +257,12 @@
 
 .ms-erro {
   color: var(--erro);
+}
+
+.ms-total {
+  font-size: 0.82rem;
+  color: var(--gray-mid);
+  margin-top: 10px;
 }
 
 @media (max-width: 1280px) {

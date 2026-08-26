@@ -59,6 +59,16 @@ export class ContratosAdminService {
     return this.http.post<Contrato>(`${this.base}/${id}/duplicar`, {});
   }
 
+  /** Gera (ou regenera) o link de cobrança na InfinitePay pro valor_cobranca já salvo do contrato. */
+  gerarCobranca(id: number): Observable<Contrato> {
+    return this.http.post<Contrato>(`${this.base}/${id}/gerar-cobranca`, {});
+  }
+
+  /** Marca o contrato como pago manualmente (fallback pra PIX direto/transferência/combinado fora da InfinitePay). */
+  marcarPago(id: number): Observable<Contrato> {
+    return this.http.post<Contrato>(`${this.base}/${id}/marcar-pago`, {});
+  }
+
   /** Renderiza o payload atual (sem salvar) e devolve o HTML do template oficial. */
   preview(payload: ContratoPayload): Observable<string> {
     return this.http.post(`${this.base}/preview`, payload, { responseType: 'text' });

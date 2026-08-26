@@ -58,4 +58,12 @@ export class Dashboard {
   protected rotuloTipoPub(tipo: string): string {
     return this.rotulosTipoPub[tipo] ?? tipo;
   }
+
+  protected rotuloPagamento(statusPagamento: string): string {
+    return { aguardando: 'Aguardando', pago: 'Pago', falhou: 'Falhou' }[statusPagamento] ?? statusPagamento;
+  }
+
+  protected formatarValor(valor: number): string {
+    return 'R$ ' + valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
 }

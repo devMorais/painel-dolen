@@ -11,6 +11,7 @@ import {
 
 import { LeadsAdminService } from '@core/services/admin';
 import {
+  ContratoResumo,
   LeadAdmin,
   LeadAnotacao,
   LeadHistoricoItem,
@@ -90,6 +91,9 @@ export class Leads {
 
   protected readonly historico = signal<LeadHistoricoItem[]>([]);
   protected readonly carregandoHistorico = signal(false);
+
+  protected readonly contratosDoLead = signal<ContratoResumo[]>([]);
+  protected readonly carregandoContratos = signal(false);
 
   /** Lista já filtrada por busca + origens únicas pra popular o select de filtro. */
   protected readonly origensDisponiveis = computed<string[]>(() => {
@@ -229,6 +233,16 @@ export class Leads {
     this.anotacoes.set([]);
     this.tarefas.set([]);
     this.historico.set([]);
+    this.contratosDoLead.set([]);
+
+    this.carregandoContratos.set(true);
+    this.leadsService.listarContratosDoLead(lead.id).subscribe({
+      next: (contratos) => {
+        this.contratosDoLead.set(contratos);
+        this.carregandoContratos.set(false);
+      },
+      error: () => this.carregandoContratos.set(false),
+    });
   }
 
   protected fechar(): void {
@@ -456,6 +470,17 @@ export class Leads {
 
   protected rotulo(status: LeadStatus): string {
     return this.funil.find((c) => c.valor === status)?.rotulo ?? status;
+  }
+
+  protected rotuloPagamento(statusPagamento: string): string {
+    return (
+      { nao_iniciado: 'Não iniciado', aguardando: 'Aguardando', pago: 'Pago', falhou: 'Falhou' }[statusPagamento] ??
+      statusPagamento
+    );
+  }
+
+  protected formatarValor(valor: string): string {
+    return 'R$ ' + Number(valor).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
   protected rotuloLivre(status: string | null): string {

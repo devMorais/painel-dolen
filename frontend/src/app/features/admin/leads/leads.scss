@@ -886,6 +886,35 @@
   color: var(--gray-mid);
 }
 
+.badge-pagamento {
+  display: inline-block;
+  font-family: var(--display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 100px;
+  background: var(--gray-light);
+  color: var(--gray-dark);
+  white-space: nowrap;
+}
+
+.badge-pagamento-aguardando {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.badge-pagamento-pago {
+  background: #e3f2e6;
+  color: #1e6b34;
+}
+
+.badge-pagamento-falhou {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
 .atrasada .tarefa-data {
   color: var(--erro);
   font-weight: 600;

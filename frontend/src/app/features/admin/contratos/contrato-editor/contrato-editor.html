@@ -64,6 +64,15 @@
           <summary>Identificação</summary>
           <div class="campos">
             <label>Cliente <input formControlName="cliente_nome" placeholder="Móveis Soares"></label>
+            <label>Lead vinculado (CRM)
+              <select formControlName="lead_id">
+                <option [ngValue]="null">Nenhum</option>
+                @for (lead of leads(); track lead.id) {
+                  <option [ngValue]="lead.id">{{ lead.nome }}</option>
+                }
+              </select>
+              <span class="hint">pra ver o status de pagamento na ficha do lead</span>
+            </label>
             <label>Endereço da página (slug)
               <input formControlName="slug" placeholder="moveis-soares">
               <span class="hint">www.dolen.com.br/contratos/<strong>{{ form.controls.slug.value || 'slug' }}</strong>/</span>
@@ -83,6 +92,10 @@
             <label>CPF/CNPJ do contratante <input formControlName="contratante_documento" placeholder="opcional"></label>
             <label>E-mail do contratante
               <input type="email" formControlName="contratante_email" placeholder="necessário pra enviar assinatura eletrônica">
+            </label>
+            <label>Telefone do contratante (WhatsApp)
+              <input type="tel" formControlName="contratante_telefone" placeholder="(61) 99999-8888">
+              <span class="hint">necessário pra enviar o link de cobrança por WhatsApp</span>
             </label>
           </div>
         </details>
@@ -110,6 +123,47 @@
           <summary>Prazo</summary>
           <div class="campos">
             <label>Texto <textarea rows="2" formControlName="texto" placeholder="Prazo estimado de até 20 dias úteis..."></textarea></label>
+          </div>
+        </details>
+
+        <details class="secao" open>
+          <summary>
+            Cobrança
+            @if (contrato()?.status_pagamento && contrato()!.status_pagamento !== 'nao_iniciado') {
+              <span class="chip chip-pagamento-{{ contrato()!.status_pagamento }}">
+                {{ contrato()!.status_pagamento === 'pago' ? 'Pago' : contrato()!.status_pagamento === 'falhou' ? 'Falhou' : 'Aguardando pagamento' }}
+              </span>
+            }
+          </summary>
+          <div class="campos">
+            <label>Valor da cobrança (R$)
+              <input type="number" step="0.01" min="0" formControlName="valor_cobranca" placeholder="2520.00">
+            </label>
+            @if (!id) {
+              <span class="hint">Salve o contrato pra habilitar a geração do link.</span>
+            }
+            <button type="button" class="btn" [disabled]="!podeGerarCobranca() || gerandoCobranca()" (click)="gerarCobranca()">
+              {{ gerandoCobranca() ? 'Gerando...' : contrato()?.infinitepay_link ? 'Gerar novo link de cobrança' : 'Gerar link de cobrança' }}
+            </button>
+            @if (contrato()?.infinitepay_link; as linkCobranca) {
+              <div class="link-publicado">
+                <a [href]="linkCobranca" target="_blank" rel="noopener">{{ linkCobranca }}</a>
+                <button type="button" class="btn mini" (click)="copiarLinkCobranca()">
+                  {{ linkCobrancaCopiado() ? 'Copiado!' : 'Copiar' }}
+                </button>
+              </div>
+              @if (linkWhatsappCobranca(); as linkWpp) {
+                <a [href]="linkWpp" target="_blank" rel="noopener" class="btn mini">Enviar por WhatsApp</a>
+              } @else {
+                <span class="hint">Cadastre o telefone do cliente pra enviar o link por WhatsApp.</span>
+              }
+            }
+            @if (id && contrato()?.status_pagamento !== 'pago') {
+              <button type="button" class="btn" [disabled]="marcandoPago()" (click)="marcarPago()">
+                {{ marcandoPago() ? 'Marcando...' : 'Marcar como pago manualmente' }}
+              </button>
+              <span class="hint">Use pra PIX direto, transferência ou outro combinado fora da InfinitePay.</span>
+            }
           </div>
         </details>
 

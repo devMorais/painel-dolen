@@ -40,6 +40,7 @@
             <th>Nº</th>
             <th>Cliente</th>
             <th>Status</th>
+            <th>Pagamento</th>
             <th>Data</th>
             <th>Ações</th>
           </tr>
@@ -56,6 +57,9 @@
               </td>
               <td>
                 <span class="chip chip-{{ contrato.status }}">{{ rotuloStatus(contrato.status) }}</span>
+              </td>
+              <td>
+                <span class="chip chip-pg-{{ contrato.status_pagamento }}">{{ rotuloPagamento(contrato.status_pagamento) }}</span>
               </td>
               <td>{{ contrato.data_contrato | date: 'dd/MM/yyyy' }}</td>
               <td class="acoes">

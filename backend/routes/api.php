@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\LandingController;
 use App\Http\Controllers\Api\LeadController;
 use App\Http\Controllers\Api\StudioMaterialPublicoController;
 use App\Http\Controllers\Api\WebhookAutentiqueController;
+use App\Http\Controllers\Api\WebhookInfinitePayController;
 use App\Http\Controllers\Api\WebhookWhatsappController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,7 @@ Route::get('/instagram/posts', [InstagramController::class, 'index']);
 Route::get('/landing', [LandingController::class, 'index']);
 Route::post('/leads', [LeadController::class, 'store']);
 Route::post('/webhooks/autentique', [WebhookAutentiqueController::class, 'handle']);
+Route::post('/webhooks/infinitepay-contratos', [WebhookInfinitePayController::class, 'receber']);
 Route::get('/whatsapp/webhook', [WebhookWhatsappController::class, 'verificar']);
 Route::post('/whatsapp/webhook', [WebhookWhatsappController::class, 'receber']);
 
@@ -71,6 +73,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/leads/{lead}/tags', [LeadsController::class, 'syncTags']);
         Route::delete('/leads/{lead}', [LeadsController::class, 'destroy']);
         Route::get('/leads/{lead}/historico', [LeadsController::class, 'historico']);
+        Route::get('/leads/{lead}/contratos', [LeadsController::class, 'contratos']);
 
         Route::get('/leads/{lead}/anotacoes', [LeadAnotacoesController::class, 'index']);
         Route::post('/leads/{lead}/anotacoes', [LeadAnotacoesController::class, 'store']);
@@ -114,8 +117,10 @@ Route::prefix('admin')->group(function () {
         Route::post('/contratos/{contrato}/publicar', [ContratosController::class, 'publicar']);
         Route::post('/contratos/{contrato}/despublicar', [ContratosController::class, 'despublicar']);
         Route::post('/contratos/{contrato}/marcar-assinado', [ContratosController::class, 'marcarAssinado']);
+        Route::post('/contratos/{contrato}/marcar-pago', [ContratosController::class, 'marcarPago']);
         Route::post('/contratos/{contrato}/enviar-para-assinatura', [ContratosController::class, 'enviarParaAssinatura']);
         Route::post('/contratos/{contrato}/duplicar', [ContratosController::class, 'duplicar']);
+        Route::post('/contratos/{contrato}/gerar-cobranca', [ContratosController::class, 'gerarCobranca']);
 
         Route::get('/conversas', [WhatsappConversasController::class, 'index']);
         Route::get('/conversas/{lead}', [WhatsappConversasController::class, 'show']);
