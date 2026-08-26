@@ -116,6 +116,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/contratos/{contrato}/marcar-assinado', [ContratosController::class, 'marcarAssinado']);
         Route::post('/contratos/{contrato}/enviar-para-assinatura', [ContratosController::class, 'enviarParaAssinatura']);
         Route::post('/contratos/{contrato}/duplicar', [ContratosController::class, 'duplicar']);
+        Route::post('/contratos/{contrato}/gerar-cobranca', [ContratosController::class, 'gerarCobranca']);
 
         Route::get('/conversas', [WhatsappConversasController::class, 'index']);
         Route::get('/conversas/{lead}', [WhatsappConversasController::class, 'show']);

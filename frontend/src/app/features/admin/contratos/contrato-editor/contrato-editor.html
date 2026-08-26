@@ -114,6 +114,36 @@
         </details>
 
         <details class="secao" open>
+          <summary>
+            Cobrança
+            @if (contrato()?.status_pagamento && contrato()!.status_pagamento !== 'nao_iniciado') {
+              <span class="chip chip-pagamento-{{ contrato()!.status_pagamento }}">
+                {{ contrato()!.status_pagamento === 'pago' ? 'Pago' : contrato()!.status_pagamento === 'falhou' ? 'Falhou' : 'Aguardando pagamento' }}
+              </span>
+            }
+          </summary>
+          <div class="campos">
+            <label>Valor da cobrança (R$)
+              <input type="number" step="0.01" min="0" formControlName="valor_cobranca" placeholder="2520.00">
+            </label>
+            @if (!id) {
+              <span class="hint">Salve o contrato pra habilitar a geração do link.</span>
+            }
+            <button type="button" class="btn" [disabled]="!podeGerarCobranca() || gerandoCobranca()" (click)="gerarCobranca()">
+              {{ gerandoCobranca() ? 'Gerando...' : contrato()?.infinitepay_link ? 'Gerar novo link de cobrança' : 'Gerar link de cobrança' }}
+            </button>
+            @if (contrato()?.infinitepay_link; as linkCobranca) {
+              <div class="link-publicado">
+                <a [href]="linkCobranca" target="_blank" rel="noopener">{{ linkCobranca }}</a>
+                <button type="button" class="btn mini" (click)="copiarLinkCobranca()">
+                  {{ linkCobrancaCopiado() ? 'Copiado!' : 'Copiar' }}
+                </button>
+              </div>
+            }
+          </div>
+        </details>
+
+        <details class="secao" open>
           <summary>Condições gerais</summary>
           <div class="campos">
             <label>Itens (um por linha)

@@ -6,6 +6,7 @@ use App\Models\PaymentLog;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Request as RequestFacade;
+use RuntimeException;
 
 /**
  * Integracao com a API InfinitePay. Portado de
@@ -28,7 +29,13 @@ class InfinitePayService
 
     public function __construct(?int $contratoId = null)
     {
-        $this->handle = config('services.infinitepay.handle');
+        $handle = config('services.infinitepay.handle');
+
+        if (! $handle) {
+            throw new RuntimeException('Integração com a InfinitePay não configurada (defina INFINITEPAY_HANDLE no .env).');
+        }
+
+        $this->handle = $handle;
         $this->url = config('services.infinitepay.url');
         $this->webhookUrl = config('services.infinitepay.webhook_url');
         $this->redirectUrl = config('services.infinitepay.redirect_url');

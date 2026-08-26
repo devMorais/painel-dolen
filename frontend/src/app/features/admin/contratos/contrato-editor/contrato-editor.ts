@@ -34,6 +34,8 @@ export class ContratoEditor {
   protected readonly previewHtml = signal<SafeHtml | null>(null);
   protected readonly linkCopiado = signal(false);
   protected readonly enviandoAssinatura = signal(false);
+  protected readonly gerandoCobranca = signal(false);
+  protected readonly linkCobrancaCopiado = signal(false);
 
   /** Arrays de string editados como "um item por linha" (mesmo padrão do editor de Conteúdo). */
   protected objetoDescricaoTexto = '';
@@ -45,6 +47,7 @@ export class ContratoEditor {
     proposta_id: this.fb.control<number | null>(null),
     cliente_nome: ['', Validators.required],
     data_contrato: ['', Validators.required],
+    valor_cobranca: this.fb.control<number | null>(null),
     partes: this.fb.group({
       contratada_nome: ['Dolen Tecnologia'],
       contratante_nome: [''],
@@ -99,6 +102,7 @@ export class ContratoEditor {
           proposta_id: contrato.proposta_id,
           cliente_nome: contrato.cliente_nome,
           data_contrato: contrato.data_contrato,
+          valor_cobranca: contrato.valor_cobranca ? Number(contrato.valor_cobranca) : null,
           partes: contrato.conteudo.partes,
           objeto: { titulo: contrato.conteudo.objeto?.titulo ?? '' },
           investimento: contrato.conteudo.investimento,
@@ -134,6 +138,7 @@ export class ContratoEditor {
       proposta_id: valor.proposta_id,
       cliente_nome: valor.cliente_nome,
       data_contrato: valor.data_contrato,
+      valor_cobranca: valor.valor_cobranca,
       conteudo: {
         partes: valor.partes,
         objeto: { titulo: valor.objeto.titulo, descricao: this.linhas(this.objetoDescricaoTexto) },
@@ -294,6 +299,61 @@ export class ContratoEditor {
     navigator.clipboard.writeText(url).then(() => {
       this.linkCopiado.set(true);
       setTimeout(() => this.linkCopiado.set(false), 2000);
+    });
+  }
+
+  /**
+   * Exige um contrato já salvo (com id): salvar() navega de /contratos/novo pra
+   * /contratos/:id na 1ª gravação — rotas diferentes recriam o componente, e a
+   * resposta da geração do link chegaria numa instância que ninguém mais vê.
+   * Evita a corrida em vez de tentar sincronizar o resultado através da navegação.
+   */
+  protected podeGerarCobranca(): boolean {
+    const valor = this.form.controls.valor_cobranca.value;
+    return !!this.id && !!valor && valor > 0;
+  }
+
+  /** Salva o contrato (garante que o valor_cobranca esteja persistido) e gera/regenera o link na InfinitePay. */
+  protected gerarCobranca(): void {
+    if (!this.id) {
+      this.erro.set('Salve o contrato antes de gerar o link de cobrança.');
+      return;
+    }
+
+    if (!this.podeGerarCobranca()) {
+      this.erro.set('Preencha o valor da cobrança antes de gerar o link.');
+      return;
+    }
+
+    this.mensagem.set('');
+    this.erro.set('');
+
+    this.salvar((salvo) => {
+      this.gerandoCobranca.set(true);
+      this.contratosService.gerarCobranca(salvo.id).subscribe({
+        next: (contrato) => {
+          this.gerandoCobranca.set(false);
+          this.contrato.set(contrato);
+          this.mensagem.set('Link de cobrança gerado!');
+        },
+        error: (resposta) => {
+          this.gerandoCobranca.set(false);
+          this.erro.set(resposta?.error?.message ?? 'Erro ao gerar o link de cobrança.');
+        },
+      });
+    });
+  }
+
+  protected copiarLinkCobranca(): void {
+    const link = this.contrato()?.infinitepay_link;
+
+    if (!link) {
+      return;
+    }
+
+    navigator.clipboard.writeText(link).then(() => {
+      this.linkCobrancaCopiado.set(true);
+      setTimeout(() => this.linkCobrancaCopiado.set(false), 2000);
     });
   }
 
