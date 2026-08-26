@@ -1,0 +1,213 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face {
+    font-family: 'Space Grotesk';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('file:///C:/Users/Claudia/Herd/dolen-painel/frontend/public/assets/fonts/space-grotesk-latin-ext.woff2') format('woff2');
+}
+:root{--ink:#0b0b0b;--paper:#f5f4f1;--display:'Space Grotesk','Segoe UI',system-ui,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000;}
+body{font-family:var(--display);-webkit-font-smoothing:antialiased;}
+
+.scene{position:absolute;inset:0;width:1080px;height:1920px;display:none;}
+.scene.on{display:block;}
+.bg-dark{background:var(--ink);color:#fff;}
+.bg-light{background:var(--paper);color:var(--ink);}
+
+.safe{position:absolute;left:96px;right:96px;top:250px;bottom:480px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;}
+
+.grain{position:absolute;inset:0;z-index:50;pointer-events:none;mix-blend-mode:overlay;opacity:0.28;}
+
+.big{font-weight:700;letter-spacing:-0.03em;line-height:1.04;font-size:132px;}
+.mid{font-weight:700;letter-spacing:-0.02em;line-height:1.1;font-size:92px;}
+.small{font-weight:600;letter-spacing:-0.01em;line-height:1.3;}
+.kicker{font-size:34px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;opacity:0.48;}
+.strike{text-decoration:line-through;text-decoration-thickness:7px;}
+
+.brandmini{position:absolute;top:150px;left:96px;display:flex;align-items:center;gap:12px;}
+.brandmini img{width:32px;height:32px;}
+.brandmini span{font-size:22px;font-weight:700;}
+
+.logo-row{position:absolute;left:96px;right:96px;top:0;bottom:0;display:flex;align-items:center;gap:48px;}
+.logo-row img{width:190px;height:190px;flex:none;}
+.logo-row .wm{font-size:140px;font-weight:700;letter-spacing:-0.02em;display:flex;}
+.logo-row .wm span{display:inline-block;}
+
+/* elemento animavel: opacity/transform setados via JS puro, sem CSS animation */
+.fx{will-change:transform,opacity;}
+</style></head><body>
+
+<!-- SCENE 0: 0.00 - 4.24s (gancho) -->
+<div class="scene bg-dark" data-start="0" data-end="4.24" id="s0">
+  <div class="safe">
+    <div class="kicker fx" data-fx="fadeIn" data-delay="0" data-dur="0.4">Dolen &middot; bastidor</div>
+    <div class="big fx" data-fx="slideUp" data-delay="0.15" data-dur="0.6" style="margin-top:20px;">Deixa eu te<br/>mostrar</div>
+    <div class="mid fx" data-fx="slideUp" data-delay="1.6" data-dur="0.6" style="margin-top:24px;opacity:0.7;">um site de verdade<br/>que a gente fez.</div>
+  </div>
+</div>
+
+<!-- SCENE 1: 5.02 - 8.66s -->
+<div class="scene bg-light" data-start="5.02" data-end="8.66" id="s1">
+  <div class="brandmini"><img src="file:///C:/Users/Claudia/Herd/dolen-painel/frontend/public/assets/images/logo-icon-black.png"/><span>dolen</span></div>
+  <div class="safe">
+    <div class="mid fx" data-fx="fadeIn" data-delay="0" data-dur="0.4" style="opacity:0.55;">Esse aqui &eacute;</div>
+    <div class="big fx" data-fx="popIn" data-delay="0.5" data-dur="0.5" style="margin-top:36px;">um sistema<br/>de vota&ccedil;&atilde;o</div>
+    <div class="small fx" data-fx="slideUp" data-delay="1.9" data-dur="0.5" style="margin-top:32px;font-size:44px;opacity:0.8;">que a gente criou,</div>
+  </div>
+</div>
+
+<!-- SCENE 2: 9.00 - 15.58s -->
+<div class="scene bg-dark" data-start="9.00" data-end="15.58" id="s2">
+  <div class="safe">
+    <div class="mid fx" data-fx="fadeIn" data-delay="0" data-dur="0.4" style="opacity:0.6;">funcionando<br/>de verdade,</div>
+    <div class="big fx" data-fx="popIn" data-delay="0.9" data-dur="0.5" style="margin-top:48px;">com milhares<br/>de acessos.</div>
+    <div class="small fx" data-fx="slideUp" data-delay="3.3" data-dur="0.5" style="margin-top:40px;font-size:44px;opacity:0.75;">Do perfil de cada<br/>candidata ao voto,</div>
+  </div>
+</div>
+
+<!-- SCENE 3: 15.96 - 17.82s -->
+<div class="scene bg-light" data-start="15.96" data-end="17.82" id="s3">
+  <div class="safe" style="justify-content:center;align-items:center;text-align:center;">
+    <div class="big fx" data-fx="popIn" data-delay="0" data-dur="0.5">tudo acontece<br/>dentro do site.</div>
+  </div>
+</div>
+
+<!-- SCENE 4: 18.48 - 22.90s -->
+<div class="scene bg-dark" data-start="18.48" data-end="22.90" id="s4">
+  <div class="safe">
+    <div class="mid fx" data-fx="fadeIn" data-delay="0" data-dur="0.4" style="opacity:0.55;">A gente n&atilde;o faz s&oacute;</div>
+    <div class="big fx" data-fx="popIn" data-delay="0.9" data-dur="0.5" style="margin-top:48px;"><span class="strike">p&aacute;gina bonita</span>,</div>
+    <div class="mid fx" data-fx="slideUp" data-delay="2.4" data-dur="0.6" style="margin-top:52px;">faz sistema<br/>que resolve.</div>
+  </div>
+</div>
+
+<!-- SCENE 5: 23.74 - 26.90s -->
+<div class="scene bg-light" data-start="23.74" data-end="26.90" id="s5">
+  <div class="safe" style="justify-content:center;">
+    <div class="mid fx" data-fx="popIn" data-delay="0" data-dur="0.6">Seja um site<br/>simples ou uma<br/>ferramenta completa.</div>
+  </div>
+</div>
+
+<!-- SCENE 6: 27.60 - 32.76s -->
+<div class="scene bg-dark" data-start="27.60" data-end="32.76" id="s6">
+  <div class="safe">
+    <div class="kicker fx" data-fx="fadeIn" data-delay="0" data-dur="0.4">A r&eacute;gua &eacute; a mesma</div>
+    <div class="big fx" data-fx="popIn" data-delay="0.9" data-dur="0.5" style="margin-top:44px;">tem que<br/>funcionar</div>
+    <div class="mid fx" data-fx="slideUp" data-delay="3.0" data-dur="0.6" style="margin-top:52px;opacity:0.75;">e ter a nossa<br/>cara de bem feito.</div>
+  </div>
+</div>
+
+<!-- SCENE 7: 33.34 - 34.64s -->
+<div class="scene bg-light" data-start="33.34" data-end="34.64" id="s7">
+  <div class="safe" style="justify-content:center;align-items:center;text-align:center;">
+    <div class="big fx" data-fx="popIn" data-delay="0" data-dur="0.5">Tem uma ideia<br/>parecida?</div>
+  </div>
+</div>
+
+<!-- SCENE 8: 35.08 - 36.98s (CTA) -->
+<div class="scene bg-dark" data-start="35.08" data-end="36.98" id="s8">
+  <div class="safe" style="justify-content:center;align-items:center;text-align:center;">
+    <div class="big fx" data-fx="slideUp" data-delay="0" data-dur="0.55">Chama a gente<br/>pra tirar do papel.</div>
+    <svg class="fx" data-fx="fadeIn" data-delay="0.4" data-dur="0.4" style="width:64px;height:64px;margin-top:36px;" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+  </div>
+</div>
+
+<!-- SCENE 9: 36.98 - 39.80s (assinatura da logo cinetica, gerada no HTML - sem sting externo) -->
+<div class="scene bg-dark" data-start="36.98" data-end="39.80" id="s9">
+  <div class="logo-row">
+    <img class="fx" data-fx="fadeIn" data-delay="1.25" data-dur="0.85" src="file:///C:/Users/Claudia/Herd/dolen-painel/frontend/public/assets/images/logo-icon-white.png"/>
+    <div class="wm">
+      <span class="fx" data-fx="letterDrop" data-delay="0.10" data-dur="0.55" data-lx="-30" data-ly="-260" data-lr="-16">d</span>
+      <span class="fx" data-fx="letterDrop" data-delay="0.32" data-dur="0.55" data-lx="55" data-ly="-300" data-lr="20">o</span>
+      <span class="fx" data-fx="letterDrop" data-delay="0.54" data-dur="0.55" data-lx="-25" data-ly="280" data-lr="-14">l</span>
+      <span class="fx" data-fx="letterDrop" data-delay="0.76" data-dur="0.55" data-lx="45" data-ly="-260" data-lr="16">e</span>
+      <span class="fx" data-fx="letterDrop" data-delay="0.98" data-dur="0.55" data-lx="-55" data-ly="300" data-lr="-20">n</span>
+    </div>
+  </div>
+</div>
+
+<div class="grain">
+  <svg style="width:100%;height:100%;" xmlns='http://www.w3.org/2000/svg'>
+    <filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter>
+    <rect width='100%' height='100%' filter='url(#g)' opacity='0.35'/>
+  </svg>
+</div>
+
+<script>
+function easeOutCubic(x){ return 1 - Math.pow(1 - x, 3); }
+function easeOutBack(x){ const c1=1.70158,c3=c1+1; return 1 + c3*Math.pow(x-1,3) + c1*Math.pow(x-1,2); }
+
+var FX = {
+  fadeIn: function(p, el){ el.style.opacity = p; },
+  slideUp: function(p, el, baseOpacity){
+    var e = easeOutCubic(p);
+    el.style.opacity = (baseOpacity!=null?baseOpacity:1) * p;
+    el.style.transform = 'translateY(' + (46*(1-e)) + 'px)';
+  },
+  popIn: function(p, el){
+    var e = easeOutBack(p);
+    el.style.opacity = Math.min(p*1.6,1);
+    el.style.transform = 'scale(' + (0.85 + 0.15*e) + ') translateY(' + (24*(1-Math.min(p*2,1))) + 'px)';
+  },
+  shakeHit: function(p, el){
+    var e = easeOutBack(p);
+    el.style.opacity = Math.min(p*2.5,1);
+    el.style.transform = 'scale(' + (1.3 - 0.3*e) + ')';
+  },
+  stackUp: function(p, el){
+    var e = easeOutCubic(p);
+    el.style.opacity = p;
+    el.style.transform = 'translateY(' + (30*(1-e)) + 'px) scale(' + (0.9+0.1*e) + ')';
+  },
+  cashStack: function(p, el){
+    var e = easeOutCubic(p);
+    el.style.opacity = p * (parseFloat(el.dataset.baseOpacity || 1));
+    el.style.transform = 'translateX(' + (30*(1-e)) + 'px)';
+  },
+  lockShut: function(p, el){
+    var e = easeOutCubic(p);
+    el.style.opacity = Math.min(p*2,1);
+    el.style.transform = 'rotate(' + (-18*(1-e)) + 'deg) translateY(' + (-14*(1-e)) + 'px)';
+  },
+  spin: function(p, el){
+    el.style.opacity = 1;
+    el.style.transform = 'rotate(' + (p*360) + 'deg)';
+  },
+  letterDrop: function(p, el){
+    var e = easeOutBack(p);
+    var lx = parseFloat(el.dataset.lx || 0), ly = parseFloat(el.dataset.ly || 0), lr = parseFloat(el.dataset.lr || 0);
+    el.style.opacity = Math.min(p*1.8,1);
+    el.style.transform = 'translate(' + (lx*(1-e)) + 'px,' + (ly*(1-e)) + 'px) rotate(' + (lr*(1-e)) + 'deg) scale(' + (0.6+0.4*e) + ')';
+  }
+};
+
+// guarda opacity base definida via style inline (ex: opacity:0.7 nos textos secundarios)
+document.querySelectorAll('.fx').forEach(function(el){
+  var inlineOp = el.style.opacity;
+  if (inlineOp !== '') el.dataset.baseOpacity = inlineOp;
+});
+
+window.setReelTime = function(t){
+  document.querySelectorAll('.scene').forEach(function(sc){
+    var start = parseFloat(sc.dataset.start);
+    var end = parseFloat(sc.dataset.end);
+    var active = (t >= start && t < end);
+    sc.classList.toggle('on', active);
+    if (!active) return;
+    var local = t - start;
+    sc.querySelectorAll('.fx').forEach(function(el){
+      var fxName = el.dataset.fx;
+      var delay = parseFloat(el.dataset.delay || 0);
+      var dur = parseFloat(el.dataset.dur || 0.5);
+      var lt = local - delay;
+      if (lt < 0) { el.style.opacity = 0; return; }
+      var p = fxName === 'spin' ? ((lt % dur) / dur) : Math.min(lt / dur, 1);
+      var baseOp = el.dataset.baseOpacity ? parseFloat(el.dataset.baseOpacity) : 1;
+      FX[fxName](p, el, baseOp);
+    });
+  });
+};
+</script>
+</body></html>

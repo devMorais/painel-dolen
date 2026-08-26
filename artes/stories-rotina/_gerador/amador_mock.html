@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1440px; height: 1700px; overflow: hidden; }
+  body {
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    background: #fefb00;
+    background-image: repeating-linear-gradient(45deg, #fefb00 0 40px, #fff59d 40px 80px);
+  }
+  .topbar { background: #ff00ea; height: 90px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; border-bottom: 6px dashed #00eaff; }
+  .topbar .logo { font-size: 40px; font-weight: bold; color: #fff; text-shadow: 3px 3px 0 #0033ff; letter-spacing: -1px; }
+  .topbar nav { display: flex; gap: 26px; }
+  .topbar nav a { color: #fff200; font-size: 22px; font-weight: bold; text-decoration: underline; }
+  .marquee { background: #ff0000; color: #fff; font-size: 26px; font-weight: bold; padding: 10px 20px; text-align: center; letter-spacing: 1px; }
+  .hero { padding: 50px 40px 30px; text-align: center; }
+  .hero h1 { font-size: 64px; color: #0033ff; text-shadow: 2px 2px 0 #fff, 4px 4px 0 #ff00ea; transform: rotate(-2deg); line-height: 1.1; }
+  .hero p { font-size: 26px; color: #00891f; font-weight: bold; margin-top: 18px; }
+  .badge-row { display: flex; justify-content: center; gap: 24px; margin-top: 30px; }
+  .badge { background: radial-gradient(circle, #ffe100, #ff9900); border: 5px solid #d40000; border-radius: 50%; width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 20px; font-weight: bold; color: #9b0000; transform: rotate(6deg); }
+  .badge:nth-child(2) { transform: rotate(-8deg); }
+  .content-box { background: #fff; margin: 40px 50px; padding: 34px; border: 6px solid #0033ff; border-radius: 4px; box-shadow: 10px 10px 0 rgba(0,0,0,0.25); }
+  .content-box h2 { font-size: 36px; color: #ff00ea; margin-bottom: 16px; }
+  .content-box ul { font-size: 24px; color: #333; line-height: 2; padding-left: 30px; }
+  .content-box li::marker { content: "\2605  "; color: #ff9900; }
+  .btn-row { display: flex; gap: 20px; justify-content: center; margin: 40px 0; }
+  .btn { background: linear-gradient(#7cff5c, #2fa813); border: 4px outset #1c7a00; color: #fff; font-size: 26px; font-weight: bold; padding: 18px 36px; text-shadow: 1px 1px 0 #000; }
+  .counter { text-align: center; font-size: 20px; color: #333; margin-bottom: 30px; }
+  .counter span { background: #000; color: #0f0; font-family: monospace; padding: 6px 14px; letter-spacing: 4px; font-size: 24px; }
+  .gallery { display: flex; gap: 14px; padding: 0 50px 60px; justify-content: center; flex-wrap: wrap; }
+  .gallery div { width: 220px; height: 160px; background: repeating-linear-gradient(135deg, #ccc 0 12px, #ddd 12px 24px); border: 3px solid #999; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #666; }
+  .footer { background: #0033ff; color: #fff; text-align: center; padding: 26px; font-size: 20px; }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <span class="logo">★ Loja da Ana ★</span>
+    <nav><a>Inicio</a><a>Produtos</a><a>Contato</a></nav>
+  </div>
+  <div class="marquee">✦✦✦ PROMOÇÃO IMPERDÍVEL ESSA SEMANA — CONFIRA JÁ ✦✦✦</div>
+  <div class="hero">
+    <h1>Seja Bem Vindo(a) ao<br>nosso site!!!</h1>
+    <p>o melhor da regiao em qualidade e preço desde 2012</p>
+    <div class="badge-row">
+      <div class="badge">FRETE<br>GRATIS*</div>
+      <div class="badge">100%<br>GARANTIDO</div>
+    </div>
+  </div>
+  <div class="content-box">
+    <h2>Sobre nós</h2>
+    <ul>
+      <li>Atendimento rapido e de qualidade</li>
+      <li>Produtos com garantia</li>
+      <li>Entrega pra todo o brasil</li>
+      <li>Mais de 10 anos de experiencia</li>
+    </ul>
+  </div>
+  <div class="btn-row">
+    <div class="btn">CLIQUE AQUI</div>
+    <div class="btn" style="background:linear-gradient(#5cc9ff,#0d7fc7);border-color:#0a5c94;">FALE CONOSCO</div>
+  </div>
+  <div class="counter">Você é o visitante número: <span>004821</span></div>
+  <div class="gallery">
+    <div>foto1.jpg</div>
+    <div>foto2.jpg</div>
+    <div>foto3.jpg</div>
+  </div>
+  <div class="footer">© Todos os direitos reservados 2012-2018 — site criado por mim mesma</div>
+</body>
+</html>

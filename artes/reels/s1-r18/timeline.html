@@ -1,0 +1,200 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face {
+    font-family: 'Space Grotesk';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('file:///C:/Users/Claudia/Herd/dolen-painel/frontend/public/assets/fonts/space-grotesk-latin-ext.woff2') format('woff2');
+}
+:root{--ink:#0b0b0b;--paper:#f5f4f1;--display:'Space Grotesk','Segoe UI',system-ui,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000;}
+body{font-family:var(--display);-webkit-font-smoothing:antialiased;}
+
+.scene{position:absolute;inset:0;width:1080px;height:1920px;display:none;}
+.scene.on{display:block;}
+.bg-dark{background:var(--ink);color:#fff;}
+.bg-light{background:var(--paper);color:var(--ink);}
+
+.safe{position:absolute;left:96px;right:96px;top:250px;bottom:480px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;}
+
+.grain{position:absolute;inset:0;z-index:50;pointer-events:none;mix-blend-mode:overlay;opacity:0.28;}
+
+.big{font-weight:700;letter-spacing:-0.03em;line-height:1.04;font-size:132px;}
+.mid{font-weight:700;letter-spacing:-0.02em;line-height:1.1;font-size:92px;}
+.small{font-weight:600;letter-spacing:-0.01em;line-height:1.3;}
+.kicker{font-size:34px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;opacity:0.48;}
+
+.brandmini{position:absolute;top:150px;left:96px;display:flex;align-items:center;gap:12px;}
+.brandmini img{width:32px;height:32px;}
+.brandmini span{font-size:22px;font-weight:700;}
+
+.logo-row{position:absolute;left:96px;right:96px;top:0;bottom:0;display:flex;align-items:center;gap:48px;}
+.logo-row img{width:190px;height:190px;flex:none;}
+.logo-row .wm{font-size:140px;font-weight:700;letter-spacing:-0.02em;display:flex;}
+.logo-row .wm span{display:inline-block;}
+
+/* elemento animavel: opacity/transform setados via JS puro, sem CSS animation */
+.fx{will-change:transform,opacity;}
+</style></head><body>
+
+<!-- SCENE 0: 0.72 - 2.26s (gancho sincero) -->
+<div class="scene bg-dark" data-start="0.72" data-end="2.26" id="s0">
+  <div class="safe">
+    <div class="kicker fx" data-fx="fadeIn" data-delay="0" data-dur="0.3">Dolen &middot; condi&ccedil;&atilde;o de fundador</div>
+    <div class="big fx" data-fx="slideUp" data-delay="0.3" data-dur="0.5" style="margin-top:20px;">Vou ser<br/>transparente:</div>
+  </div>
+</div>
+
+<!-- SCENE 1: 2.54 - 3.90s -->
+<div class="scene bg-light" data-start="2.54" data-end="3.90" id="s1">
+  <div class="brandmini"><img src="file:///C:/Users/Claudia/Herd/dolen-painel/frontend/public/assets/images/logo-icon-black.png"/><span>dolen</span></div>
+  <div class="safe">
+    <div class="mid fx" data-fx="popIn" data-delay="0" data-dur="0.5">a Dolen est&aacute;<br/>come&ccedil;ando.</div>
+  </div>
+</div>
+
+<!-- SCENE 2: 3.90 - 6.86s -->
+<div class="scene bg-dark" data-start="3.90" data-end="6.86" id="s2">
+  <div class="safe">
+    <div class="mid fx" data-fx="slideUp" data-delay="0" data-dur="0.5">E pra montar nosso<br/>portf&oacute;lio</div>
+    <div class="mid fx" data-fx="slideUp" data-delay="1.1" data-dur="0.5" style="margin-top:24px;opacity:0.75;">com casos reais,</div>
+  </div>
+</div>
+
+<!-- SCENE 3: 6.86 - 11.04s -->
+<div class="scene bg-light" data-start="6.86" data-end="11.04" id="s3">
+  <div class="safe">
+    <div class="kicker fx" data-fx="fadeIn" data-delay="0" data-dur="0.4" style="opacity:0.55;">a gente abriu uma<br/>condi&ccedil;&atilde;o de fundador</div>
+    <div class="big fx" data-fx="popIn" data-delay="1.1" data-dur="0.55" style="margin-top:36px;">pros tr&ecirc;s<br/>primeiros<br/>clientes:</div>
+  </div>
+</div>
+
+<!-- SCENE 4: 11.34 - 12.62s (o cerne da oferta) -->
+<div class="scene bg-dark" data-start="11.34" data-end="12.62" id="s4">
+  <div class="safe" style="justify-content:center;align-items:center;text-align:center;">
+    <div class="big fx" data-fx="popIn" data-delay="0" data-dur="0.5">Um desconto<br/>de verdade,</div>
+  </div>
+</div>
+
+<!-- SCENE 5: 12.62 - 16.60s -->
+<div class="scene bg-light" data-start="12.62" data-end="16.60" id="s5">
+  <div class="safe">
+    <div class="mid fx" data-fx="slideUp" data-delay="0" data-dur="0.5">em troca de um<br/>depoimento</div>
+    <div class="mid fx" data-fx="slideUp" data-delay="1.3" data-dur="0.5" style="margin-top:24px;opacity:0.75;">e de poder mostrar<br/>o resultado.</div>
+  </div>
+</div>
+
+<!-- SCENE 6: 17.28 - 19.60s -->
+<div class="scene bg-dark" data-start="17.28" data-end="19.60" id="s6">
+  <div class="safe">
+    <div class="mid fx" data-fx="popIn" data-delay="0" data-dur="0.5">&Eacute; a hora de<br/>sair na frente</div>
+    <div class="mid fx" data-fx="slideUp" data-delay="1.1" data-dur="0.5" style="margin-top:24px;opacity:0.75;">pagando menos.</div>
+  </div>
+</div>
+
+<!-- SCENE 7: 20.16 - 22.92s -->
+<div class="scene bg-light" data-start="20.16" data-end="22.92" id="s7">
+  <div class="safe">
+    <div class="kicker fx" data-fx="fadeIn" data-delay="0" data-dur="0.35" style="opacity:0.5;">Depois dessas<br/>tr&ecirc;s vagas,</div>
+    <div class="big fx" data-fx="popIn" data-delay="0.7" data-dur="0.55" style="margin-top:36px;">o pre&ccedil;o<br/>volta ao normal.</div>
+  </div>
+</div>
+
+<!-- SCENE 8: 23.50 - 24.70s -->
+<div class="scene bg-dark" data-start="23.50" data-end="24.70" id="s8">
+  <div class="safe" style="justify-content:center;align-items:center;text-align:center;">
+    <div class="big fx" data-fx="popIn" data-delay="0" data-dur="0.45">Quer uma<br/>das vagas?</div>
+  </div>
+</div>
+
+<!-- SCENE 9: 25.16 - 27.22s (urgencia leve, sem desespero) -->
+<div class="scene bg-light" data-start="25.16" data-end="27.22" id="s9">
+  <div class="safe" style="justify-content:center;align-items:center;text-align:center;">
+    <div class="big fx" data-fx="slideUp" data-delay="0" data-dur="0.55">Corre no<br/>direct antes<br/>de acabar.</div>
+  </div>
+</div>
+
+<!-- SCENE 10: 27.22 - 30.00s (assinatura da logo cinetica) -->
+<div class="scene bg-dark" data-start="27.22" data-end="30.00" id="s10">
+  <div class="logo-row">
+    <img class="fx" data-fx="fadeIn" data-delay="1.25" data-dur="0.85" src="file:///C:/Users/Claudia/Herd/dolen-painel/frontend/public/assets/images/logo-icon-white.png"/>
+    <div class="wm">
+      <span class="fx" data-fx="letterDrop" data-delay="0.10" data-dur="0.55" data-lx="-30" data-ly="-260" data-lr="-16">d</span>
+      <span class="fx" data-fx="letterDrop" data-delay="0.32" data-dur="0.55" data-lx="55" data-ly="-300" data-lr="20">o</span>
+      <span class="fx" data-fx="letterDrop" data-delay="0.54" data-dur="0.55" data-lx="-25" data-ly="280" data-lr="-14">l</span>
+      <span class="fx" data-fx="letterDrop" data-delay="0.76" data-dur="0.55" data-lx="45" data-ly="-260" data-lr="16">e</span>
+      <span class="fx" data-fx="letterDrop" data-delay="0.98" data-dur="0.55" data-lx="-55" data-ly="300" data-lr="-20">n</span>
+    </div>
+  </div>
+</div>
+
+<div class="grain">
+  <svg style="width:100%;height:100%;" xmlns='http://www.w3.org/2000/svg'>
+    <filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter>
+    <rect width='100%' height='100%' filter='url(#g)' opacity='0.35'/>
+  </svg>
+</div>
+
+<script>
+function easeOutCubic(x){ return 1 - Math.pow(1 - x, 3); }
+function easeOutBack(x){ const c1=1.70158,c3=c1+1; return 1 + c3*Math.pow(x-1,3) + c1*Math.pow(x-1,2); }
+
+var FX = {
+  fadeIn: function(p, el){ el.style.opacity = p; },
+  slideUp: function(p, el, baseOpacity){
+    var e = easeOutCubic(p);
+    el.style.opacity = (baseOpacity!=null?baseOpacity:1) * p;
+    el.style.transform = 'translateY(' + (46*(1-e)) + 'px)';
+  },
+  popIn: function(p, el){
+    var e = easeOutBack(p);
+    el.style.opacity = Math.min(p*1.6,1);
+    el.style.transform = 'scale(' + (0.85 + 0.15*e) + ') translateY(' + (24*(1-Math.min(p*2,1))) + 'px)';
+  },
+  shakeHit: function(p, el){
+    var e = easeOutBack(p);
+    el.style.opacity = Math.min(p*2.5,1);
+    el.style.transform = 'scale(' + (1.3 - 0.3*e) + ')';
+  },
+  stackUp: function(p, el){
+    var e = easeOutCubic(p);
+    el.style.opacity = p;
+    el.style.transform = 'translateY(' + (30*(1-e)) + 'px) scale(' + (0.9+0.1*e) + ')';
+  },
+  letterDrop: function(p, el){
+    var e = easeOutBack(p);
+    var lx = parseFloat(el.dataset.lx || 0), ly = parseFloat(el.dataset.ly || 0), lr = parseFloat(el.dataset.lr || 0);
+    el.style.opacity = Math.min(p*1.8,1);
+    el.style.transform = 'translate(' + (lx*(1-e)) + 'px,' + (ly*(1-e)) + 'px) rotate(' + (lr*(1-e)) + 'deg) scale(' + (0.6+0.4*e) + ')';
+  }
+};
+
+// guarda opacity base definida via style inline (ex: opacity:0.7 nos textos secundarios)
+document.querySelectorAll('.fx').forEach(function(el){
+  var inlineOp = el.style.opacity;
+  if (inlineOp !== '') el.dataset.baseOpacity = inlineOp;
+});
+
+window.setReelTime = function(t){
+  document.querySelectorAll('.scene').forEach(function(sc){
+    var start = parseFloat(sc.dataset.start);
+    var end = parseFloat(sc.dataset.end);
+    var active = (t >= start && t < end);
+    sc.classList.toggle('on', active);
+    if (!active) return;
+    var local = t - start;
+    sc.querySelectorAll('.fx').forEach(function(el){
+      var fxName = el.dataset.fx;
+      var delay = parseFloat(el.dataset.delay || 0);
+      var dur = parseFloat(el.dataset.dur || 0.5);
+      var lt = local - delay;
+      if (lt < 0) { el.style.opacity = 0; return; }
+      var p = fxName === 'spin' ? ((lt % dur) / dur) : Math.min(lt / dur, 1);
+      var baseOp = el.dataset.baseOpacity ? parseFloat(el.dataset.baseOpacity) : 1;
+      FX[fxName](p, el, baseOp);
+    });
+  });
+};
+</script>
+</body></html>
