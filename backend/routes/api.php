@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\LandingController;
 use App\Http\Controllers\Api\LeadController;
 use App\Http\Controllers\Api\StudioMaterialPublicoController;
 use App\Http\Controllers\Api\WebhookAutentiqueController;
+use App\Http\Controllers\Api\WebhookInfinitePayController;
 use App\Http\Controllers\Api\WebhookWhatsappController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,7 @@ Route::get('/instagram/posts', [InstagramController::class, 'index']);
 Route::get('/landing', [LandingController::class, 'index']);
 Route::post('/leads', [LeadController::class, 'store']);
 Route::post('/webhooks/autentique', [WebhookAutentiqueController::class, 'handle']);
+Route::post('/webhooks/infinitepay-contratos', [WebhookInfinitePayController::class, 'receber']);
 Route::get('/whatsapp/webhook', [WebhookWhatsappController::class, 'verificar']);
 Route::post('/whatsapp/webhook', [WebhookWhatsappController::class, 'receber']);
 
