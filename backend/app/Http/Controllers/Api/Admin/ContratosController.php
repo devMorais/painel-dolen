@@ -254,6 +254,14 @@ class ContratosController extends Controller
             return response()->json(['message' => $e->getMessage()], 422);
         }
 
+        // A InfinitePay exige customer.phone_number preenchido sempre que o
+        // objeto "customer" é enviado - por isso só mandamos nome+telefone
+        // juntos (nunca só o nome) quando o telefone do contratante existir;
+        // sem telefone, omitimos "customer" inteiro em vez de mandar vazio
+        // (achado ao vivo: "Invalid checkout link params" / phone_number
+        // must be filled quando so o nome era enviado).
+        $telefone = $contrato->conteudo['partes']['contratante_telefone'] ?? null;
+
         $resultado = $infinitePay->gerarLinkPagamento(
             itens: [[
                 'quantidade' => 1,
@@ -261,7 +269,10 @@ class ContratosController extends Controller
                 'descricao' => "Contrato {$contrato->numero} — {$contrato->cliente_nome}",
             ]],
             orderNsu: $orderNsu,
-            dadosCliente: ['nome' => $contrato->conteudo['partes']['contratante_nome'] ?? $contrato->cliente_nome],
+            dadosCliente: $telefone ? [
+                'nome' => $contrato->conteudo['partes']['contratante_nome'] ?? $contrato->cliente_nome,
+                'telefone' => $telefone,
+            ] : null,
         );
 
         if ($resultado['erro']) {
