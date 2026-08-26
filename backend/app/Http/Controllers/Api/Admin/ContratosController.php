@@ -69,6 +69,7 @@ class ContratosController extends Controller
                     'contratante_nome' => $proposta->cliente_nome,
                     'contratante_documento' => '',
                     'contratante_email' => '',
+                    'contratante_telefone' => '',
                 ],
                 'objeto' => [
                     'titulo' => $opcaoEscolhida['titulo'] ?? 'Desenvolvimento de site',

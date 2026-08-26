@@ -4,6 +4,7 @@ export interface ConteudoContrato {
     contratante_nome: string;
     contratante_documento: string;
     contratante_email: string;
+    contratante_telefone: string;
   };
   objeto: {
     titulo: string;

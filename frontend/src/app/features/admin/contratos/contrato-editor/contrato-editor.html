@@ -84,6 +84,10 @@
             <label>E-mail do contratante
               <input type="email" formControlName="contratante_email" placeholder="necessário pra enviar assinatura eletrônica">
             </label>
+            <label>Telefone do contratante (WhatsApp)
+              <input type="tel" formControlName="contratante_telefone" placeholder="(61) 99999-8888">
+              <span class="hint">necessário pra enviar o link de cobrança por WhatsApp</span>
+            </label>
           </div>
         </details>
 
@@ -139,6 +143,11 @@
                   {{ linkCobrancaCopiado() ? 'Copiado!' : 'Copiar' }}
                 </button>
               </div>
+              @if (linkWhatsappCobranca(); as linkWpp) {
+                <a [href]="linkWpp" target="_blank" rel="noopener" class="btn mini">Enviar por WhatsApp</a>
+              } @else {
+                <span class="hint">Cadastre o telefone do cliente pra enviar o link por WhatsApp.</span>
+              }
             }
           </div>
         </details>

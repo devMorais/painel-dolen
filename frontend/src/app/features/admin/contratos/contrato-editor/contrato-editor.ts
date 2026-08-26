@@ -7,6 +7,7 @@ import { EMPTY, catchError, debounceTime, switchMap } from 'rxjs';
 
 import { Contrato, ContratoPayload, ConteudoContrato } from '@core/models/admin';
 import { ContratosAdminService } from '@core/services/admin';
+import { linkWhatsApp } from '@shared/utils/whatsapp.util';
 
 const SLUG_REGEX = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
@@ -53,6 +54,7 @@ export class ContratoEditor {
       contratante_nome: [''],
       contratante_documento: [''],
       contratante_email: [''],
+      contratante_telefone: [''],
     }),
     objeto: this.fb.group({ titulo: [''] }),
     investimento: this.fb.group({
@@ -355,6 +357,20 @@ export class ContratoEditor {
       this.linkCobrancaCopiado.set(true);
       setTimeout(() => this.linkCobrancaCopiado.set(false), 2000);
     });
+  }
+
+  /** Link wa.me com a cobrança pré-preenchida — null se faltar telefone ou o link ainda não foi gerado. */
+  protected linkWhatsappCobranca(): string | null {
+    const link = this.contrato()?.infinitepay_link;
+    const telefone = this.form.controls.partes.controls.contratante_telefone.value;
+
+    if (!link || !telefone) {
+      return null;
+    }
+
+    const nome = this.form.controls.partes.controls.contratante_nome.value || this.form.controls.cliente_nome.value;
+
+    return linkWhatsApp(telefone, `Olá ${nome}! Segue o link pra confirmar o pagamento e darmos início ao seu projeto: ${link}`);
   }
 
   private slugify(texto: string): string {
