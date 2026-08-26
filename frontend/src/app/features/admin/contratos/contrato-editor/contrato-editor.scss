@@ -232,7 +232,8 @@ label.check {
 }
 
 input:not([type='checkbox']),
-textarea {
+textarea,
+select {
   font: inherit;
   font-weight: 400;
   font-size: 0.9rem;

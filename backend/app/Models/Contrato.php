@@ -13,6 +13,7 @@ class Contrato extends Model
         'numero',
         'slug',
         'proposta_id',
+        'lead_id',
         'cliente_nome',
         'status',
         'data_contrato',
@@ -47,6 +48,11 @@ class Contrato extends Model
         return $this->belongsTo(Proposta::class);
     }
 
+    public function lead(): BelongsTo
+    {
+        return $this->belongsTo(Lead::class);
+    }
+
     public function urlPublica(): ?string
     {
         if ($this->status === 'rascunho') {
@@ -66,6 +72,8 @@ class Contrato extends Model
             'numero' => $this->numero,
             'slug' => $this->slug,
             'proposta_id' => $this->proposta_id,
+            'lead_id' => $this->lead_id,
+            'lead_nome' => $this->relationLoaded('lead') ? $this->lead?->nome : null,
             'cliente_nome' => $this->cliente_nome,
             'status' => $this->status,
             'data_contrato' => $this->data_contrato?->toDateString(),

@@ -35,6 +35,8 @@ export interface ContratoResumo {
   numero: string;
   slug: string;
   proposta_id: number | null;
+  lead_id: number | null;
+  lead_nome: string | null;
   cliente_nome: string;
   status: ContratoStatus;
   data_contrato: string;
@@ -60,6 +62,7 @@ export interface ContratoPayload {
   numero: string;
   slug: string;
   proposta_id: number | null;
+  lead_id: number | null;
   cliente_nome: string;
   data_contrato: string;
   conteudo: ConteudoContrato;

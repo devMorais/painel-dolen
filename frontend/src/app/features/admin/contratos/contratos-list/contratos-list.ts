@@ -100,4 +100,11 @@ export class ContratosList {
       { rascunho: 'Rascunho', enviado: 'Enviado', assinado: 'Assinado', recusado: 'Recusado' }[status] ?? status
     );
   }
+
+  protected rotuloPagamento(statusPagamento: string): string {
+    return (
+      { nao_iniciado: 'Não iniciado', aguardando: 'Aguardando', pago: 'Pago', falhou: 'Falhou' }[statusPagamento] ??
+      statusPagamento
+    );
+  }
 }

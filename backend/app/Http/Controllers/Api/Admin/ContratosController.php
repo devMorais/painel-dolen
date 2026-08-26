@@ -22,6 +22,7 @@ class ContratosController extends Controller
     public function index(): JsonResponse
     {
         $contratos = Contrato::query()
+            ->with('lead:id,nome')
             ->orderByDesc('created_at')
             ->get()
             ->map(fn (Contrato $contrato) => $contrato->paraResumo());
@@ -31,6 +32,8 @@ class ContratosController extends Controller
 
     public function show(Contrato $contrato): JsonResponse
     {
+        $contrato->load('lead:id,nome');
+
         return response()->json($this->detalhe($contrato));
     }
 
@@ -296,6 +299,7 @@ class ContratosController extends Controller
             'numero' => ['nullable', 'string', 'max:30'],
             'slug' => $slug,
             'proposta_id' => ['nullable', 'integer', 'exists:propostas,id'],
+            'lead_id' => ['nullable', 'integer', 'exists:leads,id'],
             'cliente_nome' => ['required', 'string', 'max:160'],
             'data_contrato' => ['required', 'date'],
             'conteudo' => ['required', 'array'],

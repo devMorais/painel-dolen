@@ -73,6 +73,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/leads/{lead}/tags', [LeadsController::class, 'syncTags']);
         Route::delete('/leads/{lead}', [LeadsController::class, 'destroy']);
         Route::get('/leads/{lead}/historico', [LeadsController::class, 'historico']);
+        Route::get('/leads/{lead}/contratos', [LeadsController::class, 'contratos']);
 
         Route::get('/leads/{lead}/anotacoes', [LeadAnotacoesController::class, 'index']);
         Route::post('/leads/{lead}/anotacoes', [LeadAnotacoesController::class, 'store']);

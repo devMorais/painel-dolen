@@ -133,6 +133,43 @@
         </ul>
       }
     </section>
+
+    <!-- Contratos aguardando pagamento -->
+    <section class="bloco bloco-mini">
+      <div class="bloco-head">
+        <h2>Contratos</h2>
+        <a routerLink="/admin/contratos" class="ver-todos">Abrir →</a>
+      </div>
+      <div class="mini-stats">
+        <div>
+          <span class="ms-num">{{ s.contratos.aguardando }}</span>
+          <span class="ms-label">aguardando pagamento</span>
+        </div>
+        <div>
+          <span class="ms-num">{{ s.contratos.pago }}</span>
+          <span class="ms-label">pagos</span>
+        </div>
+      </div>
+      @if (s.contratos.aguardando > 0) {
+        <p class="ms-total">{{ formatarValor(s.contratos.valor_aguardando) }} no total aguardando</p>
+      }
+
+      @if (s.contratos_aguardando_recentes.length > 0) {
+        <ul class="leads-mini">
+          @for (contrato of s.contratos_aguardando_recentes; track contrato.id) {
+            <li>
+              <div class="lm-info">
+                <strong>{{ contrato.cliente_nome }}</strong>
+                <span>Nº {{ contrato.numero }}</span>
+              </div>
+              <div class="lm-meta">
+                <span class="pill pill-pagamento-{{ contrato.status_pagamento }}">{{ rotuloPagamento(contrato.status_pagamento) }}</span>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </section>
   </div>
 } @else {
   <div class="pg-loading">Não foi possível carregar o dashboard.</div>

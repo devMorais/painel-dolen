@@ -1,3 +1,4 @@
+import { ContratoResumo } from './contrato.model';
 import { PropostaResumo } from './proposta.model';
 
 export type LeadStatus = 'novo' | 'em_contato' | 'proposta' | 'fechado' | 'perdido';
@@ -101,9 +102,15 @@ export interface DashboardStats {
     rascunho: number;
     publicadas: number;
   };
+  contratos: {
+    aguardando: number;
+    pago: number;
+    valor_aguardando: number;
+  };
   leads_recentes: LeadAdmin[];
   proximas_publicacoes: PublicacaoResumo[];
   propostas_recentes: PropostaResumo[];
+  contratos_aguardando_recentes: ContratoResumo[];
 }
 
 

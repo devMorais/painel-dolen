@@ -218,6 +218,21 @@ td.num {
   color: #1e6b34;
 }
 
+.chip-pg-aguardando {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.chip-pg-pago {
+  background: #e3f2e6;
+  color: #1e6b34;
+}
+
+.chip-pg-falhou {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
 .acoes {
   display: flex;
   flex-wrap: wrap;

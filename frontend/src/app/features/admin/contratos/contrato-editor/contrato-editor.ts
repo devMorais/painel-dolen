@@ -5,8 +5,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EMPTY, catchError, debounceTime, switchMap } from 'rxjs';
 
-import { Contrato, ContratoPayload, ConteudoContrato } from '@core/models/admin';
-import { ContratosAdminService } from '@core/services/admin';
+import { Contrato, ContratoPayload, ConteudoContrato, LeadAdmin } from '@core/models/admin';
+import { ContratosAdminService, LeadsAdminService } from '@core/services/admin';
 import { linkWhatsApp } from '@shared/utils/whatsapp.util';
 
 const SLUG_REGEX = /^[a-z0-9]+(-[a-z0-9]+)*$/;
@@ -20,11 +20,13 @@ const SLUG_REGEX = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 export class ContratoEditor {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly contratosService = inject(ContratosAdminService);
+  private readonly leadsService = inject(LeadsAdminService);
   private readonly sanitizer = inject(DomSanitizer);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
   protected id: number | null = null;
+  protected readonly leads = signal<LeadAdmin[]>([]);
 
   protected readonly contrato = signal<Contrato | null>(null);
   protected readonly carregando = signal(false);
@@ -46,6 +48,7 @@ export class ContratoEditor {
     numero: [''],
     slug: ['', [Validators.required, Validators.pattern(SLUG_REGEX)]],
     proposta_id: this.fb.control<number | null>(null),
+    lead_id: this.fb.control<number | null>(null),
     cliente_nome: ['', Validators.required],
     data_contrato: ['', Validators.required],
     valor_cobranca: this.fb.control<number | null>(null),
@@ -67,6 +70,11 @@ export class ContratoEditor {
   });
 
   constructor() {
+    this.leadsService.listar().subscribe({
+      next: (leads) => this.leads.set(leads),
+      error: () => {},
+    });
+
     const idParam = this.route.snapshot.paramMap.get('id');
     this.id = idParam ? Number(idParam) : null;
 
@@ -102,6 +110,7 @@ export class ContratoEditor {
           numero: contrato.numero,
           slug: contrato.slug,
           proposta_id: contrato.proposta_id,
+          lead_id: contrato.lead_id,
           cliente_nome: contrato.cliente_nome,
           data_contrato: contrato.data_contrato,
           valor_cobranca: contrato.valor_cobranca ? Number(contrato.valor_cobranca) : null,
@@ -138,6 +147,7 @@ export class ContratoEditor {
       numero: valor.numero,
       slug: valor.slug,
       proposta_id: valor.proposta_id,
+      lead_id: valor.lead_id,
       cliente_nome: valor.cliente_nome,
       data_contrato: valor.data_contrato,
       valor_cobranca: valor.valor_cobranca,

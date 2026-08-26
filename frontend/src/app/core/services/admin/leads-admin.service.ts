@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 
 import { environment } from '@env/environment';
 import {
+  ContratoResumo,
   DashboardStats,
   LeadAdmin,
   LeadAnotacao,
@@ -112,6 +113,13 @@ export class LeadsAdminService {
   listarHistorico(leadId: number): Observable<LeadHistoricoItem[]> {
     return this.http
       .get<{ data: LeadHistoricoItem[] }>(`${this.base}/leads/${leadId}/historico`)
+      .pipe(map((r) => r.data));
+  }
+
+  // ---- Contratos vinculados (PAG-06) ----
+  listarContratosDoLead(leadId: number): Observable<ContratoResumo[]> {
+    return this.http
+      .get<{ data: ContratoResumo[] }>(`${this.base}/leads/${leadId}/contratos`)
       .pipe(map((r) => r.data));
   }
 }

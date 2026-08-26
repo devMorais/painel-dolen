@@ -64,6 +64,15 @@
           <summary>Identificação</summary>
           <div class="campos">
             <label>Cliente <input formControlName="cliente_nome" placeholder="Móveis Soares"></label>
+            <label>Lead vinculado (CRM)
+              <select formControlName="lead_id">
+                <option [ngValue]="null">Nenhum</option>
+                @for (lead of leads(); track lead.id) {
+                  <option [ngValue]="lead.id">{{ lead.nome }}</option>
+                }
+              </select>
+              <span class="hint">pra ver o status de pagamento na ficha do lead</span>
+            </label>
             <label>Endereço da página (slug)
               <input formControlName="slug" placeholder="moveis-soares">
               <span class="hint">www.dolen.com.br/contratos/<strong>{{ form.controls.slug.value || 'slug' }}</strong>/</span>
