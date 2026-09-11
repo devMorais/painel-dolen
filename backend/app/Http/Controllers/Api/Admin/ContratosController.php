@@ -221,7 +221,19 @@ class ContratosController extends Controller
                 emailCliente: $emailCliente,
             );
         } catch (RequestException $e) {
-            return response()->json(['message' => 'Erro ao enviar pra Autentique: '.$e->response->body()], 422);
+            // O corpo cru da Autentique e um JSON de erro GraphQL (ou as vezes
+            // nem isso) - nunca mostrar direto pro usuario. O caso mais comum
+            // de falha aqui e estourar o limite do plano gratuito (20
+            // documentos), entao a mensagem generica ja adianta o motivo mais
+            // provavel em vez de so "erro ao enviar".
+            $mensagemApi = $e->response->json('errors.0.message');
+
+            return response()->json([
+                'message' => $mensagemApi
+                    ?? 'Não foi possível enviar pra Autentique. Se o plano gratuito (20 documentos) tiver acabado, é preciso fazer upgrade pra continuar enviando contratos.',
+            ], 422);
+        } catch (RuntimeException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
         } finally {
             @unlink($arquivoTemp);
         }
@@ -231,6 +243,43 @@ class ContratosController extends Controller
             'autentique_documento_id' => $resultado['documento_id'],
             'enviado_para_assinatura_em' => now(),
         ]);
+
+        return response()->json($this->detalhe($contrato->refresh()));
+    }
+
+    /**
+     * Consulta o status real na Autentique e atualiza o contrato - fallback manual
+     * pro caso do webhook não chegar (plano gratuito não valida assinatura HMAC e
+     * não há garantia de entrega). Só faz sentido pra contrato já enviado.
+     */
+    public function verificarAssinatura(Contrato $contrato, AutentiqueService $autentique): JsonResponse
+    {
+        if (! $contrato->autentique_documento_id) {
+            return response()->json(['message' => 'Este contrato ainda não foi enviado pra assinatura.'], 422);
+        }
+
+        try {
+            $documento = $autentique->consultarDocumento($contrato->autentique_documento_id);
+        } catch (RequestException $e) {
+            return response()->json(['message' => 'Não foi possível consultar a Autentique agora. Tente novamente em instantes.'], 422);
+        }
+
+        $assinaturas = $documento['signatures'] ?? [];
+
+        $algumaRecusada = collect($assinaturas)->first(fn ($s) => ! empty($s['rejected']['created_at'] ?? null));
+        $todasAssinadas = $assinaturas !== [] && collect($assinaturas)->every(fn ($s) => ! empty($s['signed']['created_at'] ?? null));
+
+        if ($algumaRecusada) {
+            $contrato->update([
+                'status' => 'recusado',
+                'assinatura_recusada_motivo' => 'Recusado pelo signatário (verificado manualmente em '.now()->format('d/m/Y H:i').').',
+            ]);
+        } elseif ($todasAssinadas) {
+            $contrato->update([
+                'status' => 'assinado',
+                'assinado_em' => now(),
+            ]);
+        }
 
         return response()->json($this->detalhe($contrato->refresh()));
     }

@@ -55,6 +55,11 @@ export class ContratosAdminService {
     return this.http.post<Contrato>(`${this.base}/${id}/enviar-para-assinatura`, {});
   }
 
+  /** Consulta o status real na Autentique - fallback manual caso o webhook não tenha chegado. */
+  verificarAssinatura(id: number): Observable<Contrato> {
+    return this.http.post<Contrato>(`${this.base}/${id}/verificar-assinatura`, {});
+  }
+
   duplicar(id: number): Observable<Contrato> {
     return this.http.post<Contrato>(`${this.base}/${id}/duplicar`, {});
   }

@@ -37,6 +37,7 @@ export class ContratoEditor {
   protected readonly previewHtml = signal<SafeHtml | null>(null);
   protected readonly linkCopiado = signal(false);
   protected readonly enviandoAssinatura = signal(false);
+  protected readonly verificandoAssinatura = signal(false);
   protected readonly gerandoCobranca = signal(false);
   protected readonly linkCobrancaCopiado = signal(false);
   protected readonly marcandoPago = signal(false);
@@ -323,6 +324,36 @@ export class ContratoEditor {
           this.erro.set(resposta?.error?.message ?? 'Erro ao enviar pra assinatura eletrônica.');
         },
       });
+    });
+  }
+
+  /**
+   * Consulta o status real na Autentique - fallback manual pro caso o webhook
+   * de confirmação não ter chegado (não há garantia de entrega no plano gratuito).
+   */
+  protected verificarAssinatura(): void {
+    const atual = this.contrato();
+    if (!atual) {
+      return;
+    }
+
+    this.verificandoAssinatura.set(true);
+    this.contratosService.verificarAssinatura(atual.id).subscribe({
+      next: (resultado) => {
+        this.verificandoAssinatura.set(false);
+        this.contrato.set(resultado);
+        this.mensagem.set(
+          resultado.status === 'assinado'
+            ? 'Assinado! Todas as partes confirmaram na Autentique.'
+            : resultado.status === 'recusado'
+              ? 'Alguém recusou a assinatura na Autentique.'
+              : 'Ainda aguardando assinatura - nada novo na Autentique por enquanto.',
+        );
+      },
+      error: (resposta) => {
+        this.verificandoAssinatura.set(false);
+        this.erro.set(resposta?.error?.message ?? 'Erro ao consultar a Autentique.');
+      },
     });
   }
 

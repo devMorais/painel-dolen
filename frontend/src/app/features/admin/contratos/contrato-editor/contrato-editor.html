@@ -35,6 +35,9 @@
         </button>
       }
       @if (contrato()?.status === 'enviado') {
+        <button type="button" class="btn" [disabled]="verificandoAssinatura()" (click)="verificarAssinatura()">
+          {{ verificandoAssinatura() ? 'Consultando...' : 'Verificar na Autentique' }}
+        </button>
         <button type="button" class="btn" [disabled]="publicando()" (click)="marcarAssinado()">Marcar assinado</button>
       }
       <button type="button" class="btn" [disabled]="salvando()" (click)="salvar()">
