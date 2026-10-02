@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Contrato;
 use App\Services\AutentiqueService;
+use App\Services\BloqueioSiteService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -45,10 +46,7 @@ class WebhookAutentiqueController extends Controller
         }
 
         match ($tipo) {
-            'document.finished', 'signature.accepted' => $contrato->update([
-                'status' => 'assinado',
-                'assinado_em' => now(),
-            ]),
+            'document.finished', 'signature.accepted' => $this->marcarAssinado($contrato),
             'signature.rejected' => $contrato->update([
                 'status' => 'recusado',
                 'assinatura_recusada_motivo' => $request->input('event.data.object.rejected_reason'),
@@ -57,5 +55,31 @@ class WebhookAutentiqueController extends Controller
         };
 
         return response()->json(['message' => 'ok']);
+    }
+
+    /**
+     * Marca o contrato como assinado e, se o site do cliente estiver bloqueado
+     * aguardando essa assinatura, devolve ele ao ar na hora.
+     *
+     * O comando contratos:verificar-assinaturas faz a mesma coisa de tempos em
+     * tempos. A duplicidade é proposital: o webhook da Autentique no plano
+     * gratuito não tem garantia de entrega, e um site de cliente não pode ficar
+     * fora do ar porque um POST se perdeu no caminho.
+     */
+    private function marcarAssinado(Contrato $contrato): void
+    {
+        $contrato->update([
+            'status' => 'assinado',
+            'assinado_em' => now(),
+        ]);
+
+        $bloqueio = app(BloqueioSiteService::class);
+        $caminho = $bloqueio->caminhoDoContrato($contrato->slug);
+
+        if ($caminho && $bloqueio->liberar($caminho)) {
+            Log::info('Contrato assinado: site do cliente liberado pelo webhook.', [
+                'contrato' => $contrato->slug,
+            ]);
+        }
     }
 }

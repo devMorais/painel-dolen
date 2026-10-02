@@ -18,3 +18,10 @@ Schedule::command('publicacoes:processar')->everyMinute()->withoutOverlapping();
 // Mantém as métricas do Instagram sempre frescas no cache — o painel nunca
 // espera a API da Meta responder, só lê o que o cron já deixou pronto.
 Schedule::command('instagram:atualizar-metricas')->everyFifteenMinutes()->withoutOverlapping();
+
+// Rede de segurança do desbloqueio de site: pergunta à Autentique se os
+// contratos pendentes já foram assinados e, quando foram, remove o bloqueio do
+// .htaccess do cliente. O webhook da Autentique é o caminho rápido, mas no
+// plano gratuito ele não tem validação HMAC nem garantia de entrega — então
+// não dá pra depender só dele pra devolver o site de um cliente ao ar.
+Schedule::command('contratos:verificar-assinaturas')->everyFiveMinutes()->withoutOverlapping();
