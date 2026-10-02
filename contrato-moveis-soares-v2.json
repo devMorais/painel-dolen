@@ -1,0 +1,45 @@
+{
+  "partes": {
+    "contratada_nome": "Dolen Tecnologia",
+    "contratante_nome": "Móveis Soares",
+    "contratante_documento": null,
+    "contratante_email": "moveissoaresdf@gmail.com",
+    "contratante_telefone": "5561991572752"
+  },
+  "objeto": {
+    "titulo": "Loja virtual — plano Pro",
+    "descricao": [
+      "Site completo: Início, Catálogo, Sobre a loja, Localização e Contato",
+      "Catálogo com produtos ilimitados, organizados por ambiente",
+      "Pedidos pelo WhatsApp: cada produto leva o cliente direto para a conversa, já com o nome e o link do item",
+      "Painel administrativo próprio: vocês trocam fotos, preços e textos e administram o catálogo sozinhos",
+      "Domínio próprio moveissoares.com.br, hospedagem e certificado de segurança inclusos",
+      "Carrinho de compras com pagamento por PIX e cartão e cálculo de frete por cidade ficam prontos no site e podem ser ativados quando vocês quiserem",
+      "Já está no ar, testado e funcionando"
+    ]
+  },
+  "investimento": {
+    "valor": "R$ 1.500",
+    "forma_pagamento": "· entrada de R$ 150 paga · R$ 1.000 pagos em 1º de outubro de 2026 · saldo de R$ 350 até 15 de outubro de 2026",
+    "total_primeiro_ano": "Já pagos: R$ 1.150. Falta apenas o saldo de R$ 350. Hospedagem e domínio inclusos no 1º ano."
+  },
+  "prazo": {
+    "texto": "O site já foi entregue e está no ar, conforme a proposta comercial nº 2026-003."
+  },
+  "condicoes": {
+    "itens": [
+      "O site é de vocês para usar como quiserem: vocês administram o conteúdo, os produtos e os preços livremente pelo painel, sem precisar pedir nada para ninguém. O código-fonte e o design continuam sendo da Dolen Tecnologia.",
+      "Mexer no conteúdo nunca tem custo. Trocar foto, preço, texto ou cadastrar produto novo vocês fazem sozinhos pelo painel, quantas vezes quiserem.",
+      "Pagamento. O 1º ano custa R$ 1.500 e já está quitado em R$ 1.150: R$ 150 de entrada e R$ 1.000 pagos em 1º de outubro de 2026. Falta apenas o saldo de R$ 350, com vencimento em 15 de outubro de 2026, sem juros nem acréscimo.",
+      "Como pagar. Por PIX para a chave 035.953.501-11 (CPF), em nome de Fernando Aguiar da Costa Morais, ou para a chave informada por Claudia Marques da Silva, ambos da equipe Dolen. O comprovante do PIX já vale como recibo.",
+      "A partir do 2º ano, renovar é opcional. A renovação custa R$ 125 por mês (R$ 1.500 por ano) e cobre hospedagem, domínio e correção técnica. Não inclui alteração de conteúdo — que vocês continuam fazendo sozinhos pelo painel, sem custo — nem o desenvolvimento de funcionalidades novas.",
+      "Vocês não são obrigados a renovar. Se decidirem não continuar, nada passa a ser devido: o site apenas sai do ar na data de vencimento, sem multa e sem cobrança nenhuma.",
+      "Se o site sair do ar, nada se perde. O conteúdo, as fotos e o catálogo ficam guardados por 90 dias. Retomando a renovação dentro desse prazo, o site volta ao ar exatamente como estava.",
+      "O domínio moveissoares.com.br segue registrado pela Dolen enquanto a renovação estiver ativa. Se em algum momento vocês quiserem assumir o domínio em nome próprio, é só pedir que a transferência é feita.",
+      "Qualquer uma das partes pode encerrar este contrato avisando com 30 dias de antecedência, respeitado o que já tiver sido executado e pago."
+    ]
+  },
+  "assinatura": {
+    "local": "Brasília-DF"
+  }
+}
