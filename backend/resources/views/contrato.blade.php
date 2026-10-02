@@ -211,6 +211,9 @@
 
   <h2>Prazo</h2>
   <p>{{ $prazo['texto'] ?? '' }}</p>
+  @if ($contrato->proposta && $contrato->proposta->urlPublica())
+    <p><a href="{{ $contrato->proposta->urlPublica() }}" target="_blank" rel="noopener">Ver a proposta comercial completa →</a></p>
+  @endif
 
   <h2>Condições gerais</h2>
   @if (!empty($condicoes['itens']))
