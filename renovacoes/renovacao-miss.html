@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Renovação anual — Vote pela sua Miss</title>
+<style>
+/* Fontes e logo vêm do próprio projeto (frontend/public/assets), por caminho
+   absoluto: o Chrome roda com --allow-file-access-from-files e embute tudo no
+   PDF, então o arquivo final não depende de internet nem da máquina. */
+@font-face {
+    font-family: 'Space Grotesk';
+    src: url('file:///C:/laragon/www/painel-dolen/frontend/public/assets/fonts/space-grotesk-latin-ext.woff2') format('woff2');
+    font-weight: 500 700;
+}
+@font-face {
+    font-family: 'Inter';
+    src: url('file:///C:/laragon/www/painel-dolen/frontend/public/assets/fonts/inter-latin-ext.woff2') format('woff2');
+    font-weight: 400 600;
+}
+
+/* Mesmos tokens do site (frontend/src/styles.scss). Identidade monocromática
+   por decisão: nada de cor de acento. */
+:root {
+    --black: #0a0a0a;
+    --white: #ffffff;
+    --gray-dark: #4b4b4b;
+    --gray-mid: #8a8a8a;
+    --gray-light: #e5e5e5;
+    --band-soft: #f4f4f4;
+}
+
+@page {
+    size: A4;
+    margin: 0;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--black);
+    background: var(--white);
+    font-size: 10pt;
+    line-height: 1.55;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+/* height fixo (nao min-height): com min-height o conteudo que passasse de
+   297mm empurrava a propria pagina pra uma folha extra, e o PDF saia com o
+   dobro de paginas, cortando secao no meio. */
+.pagina {
+    width: 210mm;
+    height: 297mm;
+    padding: 14mm 17mm 9mm;
+    display: flex;
+    flex-direction: column;
+}
+.pagina + .pagina { page-break-before: always; }
+
+/* Mantem titulo e conteudo da secao na mesma folha. */
+.bloco { break-inside: avoid; page-break-inside: avoid; }
+
+/* ---------------------------------------------------------- cabeçalho */
+.topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 5.5mm;
+    border-bottom: 1.5px solid var(--black);
+}
+.marca { display: flex; align-items: center; gap: 3mm; }
+.marca img { width: 11mm; height: 11mm; }
+.marca .nome {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 17pt;
+    letter-spacing: -0.02em;
+}
+.topo .meta {
+    text-align: right;
+    font-size: 8pt;
+    color: var(--gray-mid);
+    line-height: 1.5;
+}
+
+h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 21pt;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    margin: 7mm 0 2mm;
+}
+.subtitulo {
+    font-size: 11pt;
+    color: var(--gray-dark);
+    margin-bottom: 7mm;
+}
+
+h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11.5pt;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 5mm 0 2.5mm;
+}
+
+p { margin-bottom: 2.5mm; }
+strong { font-weight: 600; }
+
+/* ---------------------------------------------------------- blocos */
+.destaque {
+    background: var(--band-soft);
+    border-left: 2.5px solid var(--black);
+    padding: 4mm 5mm;
+    margin: 3.5mm 0;
+}
+.destaque p:last-child { margin-bottom: 0; }
+
+.lista { list-style: none; margin: 3mm 0; }
+.lista li {
+    padding-left: 7mm;
+    margin-bottom: 1.8mm;
+    position: relative;
+}
+.lista li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 2.2mm;
+    width: 3mm;
+    height: 3mm;
+    border: 1.5px solid var(--black);
+    border-radius: 50%;
+}
+.lista--nao li::before {
+    border-color: var(--gray-mid);
+    background: var(--gray-light);
+}
+
+/* ---------------------------------------------------------- valor */
+.valor-caixa {
+    border: 1.5px solid var(--black);
+    padding: 4.5mm;
+    margin: 3.5mm 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 6mm;
+}
+.valor-caixa .rotulo {
+    font-size: 8.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--gray-mid);
+    margin-bottom: 1.5mm;
+}
+.valor-caixa .numero {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 23pt;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+}
+.valor-caixa .periodo { font-size: 9.5pt; color: var(--gray-dark); margin-top: 1.5mm; }
+.valor-caixa .parcela {
+    text-align: right;
+    font-size: 9.5pt;
+    color: var(--gray-dark);
+    line-height: 1.5;
+}
+.valor-caixa .parcela b {
+    display: block;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15pt;
+    color: var(--black);
+    letter-spacing: -0.02em;
+}
+
+/* ---------------------------------------------------------- prazos */
+.prazos { margin: 3.5mm 0; }
+.prazo {
+    display: flex;
+    gap: 5mm;
+    padding: 1.8mm 0;
+    border-top: 1px solid var(--gray-light);
+}
+.prazo:last-child { border-bottom: 1px solid var(--gray-light); }
+.prazo .data {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 10.5pt;
+    min-width: 28mm;
+    letter-spacing: -0.01em;
+}
+.prazo .texto { font-size: 10pt; color: var(--gray-dark); }
+
+/* ---------------------------------------------------------- botão */
+.cta {
+    display: block;
+    background: var(--black);
+    color: var(--white);
+    text-decoration: none;
+    text-align: center;
+    padding: 3.5mm;
+    margin: 3.5mm 0 2.5mm;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 13pt;
+    letter-spacing: -0.01em;
+}
+.cta .sub {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 9pt;
+    opacity: 0.75;
+    margin-top: 1.5mm;
+    letter-spacing: 0;
+}
+/* Bloco de pagamento: botao, QR e endereco. O leitor precisa entender em
+   1 segundo que ali tem um link clicavel - por isso o endereco vai
+   sublinhado e em preto, com cara de link, e nao em cinza miudo. */
+.pagar {
+    display: flex;
+    gap: 6mm;
+    align-items: stretch;
+    margin: 3mm 0 2.5mm;
+}
+.pagar .qr {
+    border: 1px solid var(--gray-light);
+    padding: 2.5mm;
+    text-align: center;
+    flex-shrink: 0;
+}
+.pagar .qr svg { width: 32mm; height: 32mm; display: block; }
+.pagar .qr .legenda {
+    font-size: 7.5pt;
+    color: var(--gray-dark);
+    margin-top: 2mm;
+    line-height: 1.3;
+    max-width: 32mm;
+}
+.pagar .alternativa { display: flex; flex-direction: column; justify-content: center; }
+.pagar .alternativa .titulo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 9.5pt;
+    margin-bottom: 1.5mm;
+}
+.link-cru {
+    line-height: 1.4;
+    font-size: 7.5pt;
+    color: var(--black);
+    text-decoration: underline;
+    word-break: break-all;
+}
+
+/* ---------------------------------------------------------- rodapé */
+.rodape {
+    margin-top: auto;
+    padding-top: 4.5mm;
+    border-top: 1px solid var(--gray-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    font-size: 8.5pt;
+    color: var(--gray-mid);
+}
+.rodape .contato { line-height: 1.6; }
+.rodape b { color: var(--black); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- ====================================================== PÁGINA 1 -->
+<section class="pagina">
+    <header class="topo">
+        <div class="marca">
+            <img src="file:///C:/laragon/www/painel-dolen/frontend/public/assets/images/dolen-icone-preto.png" alt="Dolen">
+            <span class="nome">dolen</span>
+        </div>
+        <div class="meta">
+            Renovação anual<br>
+            Emitido em 30 de outubro de 2026
+        </div>
+    </header>
+
+    <h1>Renovação do seu site<br>Vote pela sua Miss</h1>
+    <p class="subtitulo">O primeiro ano se encerra em 10 de novembro de 2026. Este documento explica o que muda, quanto custa e até quando dá pra resolver.</p>
+
+    <h2>O que já está pago</h2>
+    <p>O ano que passou já foi quitado — e com desconto. Esse valor cobriu a <strong>criação do site</strong>: o sistema de votação, a integração de pagamento por PIX e cartão, a página pública, o painel e toda a hospedagem do primeiro ano.</p>
+    <p>Esse trabalho está feito e é seu. A renovação <strong>não</strong> é uma nova cobrança pelo site.</p>
+
+    <h2>O que é esta renovação</h2>
+    <p>A partir do segundo ano, o que precisa ser mantido é a <strong>infraestrutura que deixa o site no ar</strong>. Um site não é um arquivo parado: ele ocupa um servidor ligado 24 horas por dia, com o endereço registrado e o certificado de segurança válido. Isso tem um custo que se repete todo ano.</p>
+
+    <div class="destaque">
+        <p><strong>Em uma frase:</strong> o ano passado você pagou pelo site ser <em>criado</em>. Este ano é o que mantém ele <em>no ar e funcionando</em>.</p>
+    </div>
+
+    <div class="bloco">
+    <h2>O que está incluso</h2>
+    <ul class="lista">
+        <li><strong>Hospedagem</strong> — o servidor que mantém o site acessível todos os dias do ano</li>
+        <li><strong>Domínio</strong> — a renovação do endereço votepelasuamiss.com.br</li>
+        <li><strong>Certificado de segurança (HTTPS)</strong> — o cadeado que protege os dados de quem vota e paga</li>
+        <li><strong>Manutenção técnica</strong> — correções e atualizações para o site continuar funcionando, incluindo o sistema de votação e o recebimento de pagamentos</li>
+    </ul>
+    </div>
+
+    <div class="bloco">
+    <h2>O que não está incluso</h2>
+    <p>Pra ficar claro e sem surpresa depois, a renovação cobre o site <strong>funcionando</strong> — não mudanças nele:</p>
+    <ul class="lista lista--nao">
+        <li>Alterações de conteúdo, layout ou textos</li>
+        <li>Novas funcionalidades ou páginas</li>
+        <li>Novas integrações</li>
+    </ul>
+    <p>Qualquer uma dessas coisas continua possível, com orçamento à parte. É só me chamar que eu te passo.</p>
+    </div>
+
+    <footer class="rodape">
+        <div class="contato">
+            <b>Dolen Tecnologia</b><br>
+            contato@dolen.com.br · www.dolen.com.br
+        </div>
+        <div>Página 1 de 2</div>
+    </footer>
+</section>
+
+<!-- ====================================================== PÁGINA 2 -->
+<section class="pagina">
+    <header class="topo">
+        <div class="marca">
+            <img src="file:///C:/laragon/www/painel-dolen/frontend/public/assets/images/dolen-icone-preto.png" alt="Dolen">
+            <span class="nome">dolen</span>
+        </div>
+        <div class="meta">
+            Renovação anual<br>
+            Vote pela sua Miss
+        </div>
+    </header>
+
+    <h1 style="margin-top:2mm">Valor e prazos</h1>
+
+    <div class="valor-caixa">
+        <div>
+            <div class="rotulo">Renovação anual</div>
+            <div class="numero">R$ 1.500</div>
+            <div class="periodo">por 12 meses de site no ar</div>
+        </div>
+        <div class="parcela">
+            ou em até
+            <b>12x de R$ 125</b>
+            no cartão
+        </div>
+    </div>
+
+    <h2>Até quando dá pra resolver</h2>
+    <div class="prazos">
+        <div class="prazo">
+            <div class="data">10 de nov</div>
+            <div class="texto">Data de vencimento do plano atual.</div>
+        </div>
+        <div class="prazo">
+            <div class="data">até 30 de nov</div>
+            <div class="texto">Prazo de tolerância: o site continua <strong>normalmente no ar</strong>, votação e pagamentos funcionando.</div>
+        </div>
+        <div class="prazo">
+            <div class="data">após 30 de nov</div>
+            <div class="texto">Sem o pagamento, a hospedagem não pode ser mantida e o site sai do ar.</div>
+        </div>
+    </div>
+
+    <div class="destaque">
+        <p><strong>Se isso acontecer, você não perde nada.</strong> Votos, cadastros, fotos, pagamentos e todo o conteúdo continuam guardados e seguros.</p>
+        <p>Ele apenas deixa de ficar acessível, porque a hospedagem precisa estar paga para o servidor seguir ligado. Feito o pagamento, volta ao ar exatamente como estava.</p>
+    </div>
+
+    <h2>Como pagar</h2>
+    <p>Três formas de chegar ao pagamento — use a mais fácil pra você. Todas levam ao mesmo lugar, em ambiente seguro.</p>
+
+    <a class="cta" href="__LINK_PAGAMENTO__">
+        Renovar meu site
+        <span class="sub">Clique aqui para abrir a página de pagamento</span>
+    </a>
+
+    <div class="pagar">
+        <div class="qr">
+            __QR__
+            <div class="legenda">Aponte a câmera do celular</div>
+        </div>
+        <div class="alternativa">
+            <div class="titulo">Ou abra este endereço no navegador:</div>
+            <a class="link-cru" href="__LINK_PAGAMENTO__">__LINK_PAGAMENTO__</a>
+        </div>
+    </div>
+
+
+    <footer class="rodape">
+        <div class="contato">
+            <b>Dolen Tecnologia</b><br>
+            contato@dolen.com.br · www.dolen.com.br
+        </div>
+        <div>Página 2 de 2</div>
+    </footer>
+</section>
+
+</body>
+</html>
